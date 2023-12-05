@@ -7,4 +7,11 @@
     <string name="missing_account">Non hai un account?</string>
     <string name="create">Crealo</string>
     <string name="forgot_password">Password dimenticata?</string>
+    <string name="signUp">Registrati</string>
+    <string name="username">Nome</string>
+    <string name="password_repeat">Ripeti la password</string>
+
+    <string name="email_error_message">L\'e-mail non è corretta</string>
+    <string name="password_error_message">La password non è corretta</string>
+    <string name="password_repeat_error_message">Le password non corrispondo. Per favore re-inserisci.</string>
 </resources>
