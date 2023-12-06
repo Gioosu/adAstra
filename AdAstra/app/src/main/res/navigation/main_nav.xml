@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/encyclopediaFragment"
+        android:name="it.unimib.adastra.ui.main.EncyclopediaFragment"
+        android:label="fragment_encyclopedia"
+        tools:layout="@layout/fragment_encyclopedia" />
+
+    <fragment
+        android:id="@+id/ISSFragment"
+        android:name="it.unimib.adastra.ui.main.ISSFragment"
+        android:label="fragment_i_s_s"
+        tools:layout="@layout/fragment_i_s_s" />
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="it.unimib.adastra.ui.main.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="it.unimib.adastra.ui.main.EventsFragment"
+        android:label="fragment_events"
+        tools:layout="@layout/fragment_events" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="it.unimib.adastra.ui.main.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

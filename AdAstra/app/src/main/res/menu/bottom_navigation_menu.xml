@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/encyclopediaFragment"
+        android:enabled="true"
+        android:title="@string/encyclopedia" />
+
+    <item
+        android:id="@+id/ISSFragment"
+        android:enabled="true"
+        android:title="@string/ISS" />
+
+    <item
+        android:id="@+id/homeFragment"
+        android:enabled="true"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/eventsFragment"
+        android:enabled="true"
+        android:title="@string/events" />
+
+    <item
+        android:id="@+id/profileFragment"
+        android:enabled="true"
+        android:title="@string/profile" />
+
+</menu>

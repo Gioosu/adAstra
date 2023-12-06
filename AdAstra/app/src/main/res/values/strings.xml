@@ -16,4 +16,11 @@
     <string name="email_error_message">E-mail is not correct</string>
     <string name="password_error_message">Password is not correct</string>
     <string name="password_repeat_error_message">Passwords do not match. Please re-enter them.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="encyclopedia">Encyclopedia</string>
+    <string name="ISS" translatable="false">ISS</string>
+    <string name="home" translatable="false">Home</string>
+    <string name="events">Events</string>
+    <string name="profile">Profile</string>
 </resources>
