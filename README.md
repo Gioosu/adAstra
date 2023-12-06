@@ -18,8 +18,8 @@
 - #FFFADE Cream
 
 **MAIN NAVBAR:**
-- Encyclopedia: short desryption, image and a link to wikipedia.
-- ISS: Where it's, how long does it take to see it again and more info.
-- Homepage: Countdown ISS, main event.
+- Encyclopedia: short descryption, image and a link to wikipedia.
+- ISS: where it's, how long does it take to see it again and more info.
+- Homepage: countdown for ISS, main event.
 - Events: all events with favourites and more.
-- Profile: Data, Settings, Image.
+- Profile: data, settings, image.
