@@ -11,6 +11,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityLoginBinding;
+import it.unimib.adastra.ui.main.MainActivity;
 
 public class Login extends AppCompatActivity {
 
@@ -33,6 +34,12 @@ public class Login extends AppCompatActivity {
             String password = binding.textPassword.getText().toString();
             Log.d(TAG, "Password: " + password);
             Log.d(TAG, "Password: " + isPasswordValid(password));
+
+            if(isEmailValid(email) && isPasswordValid(password)) {
+                Log.d(TAG, "Passagio a home page");
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
 
             //TODO Salvare e-mail e password
         });
