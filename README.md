@@ -12,7 +12,7 @@ API (https://github.com/public-apis/public-apis)
 http://open-notify.org/Open-Notify-API/: ISS astronauts, current location, etc
 https://thespacedevs.com/llapi: Spaceflight launches and events database
 
-Palette
-#1C1858 Midnight 
-#968AB6 Violet 
-#FFFADE Cream
+Palette:
+- #1C1858 Midnight 
+- #968AB6 Violet 
+- #FFFADE Cream
