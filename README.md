@@ -8,11 +8,18 @@
 - **List of Future Astronomical Events:** Display a list of upcoming astronomical events such as comets, meteor showers, eclipses, and more.
 - **Saving Events to Personal Device Calendar:** Capability to save astronomical events to the user's personal device calendar.
 
-API (https://github.com/public-apis/public-apis)
+**API (https://github.com/public-apis/public-apis):**
 - http://open-notify.org/Open-Notify-API/: ISS astronauts, current location, etc
 - https://thespacedevs.com/llapi: Spaceflight launches and events database
 
-Palette:
+**Palette:**
 - #1C1858 Midnight 
 - #968AB6 Violet 
 - #FFFADE Cream
+
+**MAIN NAVBAR:**
+- Encyclopedia: short desryption, image and a link to wikipedia.
+- ISS: Where it's, how long does it take to see it again and more info.
+- Homepage: Countdown ISS, main event.
+- Events: all events with favourites and more.
+- Profile: Data, Settings, Image.
