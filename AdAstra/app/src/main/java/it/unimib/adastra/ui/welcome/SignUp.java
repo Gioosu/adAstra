@@ -2,6 +2,7 @@ package it.unimib.adastra.ui.welcome;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivitySignUpBinding;
+import it.unimib.adastra.ui.main.MainActivity;
 
 
 public class SignUp extends AppCompatActivity {
@@ -40,6 +42,12 @@ public class SignUp extends AppCompatActivity {
             String passwordReapet = binding.textPasswordRepeat.getText().toString();
             Log.d(TAG, "E-mail: " + passwordReapet);
             Log.d(TAG, "E-mail: " + isPasswordRepeatValid(password, passwordReapet));
+
+            if(isEmailValid(email) && (isPasswordValid(password) && isPasswordRepeatValid(password, passwordReapet))){
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                //finish();
+            }
         });
     }
 

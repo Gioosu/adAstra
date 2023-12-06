@@ -39,6 +39,7 @@ public class Login extends AppCompatActivity {
                 Log.d(TAG, "Passagio a home page");
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                //finish();
             }
 
             //TODO Salvare e-mail e password
@@ -47,6 +48,7 @@ public class Login extends AppCompatActivity {
         binding.buttonSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUp.class);
             startActivity(intent);
+            //TODO Trovare un modo per cancellare l'activity Login DOPO che si ha raggiunto la main page attraverso questo pulsante
         });
     }
 
