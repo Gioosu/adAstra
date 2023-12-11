@@ -5,12 +5,15 @@ import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -18,28 +21,55 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.ActivitySignUpBinding;
-import it.unimib.adastra.ui.main.MainActivity;
+import it.unimib.adastra.databinding.FragmentSignUpBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
-
-public class SignUp extends AppCompatActivity {
-    private ActivitySignUpBinding binding;
-    String TAG = SignUp.class.getSimpleName();
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link SignUpFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class SignUpFragment extends Fragment {
+    private FragmentSignUpBinding binding;
+    String TAG = SignUpFragment.class.getSimpleName();
     private DataEncryptionUtil dataEncryptionUtil;
     private String username;
     private String email;
     private String password;
     private String passwordRepeat;
 
+    public SignUpFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment SignUpFragment.
+     */
+    public static SignUpFragment newInstance() {
+        return new SignUpFragment();
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_sign_up);
-        binding = ActivitySignUpBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
-        dataEncryptionUtil = new DataEncryptionUtil(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        binding = FragmentSignUpBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
         //Registrazione manuale
         binding.buttonSignUp.setOnClickListener(v -> {
@@ -75,9 +105,7 @@ public class SignUp extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent); //Cambio di activity a MainActivity
-                //finish();
+                //TODO Cambio di fragment
             }
         });
     }
@@ -87,7 +115,7 @@ public class SignUp extends AppCompatActivity {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            binding.textEmail.setError(getString(R.string.email_error_message));
+            binding.textEmail.setError(getString(R.string.invalid_email_error_message));
         }
 
         return result;
