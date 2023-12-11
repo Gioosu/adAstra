@@ -16,4 +16,9 @@
     <string name="encyclopedia">Enciclopedia</string>
     <string name="events">Eventi</string>
     <string name="profile">Profilo</string>
+    <string name="settings">Impostazioni</string>
+    <string name="user_preferences">Preferenze</string>
+    <string name="dark_theme">Tema Scuro</string>
+    <string name="time_format">Formato 12 Ore</string>
+    <string name="imperial_system">Sistema Imperiale</string>
 </resources>

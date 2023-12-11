@@ -12,29 +12,24 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.databinding.ActivityMainBinding;
+import it.unimib.adastra.databinding.FragmentLoginBinding;
 
 
 public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        /*Toolbar toolbar = findViewById(R.id.top_appbar);
-        setSupportActionBar(toolbar);*/
-
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().
-                findFragmentById(R.id.nav_host_fragment);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(binding.navHostFragment.getId());
         NavController navController = navHostFragment.getNavController();
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
-        /*AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.encyclopediaFragment, R.id.eventsFragment,
-                R.id.homeFragment, R.id.ISSFragment, R.id.profileFragment).build();*/
-
-       //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
     }
 }

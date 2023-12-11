@@ -16,12 +16,16 @@
     <string name="invalid_email_error_message">E-mail is not correct</string>
     <string name="password_error_message">Password is not correct</string>
     <string name="password_repeat_error_message">Passwords do not match. Please re-enter them.</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="encyclopedia">Encyclopedia</string>
     <string name="ISS" translatable="false">ISS</string>
     <string name="home" translatable="false">Home</string>
     <string name="events">Events</string>
     <string name="profile">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="settings">Settings</string>
+    <string name="user_preferences">Preferences</string>
+    <string name="dark_theme">Dark Mode</string>
+    <string name="time_format">12-Hour Format</string>
+    <string name="imperial_system" >Imperial System</string>
+    <string name="notification_settings">Notification settings</string>
+    <string name="log_out">Log Out</string>
 </resources>

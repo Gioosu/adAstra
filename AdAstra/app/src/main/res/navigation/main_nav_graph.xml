@@ -30,7 +30,16 @@
         tools:layout="@layout/fragment_events" />
 
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/settingsFragment"
+        android:name="it.unimib.adastra.ui.main.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_profileFragment2"
+            app:destination="@id/profileFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment2"
         android:name="it.unimib.adastra.ui.main.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />

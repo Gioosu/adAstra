@@ -26,9 +26,9 @@
         android:title="@string/events" />
 
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/settingsFragment"
         android:enabled="true"
-        android:icon="@drawable/astronaut_svgrepo_com"
-        android:title="@string/profile" />
+        android:icon="@drawable/gear_setting_settings_svgrepo_com"
+        android:title="@string/settings" />
 
 </menu>
