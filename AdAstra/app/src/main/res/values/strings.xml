@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ad Astra</string>
+    <string name="app_name" translatable="false">adAstra</string>
     <string name="login" translatable="false">Login</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="password" translatable="false">Password</string>

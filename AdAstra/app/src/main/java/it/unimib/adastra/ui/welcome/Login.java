@@ -23,12 +23,9 @@ import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 public class Login extends AppCompatActivity {
-
     private ActivityLoginBinding binding;
     String TAG = Login.class.getSimpleName();
-
     private DataEncryptionUtil dataEncryptionUtil;
-
     private String email;
     private String password;
 
@@ -41,6 +38,7 @@ public class Login extends AppCompatActivity {
         setContentView(view);
         dataEncryptionUtil = new DataEncryptionUtil(this);
 
+        // Stampa dei dati login presenti nel file crittato
         try {
             Log.d(TAG, "Email address from encrypted SharedPref: " + dataEncryptionUtil.
                     readSecretDataWithEncryptedSharedPreferences(
@@ -54,6 +52,23 @@ public class Login extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        //Login diretto, se dati lofin presenti nel file crittato
+        try {
+            if(dataEncryptionUtil.
+                    readSecretDataWithEncryptedSharedPreferences(
+                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS) != null &&
+                    dataEncryptionUtil.
+                            readSecretDataWithEncryptedSharedPreferences(
+                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD) != null){
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                //finish();
+            }
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+
+        //Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
             email = binding.textEmail.getText().toString();
             Log.d(TAG, "E-mail: " + email);
@@ -64,17 +79,15 @@ public class Login extends AppCompatActivity {
             Log.d(TAG, "Password: " + isPasswordValid(password));
 
             if(isEmailValid(email) && isPasswordValid(password)) {
-                Log.d(TAG, "prima del salvataggio");
-                saveLoginData(email, password);
-                Log.d(TAG, "dopo il salvataggio");
+                saveLoginData(email, password); //Salvataggio dei dati di login nel file crittato
                 Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                startActivity(intent); //Cambio di activity a MainActivity
                 //finish();
             }
 
-            //TODO Salvare e-mail e password
         });
 
+        //Cambio di activity a SignUpActivity
         binding.buttonSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUp.class);
             startActivity(intent);
@@ -82,6 +95,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    //Controllo sulla correttezza della e-mail
     private boolean isEmailValid(String email){
         boolean result = EmailValidator.getInstance().isValid(email);
 
@@ -92,6 +106,7 @@ public class Login extends AppCompatActivity {
         return result;
     }
 
+    //Controllo sulla correttezza della password
     private boolean isPasswordValid(String password){
         boolean result = password != null && password.length() >= 8;
         //TODO Migliorare le condizioni della password
@@ -103,6 +118,7 @@ public class Login extends AppCompatActivity {
         return result;
     }
 
+    //Salvataggio dei dati di login nel file crittato
     private void saveLoginData(String email, String password) {
         try {
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(

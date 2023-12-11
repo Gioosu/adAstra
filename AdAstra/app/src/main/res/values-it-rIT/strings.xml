@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ad Astra</string>
     <string name="signIn">Accedi</string>
     <string name="txt_or">oppure</string>
     <string name="google_icon">Icona di Google</string>

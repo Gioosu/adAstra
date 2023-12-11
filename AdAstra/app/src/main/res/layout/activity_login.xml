@@ -60,6 +60,7 @@
             android:padding="24dp"
             android:textColorHint="#546E7A"
             tools:ignore="TextContrastCheck" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
