@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="login">Accedi</string>
     <string name="signIn">Accedi</string>
     <string name="txt_or">oppure</string>
     <string name="google_icon">Icona di Google</string>
@@ -7,18 +8,24 @@
     <string name="create">Crealo</string>
     <string name="forgot_password">Password dimenticata?</string>
     <string name="signUp">Registrati</string>
+
     <string name="username">Nome</string>
     <string name="password_repeat">Ripeti la password</string>
 
-    <string name="invalid_email_error_message">L\'e-mail non è corretta</string>
-    <string name="password_error_message">La password non è corretta</string>
-    <string name="password_repeat_error_message">Le password non corrispondo. Per favore re-inserisci.</string>
     <string name="encyclopedia">Enciclopedia</string>
     <string name="events">Eventi</string>
     <string name="profile">Profilo</string>
     <string name="settings">Impostazioni</string>
     <string name="user_preferences">Preferenze</string>
-    <string name="dark_theme">Tema Scuro</string>
-    <string name="time_format">Formato 12 Ore</string>
-    <string name="imperial_system">Sistema Imperiale</string>
+    <string name="dark_theme">Tema scuro</string>
+    <string name="time_format">Formato 12 ore</string>
+    <string name="imperial_system">Sistema imperiale</string>
+    <string name="notification_settings">Notification settings</string>
+    <string name="log_out">Disconnettiti</string>
+
+    <string name="invalid_login_data_error">Accesso non riuscito. Verifica le tue credenziali e riprova.</string>
+    <string name="invalid_email_error_message">Indirizzo e-mail non valido</string>
+    <string name="invalid_password_error_message">La password deve essere lunga almeno 8 caratteri</string>
+    <string name="invalid_password_repeat_error_message">Le password devono corrispondere</string>
+
 </resources>

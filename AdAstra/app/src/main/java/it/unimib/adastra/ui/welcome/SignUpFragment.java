@@ -124,10 +124,9 @@ public class SignUpFragment extends Fragment {
     //Controllo sulla correttezza della password
     private boolean isPasswordValid(String password) {
         boolean result = password != null && password.length() >= 8;
-        //TODO Migliorare le condizioni della password
 
         if (!result) {
-            binding.textPassword.setError(getString(R.string.password_error_message));
+            binding.textPassword.setError(getString(R.string.invalid_password_error_message));
         }
 
         return result;
@@ -138,7 +137,7 @@ public class SignUpFragment extends Fragment {
         boolean result = password.equals(passwordRepeat);
 
         if (!result) {
-            binding.textPasswordRepeat.setError(getString(R.string.password_repeat_error_message));
+            binding.textPasswordRepeat.setError(getString(R.string.invalid_password_repeat_error_message));
         }
 
         return result;

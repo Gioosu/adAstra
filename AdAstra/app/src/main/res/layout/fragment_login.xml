@@ -74,7 +74,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordInputLayout"
+            android:id="@+id/passwordInputLayout_sign_up"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -92,6 +92,7 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="24dp"
+                android:paddingEnd="44dp"
                 tools:ignore="TextContrastCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -105,7 +106,7 @@
             android:text="@string/forgot_password"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
-            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout_sign_up" />
 
         <Button
             android:id="@+id/button_login"
