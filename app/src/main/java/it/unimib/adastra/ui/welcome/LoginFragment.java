@@ -114,18 +114,18 @@ public class LoginFragment extends Fragment {
                     Log.d(TAG, "Password: " + dataEncryptionUtil.
                             readSecretDataWithEncryptedSharedPreferences(
                                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
-                } catch (GeneralSecurityException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
+                } catch (GeneralSecurityException | IOException e) {
                     throw new RuntimeException(e);
                 }
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                //TODO finish();
             }
         });
 
         //Cambio di activity a SignUpActivity
         binding.buttonSignupLogin.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signUpFragment);
+            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment);
+            //TODO finish();
             //TODO Trovare un modo per cancellare l'activity Login DOPO che si ha raggiunto la main page attraverso questo pulsante
         });
     }

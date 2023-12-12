@@ -44,8 +44,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/violet">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/profile_picture"

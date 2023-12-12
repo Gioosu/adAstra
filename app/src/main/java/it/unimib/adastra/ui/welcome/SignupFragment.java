@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -104,8 +105,17 @@ public class SignupFragment extends Fragment {
                 } catch (GeneralSecurityException | IOException e) {
                     e.printStackTrace();
                 }
-
-                //TODO Cambio di fragment
+                try {
+                    Log.d(TAG, "E-mail: " + dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
+                    Log.d(TAG, "Password: " + dataEncryptionUtil.
+                            readSecretDataWithEncryptedSharedPreferences(
+                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
+                } catch (GeneralSecurityException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
+                //TODO finish();
             }
         });
     }
