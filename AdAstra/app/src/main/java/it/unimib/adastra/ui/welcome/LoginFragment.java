@@ -103,8 +103,8 @@ public class LoginFragment extends Fragment {
 
         //Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
-            email = binding.textEmail.getText().toString();
-            password = binding.textPassword.getText().toString();
+            email = binding.textEmailLogin.getText().toString();
+            password = binding.textPasswordLogin.getText().toString();
 
             if(isEmailValid(email) && isPasswordValid(password)) {
                 saveLoginData(email, password); //Salvataggio dei dati di login nel file crittato
@@ -124,7 +124,7 @@ public class LoginFragment extends Fragment {
         });
 
         //Cambio di activity a SignUpActivity
-        binding.buttonSignUp.setOnClickListener(v -> {
+        binding.buttonSignupLogin.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signUpFragment);
             //TODO Trovare un modo per cancellare l'activity Login DOPO che si ha raggiunto la main page attraverso questo pulsante
         });
@@ -139,7 +139,7 @@ public class LoginFragment extends Fragment {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            showSnackbar(binding.textEmail, getString(R.string.invalid_login_error_message));
+            showSnackbar(binding.textEmailLogin, getString(R.string.invalid_login_error_message));
         }
 
         return result;
@@ -150,7 +150,7 @@ public class LoginFragment extends Fragment {
         boolean result = password != null && password.trim().length() >= 8;
 
         if (!result) {
-            showSnackbar(binding.textPassword, getString(R.string.invalid_login_error_message));
+            showSnackbar(binding.textPasswordLogin, getString(R.string.invalid_login_error_message));
         }
 
         return result;

@@ -72,19 +72,19 @@ public class SignupFragment extends Fragment {
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
         //Registrazione manuale
-        binding.buttonSignUp.setOnClickListener(v -> {
-            username = binding.textUsername.getText().toString();
+        binding.buttonSignUpSignup.setOnClickListener(v -> {
+            username = binding.textUsernameSignup.getText().toString();
             Log.d(TAG, "E-mail: " + username);
 
-            email = binding.textEmail.getText().toString();
+            email = binding.textEmailSignup.getText().toString();
             Log.d(TAG, "E-mail: " + email);
             Log.d(TAG, "E-mail: " + isEmailValid(email));
 
-            password = binding.textPassword.getText().toString();
+            password = binding.textPasswordSignup.getText().toString();
             Log.d(TAG, "Password: " + password);
             Log.d(TAG, "Password: " + isPasswordValid(password));
 
-            passwordRepeat = binding.textPasswordRepeat.getText().toString();
+            passwordRepeat = binding.textPasswordRepeatSignup.getText().toString();
             Log.d(TAG, "E-mail: " + passwordRepeat);
             Log.d(TAG, "E-mail: " + isPasswordRepeatValid(password, passwordRepeat));
 
@@ -115,7 +115,7 @@ public class SignupFragment extends Fragment {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            binding.textEmail.setError(getString(R.string.invalid_email_error_message));
+            binding.textEmailSignup.setError(getString(R.string.invalid_email_error_message));
         }
 
         return result;
@@ -126,7 +126,7 @@ public class SignupFragment extends Fragment {
         boolean result = password != null && password.length() >= 8;
 
         if (!result) {
-            binding.textPassword.setError(getString(R.string.invalid_password_error_message));
+            binding.textPasswordSignup.setError(getString(R.string.invalid_password_error_message));
         }
 
         return result;
@@ -137,7 +137,7 @@ public class SignupFragment extends Fragment {
         boolean result = password.equals(passwordRepeat);
 
         if (!result) {
-            binding.textPasswordRepeat.setError(getString(R.string.invalid_password_repeat_error_message));
+            binding.textPasswordRepeatSignup.setError(getString(R.string.invalid_password_repeat_error_message));
         }
 
         return result;

@@ -33,7 +33,7 @@
             app:layout_constraintGuide_begin="16dp" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card"
+            android:id="@+id/card_settings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardElevation="16dp"
@@ -71,7 +71,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/profile_picture" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatingActionButton"
+                    android:id="@+id/floatingActionButton_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -86,7 +86,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/divider_settings"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
@@ -95,7 +95,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/card" />
+            app:layout_constraintTop_toBottomOf="@+id/card_settings" />
 
         <TextView
             android:id="@+id/user_preferences"
@@ -105,7 +105,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/user_preferences"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
+            app:layout_constraintTop_toBottomOf="@+id/divider_settings" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switch_theme"

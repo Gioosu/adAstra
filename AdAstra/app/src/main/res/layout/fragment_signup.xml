@@ -12,57 +12,57 @@
         tools:context=".ui.welcome.SignUp">
 
         <ImageView
-            android:id="@+id/imageView_signup_icon"
+            android:id="@+id/imageView_icon_signup"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_sign_up"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_sing_up"
-            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_sign_up"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_signup"
             app:srcCompat="@drawable/vkgqcc01" />
 
         <TextView
-            android:id="@+id/signUp"
+            android:id="@+id/signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/signup"
             android:textSize="34sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_sing_up"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_signup_icon" />
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_icon_signup" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_sx_sing_up"
+            android:id="@+id/guideline_sx_singup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_begin="16dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2_dx_sign_up"
+            android:id="@+id/guideline2_dx_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_end="16dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_horizontal_sign_up"
+            android:id="@+id/guideline_horizontal_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="16dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/usernameTextLayout"
+            android:id="@+id/usernameTextLayout_signup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_sign_up"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_sing_up"
-            app:layout_constraintTop_toBottomOf="@+id/signUp">
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
+            app:layout_constraintTop_toBottomOf="@+id/signup">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textUsername"
+                android:id="@+id/textUsername_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/astronaut_svgrepo_com"
@@ -74,17 +74,17 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/emailInputLayout"
+            android:id="@+id/emailInputLayout_signup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_sign_up"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_sing_up"
-            app:layout_constraintTop_toBottomOf="@+id/usernameTextLayout"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
+            app:layout_constraintTop_toBottomOf="@+id/usernameTextLayout_signup"
             >
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textEmail"
+                android:id="@+id/textEmail_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/baseline_alternate_email_24"
@@ -98,17 +98,17 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordInputLayout_sign_up"
+            android:id="@+id/passwordInputLayout_signup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_sign_up"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_sing_up"
-            app:layout_constraintTop_toBottomOf="@+id/emailInputLayout"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
+            app:layout_constraintTop_toBottomOf="@+id/emailInputLayout_signup"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textPassword"
+                android:id="@+id/textPassword_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/baseline_key_24"
@@ -122,17 +122,17 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordRepeatInputLayout"
+            android:id="@+id/passwordRepeatInputLayout_signup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_sign_up"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_sing_up"
-            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout_sign_up"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
+            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout_signup"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textPasswordRepeat"
+                android:id="@+id/textPasswordRepeat_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/baseline_key_24"
@@ -146,7 +146,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/button_sign_up"
+            android:id="@+id/button_sign_up_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -156,9 +156,9 @@
             android:paddingBottom="12dp"
             android:text="@string/sign_up"
             android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_sign_up"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_sing_up"
-            app:layout_constraintTop_toBottomOf="@+id/passwordRepeatInputLayout" />
+            app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
+            app:layout_constraintTop_toBottomOf="@+id/passwordRepeatInputLayout_signup" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

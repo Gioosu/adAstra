@@ -32,7 +32,7 @@
             app:layout_constraintGuide_begin="16dp" />
 
         <ImageView
-            android:id="@+id/imageView_signup_icon"
+            android:id="@+id/imageView_login_icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
@@ -48,10 +48,10 @@
             android:text="@string/login"
             android:textSize="34sp"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_signup_icon" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView_login_icon" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/emailInputLayout"
+            android:id="@+id/emailInputLayout_login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -60,7 +60,7 @@
             app:layout_constraintTop_toBottomOf="@+id/login">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textEmail"
+                android:id="@+id/textEmail_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/baseline_alternate_email_24"
@@ -74,17 +74,17 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordInputLayout_sign_up"
+            android:id="@+id/passwordInputLayout_login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
-            app:layout_constraintTop_toBottomOf="@+id/emailInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/emailInputLayout_login"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textPassword"
+                android:id="@+id/textPassword_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/baseline_key_24"
@@ -106,7 +106,7 @@
             android:text="@string/forgot_password"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
-            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout_sign_up" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout_login" />
 
         <Button
             android:id="@+id/button_login"
@@ -167,13 +167,13 @@
             android:layout_height="wrap_content"
             android:text="@string/missing_account"
             android:textSize="16sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button_sign_up"
-            app:layout_constraintEnd_toStartOf="@+id/button_sign_up"
+            app:layout_constraintBaseline_toBaselineOf="@+id/button_signup_login"
+            app:layout_constraintEnd_toStartOf="@+id/button_signup_login"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login" />
 
         <Button
-            android:id="@+id/button_sign_up"
+            android:id="@+id/button_signup_login"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
