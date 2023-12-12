@@ -85,6 +85,28 @@ public class DataEncryptionUtil {
         return sharedPreferences.getString(key, null);
     }
 
+    public void clearSecretDataWithEncryptedSharedPreferences(String sharedPreferencesFileName)
+            throws GeneralSecurityException, IOException {
+
+        MasterKey mainKey = new MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build();
+
+        SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                context,
+                sharedPreferencesFileName,
+                mainKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+
+        // Rimuove tutti i valori dalle SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+
     /**
      * Writes sensitive data in an encrypted file using EncryptedFile class.
      * @param fileName the name of the encrypted file file where to write the data
@@ -150,4 +172,16 @@ public class DataEncryptionUtil {
         byte[] plaintext = byteArrayOutputStream.toByteArray();
         return new String(plaintext, StandardCharsets.UTF_8);
     }
+
+    public void clearSecretDataOnFile(String fileName)
+            throws GeneralSecurityException, IOException {
+
+        File fileToDelete = new File(context.getFilesDir(), fileName);
+        if (fileToDelete.exists()) {
+            if (!fileToDelete.delete()) {
+                throw new IOException("Failed to delete file: " + fileName);
+            }
+        }
+    }
+
 }

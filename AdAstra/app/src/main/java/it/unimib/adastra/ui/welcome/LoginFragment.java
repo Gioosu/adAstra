@@ -33,9 +33,9 @@ import it.unimib.adastra.util.DataEncryptionUtil;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
-    private FragmentLoginBinding binding;
     String TAG = LoginFragment.class.getSimpleName();
     private DataEncryptionUtil dataEncryptionUtil;
+    private FragmentLoginBinding binding;
     private String email;
     private String password;
     public LoginFragment() {
@@ -108,6 +108,17 @@ public class LoginFragment extends Fragment {
 
             if(isEmailValid(email) && isPasswordValid(password)) {
                 saveLoginData(email, password); //Salvataggio dei dati di login nel file crittato
+                try {
+                    Log.d(TAG, "E-mail: " + dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
+                    Log.d(TAG, "Password: " + dataEncryptionUtil.
+                            readSecretDataWithEncryptedSharedPreferences(
+                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
+                } catch (GeneralSecurityException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
             }
         });

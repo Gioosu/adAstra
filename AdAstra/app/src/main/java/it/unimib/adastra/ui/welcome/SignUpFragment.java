@@ -30,8 +30,8 @@ import it.unimib.adastra.util.DataEncryptionUtil;
  * create an instance of this fragment.
  */
 public class SignUpFragment extends Fragment {
-    private FragmentSignUpBinding binding;
     String TAG = SignUpFragment.class.getSimpleName();
+    private FragmentSignUpBinding binding;
     private DataEncryptionUtil dataEncryptionUtil;
     private String username;
     private String email;

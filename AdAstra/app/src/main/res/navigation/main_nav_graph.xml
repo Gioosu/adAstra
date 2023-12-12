@@ -37,11 +37,19 @@
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment2"
             app:destination="@id/profileFragment2" />
+        <action
+            android:id="@+id/action_settingsFragment_to_welcomeActivity"
+            app:destination="@id/welcomeActivity" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment2"
         android:name="it.unimib.adastra.ui.main.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <activity
+        android:id="@+id/welcomeActivity"
+        android:name="it.unimib.adastra.ui.welcome.WelcomeActivity"
+        android:label="activity_welcome"
+        tools:layout="@layout/activity_welcome" />
 
 </navigation>

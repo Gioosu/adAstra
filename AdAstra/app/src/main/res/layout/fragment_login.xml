@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/login"
-            android:textSize="30sp"
+            android:textSize="34sp"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
@@ -101,9 +101,9 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:text="@string/forgot_password"
-            android:textColor="@color/midnight"
+            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout" />
 
@@ -166,8 +166,9 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginTop="16dp"
-            android:background="@null"
+            android:backgroundTint="@color/white"
             android:contentDescription="@string/google_icon"
+            android:elevation="4dp"
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
@@ -179,6 +180,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/missing_account"
+            android:textSize="16sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/button_sign_up"
             app:layout_constraintEnd_toStartOf="@+id/button_sign_up"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -192,6 +194,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/create"
             android:textColor="@color/midnight"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toEndOf="@+id/missing_account"
