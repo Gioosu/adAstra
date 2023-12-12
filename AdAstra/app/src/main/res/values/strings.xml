@@ -3,15 +3,15 @@
     <string name="login">Login</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="password" translatable="false">Password</string>
-    <string name="signIn">Sign In</string>
-    <string name="txt_or">or</string>
-    <string name="google_icon">Google icon</string>
-    <string name="missing_account">Don\'t have an account?</string>
-    <string name="create">Create</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="signUp">Sign Up</string>
+    <string name="Log_in">Log in</string>
+    <string name="txt_or">or</string>
+    <string name="google_login">Log in with Google</string>
+    <string name="missing_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
 
-    <string name="username">Name</string>
+    <string name="signup">Signup</string>
+    <string name="username">Username</string>
     <string name="password_repeat">Repeat password</string>
 
     <string name="encyclopedia">Encyclopedia</string>
@@ -25,10 +25,10 @@
     <string name="time_format">12-hour format</string>
     <string name="imperial_system" >Imperial system</string>
     <string name="notification_settings">Notification settings</string>
-    <string name="log_out">Log Out</string>
+    <string name="log_out">Log out</string>
 
-    <string name="invalid_login_data_error">Login failed. Please check your credentials and try again.</string>
+    <string name="invalid_login_error_message">Invalid e-mail or password</string>
     <string name="invalid_email_error_message">Invalid e-mail address</string>
-    <string name="invalid_password_error_message">Password must be at least 8 characters long</string>
+    <string name="invalid_password_error_message">Password must be at least 8 characters</string>
     <string name="invalid_password_repeat_error_message">Passwords must match</string>
 </resources>

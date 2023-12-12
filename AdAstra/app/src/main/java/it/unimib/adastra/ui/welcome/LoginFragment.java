@@ -139,7 +139,7 @@ public class LoginFragment extends Fragment {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            showSnackbar(binding.textEmail, getString(R.string.invalid_login_data_error));
+            showSnackbar(binding.textEmail, getString(R.string.invalid_login_error_message));
         }
 
         return result;
@@ -150,7 +150,7 @@ public class LoginFragment extends Fragment {
         boolean result = password != null && password.trim().length() >= 8;
 
         if (!result) {
-            showSnackbar(binding.textPassword, getString(R.string.invalid_login_data_error));
+            showSnackbar(binding.textPassword, getString(R.string.invalid_login_error_message));
         }
 
         return result;

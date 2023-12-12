@@ -21,24 +21,24 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentSignUpBinding;
+import it.unimib.adastra.databinding.FragmentSignupBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SignUpFragment#newInstance} factory method to
+ * Use the {@link SignupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SignUpFragment extends Fragment {
-    String TAG = SignUpFragment.class.getSimpleName();
-    private FragmentSignUpBinding binding;
+public class SignupFragment extends Fragment {
+    String TAG = SignupFragment.class.getSimpleName();
+    private FragmentSignupBinding binding;
     private DataEncryptionUtil dataEncryptionUtil;
     private String username;
     private String email;
     private String password;
     private String passwordRepeat;
 
-    public SignUpFragment() {
+    public SignupFragment() {
         // Required empty public constructor
     }
 
@@ -48,8 +48,8 @@ public class SignUpFragment extends Fragment {
      *
      * @return A new instance of fragment SignUpFragment.
      */
-    public static SignUpFragment newInstance() {
-        return new SignUpFragment();
+    public static SignupFragment newInstance() {
+        return new SignupFragment();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class SignUpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentSignUpBinding.inflate(inflater, container, false);
+        binding = FragmentSignupBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

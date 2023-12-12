@@ -32,9 +32,9 @@
             app:layout_constraintGuide_begin="16dp" />
 
         <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="124dp"
-            android:layout_height="124dp"
+            android:id="@+id/imageView_signup_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_login"
@@ -48,7 +48,7 @@
             android:text="@string/login"
             android:textSize="34sp"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView_signup_icon" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailInputLayout"
@@ -117,7 +117,7 @@
             android:paddingTop="12dp"
             android:paddingRight="32dp"
             android:paddingBottom="12dp"
-            android:text="@string/signIn"
+            android:text="@string/Log_in"
             android:textSize="24sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
@@ -161,21 +161,6 @@
 
         </RelativeLayout>
 
-        <ImageButton
-            android:id="@+id/button_google"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/google_icon"
-            android:elevation="4dp"
-            android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
-            app:layout_constraintTop_toBottomOf="@+id/relative_layout"
-            app:srcCompat="@drawable/google_logo_search_new_svgrepo_com" />
-
         <TextView
             android:id="@+id/missing_account"
             android:layout_width="wrap_content"
@@ -193,13 +178,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/create"
-            android:textColor="@color/midnight"
+            android:text="@string/sign_up"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toEndOf="@+id/missing_account"
             app:layout_constraintTop_toBottomOf="@+id/button_google" />
+
+        <Button
+            android:id="@+id/button_google"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:drawableStart="@drawable/google_logo_search_new_svgrepo_com"
+            android:text="@string/google_login"
+            android:textSize="16sp"
+            app:icon="@drawable/google_logo_search_new_svgrepo_com"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
+            app:layout_constraintTop_toBottomOf="@+id/relative_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
