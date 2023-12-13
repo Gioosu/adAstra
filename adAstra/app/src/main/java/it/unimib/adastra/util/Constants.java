@@ -4,6 +4,8 @@ package it.unimib.adastra.util;
  * Utility class to save constants used by the app.
  */
 public class Constants {
+    public static final String CURRENT_NAV_FRAGMENT = "current_nav_fragment";
+
     //Constants for Settings
     public static final String SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.preferences";
     public static final String USERNAME = "username";

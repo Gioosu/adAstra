@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
 
         preferences = new SharedPreferencesUtil(requireContext());
 
-        boolean isDarkTheme = preferences.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE);
-        AppCompatDelegate.setDefaultNightMode(isDarkTheme ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        boolean isDarkMode = preferences.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE);
+        AppCompatDelegate.setDefaultNightMode(isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
     }
 }

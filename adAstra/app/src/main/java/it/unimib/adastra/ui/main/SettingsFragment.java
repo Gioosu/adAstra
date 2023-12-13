@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.main;
+ package it.unimib.adastra.ui.main;
 
 import static it.unimib.adastra.util.Constants.DARK_MODE;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
@@ -78,29 +78,25 @@ public class SettingsFragment extends Fragment {
         preferences = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
-        Log.d(TAG, "Punto 1: " + binding.switchTheme.isChecked());
-
         //Settaggio del tema in base alle preferenze salvate
-        boolean isDarkTheme = preferences.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE);
-        binding.switchTheme.setChecked(isDarkTheme);
+        boolean isDarkMode = preferences.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE);
+        binding.switchTheme.setChecked(isDarkMode);
 
-        Log.d(TAG, "Punto 2: " + isDarkTheme);
+            binding.switchTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(binding.switchTheme.isPressed()) {
+                        preferences.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE, isChecked);
 
-        binding.switchTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                preferences.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE, isChecked);
-                Log.d(TAG, "Punto 3: " + isChecked);
-
-                // Applica il tema
-                if (isChecked) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    Log.d(TAG, "Punto 4: ");
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    Log.d(TAG, "Punto 5: ");
+                        // Applica il tema
+                        if (isChecked) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        }
+                    }
                 }
-            }
-        });
+            });
+
 
         binding.buttonLogOut.setOnClickListener(v -> {
             clearLoginData();
