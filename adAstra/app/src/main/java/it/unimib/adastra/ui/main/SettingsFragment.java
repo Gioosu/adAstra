@@ -1,37 +1,31 @@
- package it.unimib.adastra.ui.main;
+package it.unimib.adastra.ui.main;
 
-import static it.unimib.adastra.util.Constants.DARK_MODE;
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.adastra.util.Constants.LANGUAGE;
-import static it.unimib.adastra.util.Constants.PASSWORD;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+ import static it.unimib.adastra.util.Constants.DARK_MODE;
+ import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+ import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
+ import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+ import static it.unimib.adastra.util.Constants.PASSWORD;
+ import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
-import android.os.Bundle;
+ import android.os.Bundle;
+ import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+ import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+ import androidx.appcompat.app.AppCompatDelegate;
+ import androidx.fragment.app.Fragment;
+ import androidx.navigation.Navigation;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Spinner;
+ import java.io.IOException;
+ import java.security.GeneralSecurityException;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
-import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentLoginBinding;
-import it.unimib.adastra.databinding.FragmentSettingsBinding;
-import it.unimib.adastra.ui.welcome.LoginFragment;
-import it.unimib.adastra.util.DataEncryptionUtil;
-import it.unimib.adastra.util.SharedPreferencesUtil;
+ import it.unimib.adastra.R;
+ import it.unimib.adastra.databinding.FragmentSettingsBinding;
+ import it.unimib.adastra.util.DataEncryptionUtil;
+ import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,21 +76,17 @@ public class SettingsFragment extends Fragment {
         boolean isDarkMode = preferences.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE);
         binding.switchTheme.setChecked(isDarkMode);
 
-            binding.switchTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(binding.switchTheme.isPressed()) {
-                        preferences.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE, isChecked);
-
-                        // Applica il tema
-                        if (isChecked) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        } else {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        }
-                    }
+        binding.switchTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(binding.switchTheme.isPressed()) {
+                preferences.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE, isChecked);
+                // Applica il tema
+                if (isChecked) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-            });
-
+            }
+        });
 
         binding.buttonLogOut.setOnClickListener(v -> {
             clearLoginData();
