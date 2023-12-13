@@ -26,7 +26,7 @@
             app:layout_constraintGuide_end="16dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_hotizontal_settings"
+            android:id="@+id/guideline_horizontal_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -39,7 +39,7 @@
             app:cardElevation="16dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toTopOf="@+id/guideline_hotizontal_settings">
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_settings">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 style="?attr/materialCardViewElevatedStyle"
@@ -70,12 +70,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/profile_picture" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatingActionButton_settings"
+                    android:id="@+id/accountSettingsButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:clickable="true"
+                    android:contentDescription="@string/account_settings"
                     android:src="@drawable/baseline_create_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -106,66 +107,93 @@
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
             app:layout_constraintTop_toBottomOf="@+id/divider_settings" />
 
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/switch_theme"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/mode_dark_svgrepo_com"
-            android:drawablePadding="24dp"
-            android:text="@string/dark_theme"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/user_preferences" />
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/switch_time_format"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/baseline_access_time_24"
-            android:drawablePadding="24dp"
-            android:text="@string/time_format"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/switch_theme"
-            app:layout_constraintTop_toBottomOf="@+id/switch_theme" />
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/switch_imperial_system"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ruler_alt_2_svgrepo_com"
-            android:drawablePadding="21dp"
-            android:paddingStart="3dp"
-            android:text="@string/imperial_system"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/switch_time_format" />
-
-        <Button
-            android:id="@+id/button_notification_settings"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/notification_settings"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/switch_imperial_system" />
-
-        <Button
-            android:id="@+id/button_log_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="@string/log_out"
-            android:textSize="16sp"
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings" />
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
+            app:layout_constraintTop_toBottomOf="@+id/user_preferences">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_theme"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableStart="@drawable/mode_dark_svgrepo_com"
+                    android:drawablePadding="24dp"
+                    android:text="@string/dark_theme"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_time_format"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:drawableStart="@drawable/baseline_access_time_24"
+                    android:drawablePadding="24dp"
+                    android:text="@string/time_format"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_imperial_system"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:drawableStart="@drawable/ruler_alt_2_svgrepo_com"
+                    android:drawablePadding="21dp"
+                    android:paddingStart="3dp"
+                    android:text="@string/imperial_system"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/language"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_language"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:entries="@array/languages_string_array"
+                    android:minHeight="48dp"
+                    android:spinnerMode="dialog" />
+
+                <Button
+                    android:id="@+id/button_notification_settings"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/notification_settings"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/button_log_out"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/log_out"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
