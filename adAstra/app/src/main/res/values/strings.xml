@@ -35,6 +35,7 @@
     <string name="log_out">Log out</string>
 
     <string name="invalid_login_error_message">Invalid e-mail or password</string>
+    <string name="invalid_username_error_messagge">"The username must be between 3 and 10 characters</string>
     <string name="invalid_email_error_message">Invalid e-mail address</string>
     <string name="invalid_password_error_message">Password must be at least 8 characters</string>
     <string name="invalid_password_repeat_error_message">Passwords must match</string>

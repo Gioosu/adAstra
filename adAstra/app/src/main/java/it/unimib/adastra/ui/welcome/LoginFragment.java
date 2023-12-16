@@ -72,21 +72,7 @@ public class LoginFragment extends Fragment {
 
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
-        // Stampa dei dati login presenti nel file crittato
-        try {
-            Log.d(TAG, "Email address from encrypted SharedPref: " + dataEncryptionUtil.
-                    readSecretDataWithEncryptedSharedPreferences(
-                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
-            Log.d(TAG, "Password from encrypted SharedPref: " + dataEncryptionUtil.
-                    readSecretDataWithEncryptedSharedPreferences(
-                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
-            Log.d(TAG, "Login data from encrypted file: " + dataEncryptionUtil.
-                    readSecretDataOnFile(ENCRYPTED_DATA_FILE_NAME));
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
-
-        //Login diretto, se dati login presenti nel file crittato
+        // Login diretto, se dati login presenti nel file crittato
         try {
             if(dataEncryptionUtil.
                     readSecretDataWithEncryptedSharedPreferences(
@@ -101,7 +87,7 @@ public class LoginFragment extends Fragment {
             e.printStackTrace();
         }
 
-        //Login manuale
+        // Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
             email = binding.textEmailLogin.getText().toString();
             password = binding.textPasswordLogin.getText().toString();
@@ -122,7 +108,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        //Cambio di activity a SignUpActivity
+        // Cambio di activity a SignUpActivity
         binding.buttonSignupLogin.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment);
             //TODO finish();
@@ -130,11 +116,12 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    // Visualizzazione di una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
-    //Controllo sulla correttezza della e-mail
+    // Controllo sulla correttezza della e-mail
     private boolean isEmailValid(String email) {
         boolean result = EmailValidator.getInstance().isValid(email);
 
@@ -145,7 +132,7 @@ public class LoginFragment extends Fragment {
         return result;
     }
 
-    //Controllo sulla correttezza della password
+    // Controllo sulla correttezza della password
     private boolean isPasswordValid(String password) {
         boolean result = password != null && password.trim().length() >= 8;
 
@@ -156,7 +143,7 @@ public class LoginFragment extends Fragment {
         return result;
     }
 
-    //Salvataggio dei dati di login nel file crittato
+    // Salvataggio dei dati di login nel file crittato
     private void saveLoginData(String email, String password) {
         try {
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(

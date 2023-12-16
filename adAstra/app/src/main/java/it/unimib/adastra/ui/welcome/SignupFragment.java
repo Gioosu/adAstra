@@ -4,9 +4,10 @@ import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
+import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.security.GeneralSecurityException;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +35,7 @@ import it.unimib.adastra.util.DataEncryptionUtil;
 public class SignupFragment extends Fragment {
     String TAG = SignupFragment.class.getSimpleName();
     private FragmentSignupBinding binding;
+    private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
     private String username;
     private String email;
@@ -70,54 +73,37 @@ public class SignupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
         //Registrazione manuale
         binding.buttonSignUpSignup.setOnClickListener(v -> {
             username = binding.textUsernameSignup.getText().toString();
-            Log.d(TAG, "E-mail: " + username);
-
             email = binding.textEmailSignup.getText().toString();
-            Log.d(TAG, "E-mail: " + email);
-            Log.d(TAG, "E-mail: " + isEmailValid(email));
-
             password = binding.textPasswordSignup.getText().toString();
-            Log.d(TAG, "Password: " + password);
-            Log.d(TAG, "Password: " + isPasswordValid(password));
-
             passwordRepeat = binding.textPasswordRepeatSignup.getText().toString();
-            Log.d(TAG, "E-mail: " + passwordRepeat);
-            Log.d(TAG, "E-mail: " + isPasswordRepeatValid(password, passwordRepeat));
 
-            if(isEmailValid(email) && (isPasswordValid(password) && isPasswordRepeatValid(password, passwordRepeat))){
-                saveLoginData(email, password); //Salvataggio dei dati di login nel file crittato
+            if(isUsernameValid(username)
+                    && isEmailValid(email)
+                    && (isPasswordValid(password)
+                    && isPasswordRepeatValid(password, passwordRepeat))){
 
-                // Stampa dei dati login presenti nel file crittato
-                try {
-                    Log.d(TAG, "Email address from encrypted SharedPref: " + dataEncryptionUtil.
-                            readSecretDataWithEncryptedSharedPreferences(
-                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
-                    Log.d(TAG, "Password from encrypted SharedPref: " + dataEncryptionUtil.
-                            readSecretDataWithEncryptedSharedPreferences(
-                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
-                    Log.d(TAG, "Login data from encrypted file: " + dataEncryptionUtil.
-                            readSecretDataOnFile(ENCRYPTED_DATA_FILE_NAME));
-                } catch (GeneralSecurityException | IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Log.d(TAG, "E-mail: " + dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
-                    Log.d(TAG, "Password: " + dataEncryptionUtil.
-                            readSecretDataWithEncryptedSharedPreferences(
-                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
-                } catch (GeneralSecurityException | IOException e) {
-                    throw new RuntimeException(e);
-                }
+                //Salvataggio dei dati di login nel file crittato
+                saveSignupData(username, email, password);
+
                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
                 //TODO finish();
             }
         });
+    }
+    private boolean isUsernameValid(String username){
+        boolean result = username != null && username.length() >= 3 && username.length() <= 10;
+
+        if (!result){
+            binding.textUsernameSignup.setError(getString(R.string.invalid_username_error_messagge));
+        }
+
+        return result;
     }
 
     //Controllo sulla correttezza della e-mail
@@ -154,8 +140,9 @@ public class SignupFragment extends Fragment {
     }
 
     //Salvataggio dei dati di login nel file crittato
-    private void saveLoginData(String email, String password) {
+    private void saveSignupData(String username, String email, String password) {
         try {
+            sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, username);
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(

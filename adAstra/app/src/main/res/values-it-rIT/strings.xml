@@ -27,6 +27,7 @@
     <string name="log_out">Disconnettiti</string>
 
     <string name="invalid_login_error_message">E-mail o password non validi</string>
+    <string name="invalid_username_error_messagge">"Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
     <string name="invalid_email_error_message">Indirizzo e-mail non valido</string>
     <string name="invalid_password_error_message">La password deve essere lunga almeno 8 caratteri</string>
     <string name="invalid_password_repeat_error_message">Le password devono corrispondere</string>
