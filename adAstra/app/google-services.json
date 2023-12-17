@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "687022704520",
+    "project_id": "adastra-19b57",
+    "storage_bucket": "adastra-19b57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687022704520:android:f0f3315492e85747855c3d",
+        "android_client_info": {
+          "package_name": "it.unimib.adastra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0mob-PFtcy9gv-I1x1fNjZNqBFgk-uac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

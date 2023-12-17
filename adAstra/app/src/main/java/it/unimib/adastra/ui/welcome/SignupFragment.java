@@ -76,7 +76,7 @@ public class SignupFragment extends Fragment {
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
-        //Registrazione manuale
+        // Registrazione manuale
         binding.buttonSignUpSignup.setOnClickListener(v -> {
             username = binding.textUsernameSignup.getText().toString();
             email = binding.textEmailSignup.getText().toString();
@@ -88,7 +88,7 @@ public class SignupFragment extends Fragment {
                     && (isPasswordValid(password)
                     && isPasswordRepeatValid(password, passwordRepeat))){
 
-                //Salvataggio dei dati di login nel file crittato
+                // Salvataggio dei dati di login nel file crittato
                 saveSignupData(username, email, password);
 
                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
@@ -96,6 +96,8 @@ public class SignupFragment extends Fragment {
             }
         });
     }
+
+    // Controllo sulla correttezza del nome utente
     private boolean isUsernameValid(String username){
         boolean result = username != null && username.length() >= 3 && username.length() <= 10;
 
@@ -106,7 +108,7 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    //Controllo sulla correttezza della e-mail
+    // Controllo sulla correttezza della e-mail
     private boolean isEmailValid(String email) {
         boolean result = EmailValidator.getInstance().isValid(email);
 
@@ -117,7 +119,7 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    //Controllo sulla correttezza della password
+    // Controllo sulla correttezza della password
     private boolean isPasswordValid(String password) {
         boolean result = password != null && password.length() >= 8;
 
@@ -128,7 +130,7 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    //Controllo sull'uguaglianza delle due password
+    // Controllo sull'uguaglianza delle due password
     private boolean isPasswordRepeatValid(String password, String passwordRepeat){
         boolean result = password.equals(passwordRepeat);
 
@@ -139,7 +141,7 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    //Salvataggio dei dati di login nel file crittato
+    // Salvataggio dei dati di login nel file crittato
     private void saveSignupData(String username, String email, String password) {
         try {
             sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, username);
