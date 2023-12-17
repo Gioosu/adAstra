@@ -2,17 +2,22 @@
 
 ### Todo
 
-- [ ] Signin
-- [ ] Signup
+- [x] Signin
+- [x] Signup
 - [ ] Homepage
   - [ ] Home Layout
   - [ ] Home Code
-- [ ] svg Icon
+- [x] svg Icon
 - [ ] Themes
 - [ ] Comments
 - [ ] API
 - [ ] Database
-  - [ ] Firebase
+  - [x] Firebase
+  - [ ] Email verification
+  - [ ] Login into verified account
+  - [ ] User must login after signup (consider he missed his own email during signup)
+  - [ ] Check if email already exists during signup
+  - [ ] Password recovery
   - [ ] Analysis and Structure
 - [ ] Features extra
   - [ ] Connections
