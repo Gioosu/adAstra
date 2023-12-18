@@ -77,8 +77,6 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d(TAG, "Sono in settings");
-
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
@@ -87,18 +85,7 @@ public class SettingsFragment extends Fragment {
         initializeSettings();
 
         // Settaggio del tema chiaro/scuro attraverso lo switch
-        binding.switchTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(binding.switchTheme.isPressed()) {
-                sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED, true);
-                sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE, isChecked);
 
-                if (isChecked) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
-            }
-        });
 
         // Controllo se l'utente interagisce con lo spinner
         binding.spinnerLanguage.setOnTouchListener(new View.OnTouchListener() {
@@ -152,7 +139,6 @@ public class SettingsFragment extends Fragment {
     // Settaggio delle impostazioni in base alle preferenze salvate
     private void initializeSettings(){
         binding.username.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
-        binding.switchTheme.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE));
         binding.spinnerLanguage.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
     }
 

@@ -50,11 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Inizializza la lingua in base alle preferenze salvate
     private void initialize() {
-        if (sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+        //TODO Dark theme
 
         if (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE) != -1){
             switch (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE)) {
@@ -79,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
 
         Log.d(TAG, "Sono in onPostResume");
 

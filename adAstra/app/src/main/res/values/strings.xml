@@ -23,9 +23,16 @@
 
     <string name="account_settings">Account settings</string>
     <string name="user_preferences">Preferences</string>
-    <string name="dark_theme">Dark mode</string>
     <string name="time_format">12-hour format</string>
     <string name="imperial_system" >Imperial system</string>
+    <string name="iss_notifications">ISS notifications</string>
+    <string name="events_notifications">Events notifications</string>
+    <string name="theme">Theme</string>
+    <string-array name="dark_theme_string_array">
+        <item>OS setting</item>
+        <item>Dark theme</item>
+        <item>Light theme</item>
+    </string-array>
     <string name="language">Language</string>
     <string-array name="languages_string_array" translatable="false">
         <item>English</item>

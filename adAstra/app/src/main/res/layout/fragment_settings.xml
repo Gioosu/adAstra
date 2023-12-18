@@ -85,7 +85,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <View
-            android:id="@+id/divider_settings"
+            android:id="@+id/divider_preferences_settings"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
@@ -104,7 +104,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/user_preferences"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/divider_settings" />
+            app:layout_constraintTop_toBottomOf="@+id/divider_preferences_settings" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
@@ -121,19 +121,8 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switch_theme"
-                    android:layout_width="260dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:drawableStart="@drawable/mode_dark_svgrepo_com"
-                    android:drawablePadding="24dp"
-                    android:text="@string/dark_theme"
-                    android:textSize="16sp" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_time_format"
-                    android:layout_width="260dp"
+                    android:layout_width="276dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
@@ -144,7 +133,7 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_imperial_system"
-                    android:layout_width="260dp"
+                    android:layout_width="276dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
@@ -154,8 +143,85 @@
                     android:text="@string/imperial_system"
                     android:textSize="16sp" />
 
+                <View
+                    android:id="@+id/divider_notifications_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?android:attr/listDivider" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_iss_notifications"
+                    android:layout_width="276dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableStart="@drawable/satellite_2_signal_svgrepo_com"
+                    android:drawablePadding="24dp"
+                    android:paddingStart="3dp"
+                    android:text="@string/iss_notifications"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_events_notifications"
+                    android:layout_width="276dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableStart="@drawable/meteorite_2_comet_svgrepo_com"
+                    android:drawablePadding="24dp"
+                    android:paddingStart="3dp"
+                    android:text="@string/events_notifications"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/divider_general_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?android:attr/listDivider" />
+
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/textView_theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/theme"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="276dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView_dark_theme"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/mode_dark_svgrepo_com" />
+
+                    <Spinner
+                        android:id="@+id/spinner_dark_theme"
+                        android:layout_width="228dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/dark_theme_string_array"
+                        android:minHeight="48dp"
+                        android:spinnerMode="dialog" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView_language"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -163,24 +229,32 @@
                     android:text="@string/language"
                     android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/spinner_language"
-                    android:layout_width="260dp"
+                <LinearLayout
+                    android:layout_width="276dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
-                    android:entries="@array/languages_string_array"
-                    android:minHeight="48dp"
-                    android:spinnerMode="dialog" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/button_notification_settings"
-                    android:layout_width="260dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/notification_settings"
-                    android:textSize="16sp" />
+                    <ImageView
+                        android:id="@+id/imageView_language"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="21dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/translate_svgrepo_com" />
+
+                    <Spinner
+                        android:id="@+id/spinner_language"
+                        android:layout_width="228dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/languages_string_array"
+                        android:minHeight="48dp"
+                        android:spinnerMode="dialog" />
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/button_log_out"
@@ -191,6 +265,7 @@
                     android:layout_marginBottom="16dp"
                     android:text="@string/log_out"
                     android:textSize="16sp" />
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

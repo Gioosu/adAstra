@@ -19,9 +19,16 @@
 
     <string name="account_settings">Impostazioni dell\'account</string>
     <string name="user_preferences">Preferenze</string>
-    <string name="dark_theme">Tema scuro</string>
     <string name="time_format">Formato 12 ore</string>
     <string name="imperial_system">Sistema imperiale</string>
+    <string name="iss_notifications">Notifiche della ISS</string>
+    <string name="events_notifications">Notifiche degli eventi</string>
+    <string name="theme">Tema</string>
+    <string-array name="dark_theme_string_array">
+        <item>Impostazioni di sistema</item>
+        <item>Tema scuro</item>
+        <item>Tema chiaro</item>
+    </string-array>
     <string name="language">Lingua</string>
     <string name="notification_settings">Impostazioni notifiche</string>
     <string name="log_out">Disconnettiti</string>
