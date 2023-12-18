@@ -16,12 +16,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.concurrent.Executor;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
@@ -38,6 +43,7 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private String email;
     private String password;
+    private FirebaseAuth mAuth;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -48,7 +54,6 @@ public class LoginFragment extends Fragment {
      *
      * @return A new instance of fragment LoginFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
@@ -56,6 +61,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -93,18 +99,18 @@ public class LoginFragment extends Fragment {
             password = binding.textPasswordLogin.getText().toString();
 
             if(isEmailValid(email) && isPasswordValid(password)) {
-                saveLoginData(email, password); //Salvataggio dei dati di login nel file crittato
-                try {
-                    Log.d(TAG, "E-mail: " + dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
-                    Log.d(TAG, "Password: " + dataEncryptionUtil.
-                            readSecretDataWithEncryptedSharedPreferences(
-                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
-                } catch (GeneralSecurityException | IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
-                //TODO finish();
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task-> {
+                            if (task.isSuccessful()) {
+                                //Salvataggio dei dati di login nel file crittato
+                                saveLoginData(email, password);
+                                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                                //TODO finish();
+
+                            } else {
+                                showSnackbar(v, getString(R.string.invalid_login_error_message));
+                            }
+                        });
             }
         });
 
@@ -158,3 +164,4 @@ public class LoginFragment extends Fragment {
         }
     }
 }
+

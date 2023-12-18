@@ -8,6 +8,7 @@ import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -41,6 +46,7 @@ public class SignupFragment extends Fragment {
     private String email;
     private String password;
     private String passwordRepeat;
+    private FirebaseAuth mAuth;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -59,6 +65,8 @@ public class SignupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -87,12 +95,26 @@ public class SignupFragment extends Fragment {
                     && isEmailValid(email)
                     && (isPasswordValid(password)
                     && isPasswordRepeatValid(password, passwordRepeat))){
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Registrazione riuscita, l'email non è già in uso
+                                saveSignupData(username, email, password);
+                                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
+                                //TODO finish();
+                            } else {
+                                // La registrazione ha fallito, verifica l'errore
+                                Exception exception = task.getException();
+                                if (exception instanceof FirebaseAuthUserCollisionException) {
+                                    // L'email è già in uso
+                                    binding.textEmailSignup.setError(getString(R.string.email_already_exists_error_message));
+                                } else {
+                                    // Altri errori durante la registrazione
+                                    Snackbar.make(v, getString(R.string.signup_failure_error_message), Snackbar.LENGTH_LONG).show();
+                                }
+                            }
 
-                // Salvataggio dei dati di login nel file crittato
-                saveSignupData(username, email, password);
-
-                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
-                //TODO finish();
+                        });
             }
         });
     }

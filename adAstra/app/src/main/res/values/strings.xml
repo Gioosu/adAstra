@@ -39,4 +39,6 @@
     <string name="invalid_email_error_message">Invalid e-mail address</string>
     <string name="invalid_password_error_message">Password must be at least 8 characters</string>
     <string name="invalid_password_repeat_error_message">Passwords must match</string>
+    <string name="email_already_exists_error_message">E-mail address already in use</string>
+    <string name="signup_failure_error_message">Signup  failed</string>
 </resources>

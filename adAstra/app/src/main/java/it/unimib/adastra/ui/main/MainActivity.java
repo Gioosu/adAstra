@@ -1,20 +1,25 @@
 package it.unimib.adastra.ui.main;
 
+import static it.unimib.adastra.util.Constants.DARK_MODE;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
+import static it.unimib.adastra.util.Constants.SETTINGS_CHANGED;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import java.util.Locale;
 
+import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityMainBinding;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
@@ -23,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,29 +36,26 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferencesUtil = new SharedPreferencesUtil(this);
 
-        initializeLanguage();
+        initialize();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(binding.navHostFragment.getId());
-        NavController navController = navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-
-
     }
 
-    // Refresh dell'activity per applicare le modifiche
-    public void restartActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
+    // Inizializza la lingua in base alle preferenze salvate
+    private void initialize() {
+        if (sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
-    public void initializeLanguage() {
         if (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE) != -1){
             switch (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE)) {
                 case 0:
@@ -63,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-
     }
 
-    private void setLocale(String languageCode) {
+    // Imposta la lingua
+    public void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
         Resources resources = getResources();
@@ -75,4 +78,15 @@ public class MainActivity extends AppCompatActivity {
         resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        Log.d(TAG, "Sono in onPostResume");
+
+        if (sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED)){
+            sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED, false);
+            navController.navigate(R.id.settingsFragment);
+        }
+    }
 }

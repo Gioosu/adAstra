@@ -1,18 +1,16 @@
 package it.unimib.adastra.ui.main;
 
- import static androidx.core.app.ActivityCompat.recreate;
  import static it.unimib.adastra.util.Constants.DARK_MODE;
  import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
  import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
  import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
  import static it.unimib.adastra.util.Constants.LANGUAGE;
  import static it.unimib.adastra.util.Constants.PASSWORD;
+ import static it.unimib.adastra.util.Constants.SETTINGS_CHANGED;
  import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
  import static it.unimib.adastra.util.Constants.USERNAME;
 
  import android.app.Activity;
- import android.content.res.Configuration;
- import android.content.res.Resources;
  import android.os.Bundle;
  import android.util.Log;
  import android.view.LayoutInflater;
@@ -20,7 +18,6 @@ package it.unimib.adastra.ui.main;
  import android.view.View;
  import android.view.ViewGroup;
  import android.widget.AdapterView;
- import android.widget.ArrayAdapter;
 
  import androidx.annotation.NonNull;
  import androidx.annotation.Nullable;
@@ -30,7 +27,6 @@ package it.unimib.adastra.ui.main;
 
  import java.io.IOException;
  import java.security.GeneralSecurityException;
- import java.util.Locale;
 
  import it.unimib.adastra.R;
  import it.unimib.adastra.databinding.FragmentSettingsBinding;
@@ -47,6 +43,7 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
+    private Activity activity;
     private boolean isUserInteracted;
 
     public SettingsFragment() {
@@ -80,18 +77,19 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Log.d(TAG, "Sono in settings");
+
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        activity = getActivity();
         isUserInteracted = false;
 
-        // Settaggio delle impostazioni in base alle preferenze salvate
-        binding.username.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
-        binding.switchTheme.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE));
-        binding.spinnerLanguage.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
+        initializeSettings();
 
         // Settaggio del tema chiaro/scuro attraverso lo switch
         binding.switchTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(binding.switchTheme.isPressed()) {
+                sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED, true);
                 sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE, isChecked);
 
                 if (isChecked) {
@@ -116,19 +114,26 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isUserInteracted) {
+                    sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED, true);
                     String selectedLanguage = parent.getItemAtPosition(position).toString();
+
                     switch (selectedLanguage) {
                         case "English":
-                            setLocale("en");
                             sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
+                            if (activity instanceof MainActivity) {
+                                ((MainActivity) activity).setLocale("en");
+                            }
                             break;
                         case "Italiano":
-                            setLocale("it");
                             sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
+                            if (activity instanceof MainActivity) {
+                                ((MainActivity) activity).setLocale("it");
+                            }
                             break;
                     }
 
                     isUserInteracted = false;
+                    activity.recreate();
                 }
             }
             @Override
@@ -139,34 +144,16 @@ public class SettingsFragment extends Fragment {
         // Tasto di log out
         binding.buttonLogOut.setOnClickListener(v -> {
             clearData();
-            try {
-                Log.d(TAG, "E-mail: " + dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                        ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS));
-                Log.d(TAG, "Password: " + dataEncryptionUtil.
-                        readSecretDataWithEncryptedSharedPreferences(
-                                ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD));
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException(e);
-            }
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
             //TODO finish();
         });
     }
 
-    // Cambio della lingua visualizzata in app
-    private void setLocale(String languageCode) {
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Resources resources = getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
-
-        // Riavvia l'attività per applicare la lingua
-        Activity activity = getActivity();
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).restartActivity();
-        }
+    // Settaggio delle impostazioni in base alle preferenze salvate
+    private void initializeSettings(){
+        binding.username.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
+        binding.switchTheme.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE));
+        binding.spinnerLanguage.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
     }
 
     // Pulizia dei dati salvati (crittati e non)
