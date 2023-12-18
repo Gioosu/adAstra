@@ -1,12 +1,9 @@
 package it.unimib.adastra.ui.main;
 
- import static it.unimib.adastra.util.Constants.DARK_MODE;
- import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+ import static it.unimib.adastra.util.Constants.DARK_THEME;
  import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
  import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
  import static it.unimib.adastra.util.Constants.LANGUAGE;
- import static it.unimib.adastra.util.Constants.PASSWORD;
- import static it.unimib.adastra.util.Constants.SETTINGS_CHANGED;
  import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
  import static it.unimib.adastra.util.Constants.USERNAME;
 
@@ -44,7 +41,8 @@ public class SettingsFragment extends Fragment {
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
-    private boolean isUserInteracted;
+    private boolean isUserInteractedDarkTheme;
+    private boolean isUserInteractedLanguage;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -80,18 +78,57 @@ public class SettingsFragment extends Fragment {
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
-        isUserInteracted = false;
+        isUserInteractedDarkTheme = false;
 
         initializeSettings();
 
+        // Controlla se l'utente interagisce con lo spinner
+        binding.spinnerDarkTheme.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                isUserInteractedDarkTheme = true;
+                return false;
+            }
+        });
+
         // Settaggio del tema chiaro/scuro attraverso lo switch
+        binding.spinnerDarkTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isUserInteractedDarkTheme) {
+                    String selectedTheme = parent.getItemAtPosition(position).toString();
 
+                    switch (selectedTheme) {
+                        case "OS setting":
+                        case "Impostazioni di sistema":
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                            break;
+                        case "Dark theme":
+                        case "Tema scuro":
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 1);
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            break;
+                        case "Light theme":
+                        case "Tema chiaro":
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 2);
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            break;
+                    }
 
-        // Controllo se l'utente interagisce con lo spinner
+                    isUserInteractedDarkTheme = false;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        // Controlla se l'utente interagisce con lo spinner
         binding.spinnerLanguage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                isUserInteracted = true;
+                isUserInteractedLanguage = true;
                 return false;
             }
         });
@@ -100,8 +137,7 @@ public class SettingsFragment extends Fragment {
         binding.spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isUserInteracted) {
-                    sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED, true);
+                if (isUserInteractedLanguage) {
                     String selectedLanguage = parent.getItemAtPosition(position).toString();
 
                     switch (selectedLanguage) {
@@ -119,7 +155,7 @@ public class SettingsFragment extends Fragment {
                             break;
                     }
 
-                    isUserInteracted = false;
+                    isUserInteractedLanguage = false;
                     activity.recreate();
                 }
             }
@@ -139,6 +175,7 @@ public class SettingsFragment extends Fragment {
     // Settaggio delle impostazioni in base alle preferenze salvate
     private void initializeSettings(){
         binding.username.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
+        binding.spinnerDarkTheme.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
         binding.spinnerLanguage.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
     }
 

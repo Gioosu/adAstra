@@ -1,23 +1,16 @@
 package it.unimib.adastra.ui.main;
 
-import static it.unimib.adastra.util.Constants.DARK_MODE;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentHomeBinding;
-import it.unimib.adastra.databinding.FragmentSettingsBinding;
-import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
@@ -80,10 +73,5 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        preferences = new SharedPreferencesUtil(requireContext());
-
-        boolean isDarkMode = preferences.readBooleanData(SHARED_PREFERENCES_FILE_NAME, DARK_MODE);
-        AppCompatDelegate.setDefaultNightMode(isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
     }
 }

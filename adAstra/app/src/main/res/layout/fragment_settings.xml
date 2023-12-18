@@ -121,17 +121,6 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switch_time_format"
-                    android:layout_width="276dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:drawableStart="@drawable/baseline_access_time_24"
-                    android:drawablePadding="24dp"
-                    android:text="@string/time_format"
-                    android:textSize="16sp" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_imperial_system"
                     android:layout_width="276dp"
                     android:layout_height="wrap_content"
@@ -141,6 +130,17 @@
                     android:drawablePadding="21dp"
                     android:paddingStart="3dp"
                     android:text="@string/imperial_system"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_time_format"
+                    android:layout_width="276dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:drawableStart="@drawable/baseline_access_time_24"
+                    android:drawablePadding="24dp"
+                    android:text="@string/time_format"
                     android:textSize="16sp" />
 
                 <View

@@ -1,11 +1,9 @@
 package it.unimib.adastra.ui.main;
 
-import static it.unimib.adastra.util.Constants.DARK_MODE;
+import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
-import static it.unimib.adastra.util.Constants.SETTINGS_CHANGED;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -50,7 +48,21 @@ public class MainActivity extends AppCompatActivity {
 
     // Inizializza la lingua in base alle preferenze salvate
     private void initialize() {
-        //TODO Dark theme
+        if (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME) != -1){
+            switch (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME)) {
+                case 0:
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                    break;
+                case 1:
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    break;
+                case 2:
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    break;
+            }
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
 
         if (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE) != -1){
             switch (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE)) {
@@ -61,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                     setLocale("it");
                     break;
             }
+        }else{
+            setLocale("en");
         }
     }
 
@@ -72,17 +86,5 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = resources.getConfiguration();
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        Log.d(TAG, "Sono in onPostResume");
-
-        if (sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED)){
-            sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, SETTINGS_CHANGED, false);
-            navController.navigate(R.id.settingsFragment);
-        }
     }
 }
