@@ -10,6 +10,17 @@
     <string name="missing_account">Don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
 
+    <string name="reset_your_password">Reset your password</string>
+    <string name="enter_your_email">Enter your e-mail address and we\'ll send you a link to reset your password</string>
+    <string name="reset_password">Reset password</string>
+
+    <string name="check_your_inbox">Check your inbox</string>
+    <string name="sent_a_password">We sent a password reset link to the e-mail associated with your account</string>
+    <string name="didnt_get_an_email">Didn\'t get an email?</string>
+    <string name="resend">Resend</string>
+    <string name="email_resend">E-mail resend</string>
+    <string name="back_to_login">Back to login</string>
+
     <string name="signup">Signup</string>
     <string name="username">Username</string>
     <string name="password_repeat">Repeat password</string>
@@ -24,7 +35,7 @@
     <string name="account_settings">Account settings</string>
     <string name="user_preferences">Preferences</string>
     <string name="time_format">12-hour format</string>
-    <string name="imperial_system" >Imperial system</string>
+    <string name="imperial_system">Imperial system</string>
     <string name="iss_notifications">ISS notifications</string>
     <string name="events_notifications">Events notifications</string>
     <string name="theme">Theme</string>

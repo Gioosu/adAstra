@@ -13,12 +13,12 @@
 
         <ImageView
             android:id="@+id/imageView_icon_signup"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_signup"
-            app:srcCompat="@drawable/vkgqcc01" />
+            app:srcCompat="@drawable/app_icon" />
 
         <TextView
             android:id="@+id/signup"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/signup"
-            android:textSize="34sp"
+            android:textSize="32sp"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
             app:layout_constraintTop_toBottomOf="@+id/imageView_icon_signup" />
 

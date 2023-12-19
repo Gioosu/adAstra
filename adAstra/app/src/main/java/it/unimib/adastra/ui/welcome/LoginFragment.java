@@ -41,9 +41,10 @@ public class LoginFragment extends Fragment {
     String TAG = LoginFragment.class.getSimpleName();
     private DataEncryptionUtil dataEncryptionUtil;
     private FragmentLoginBinding binding;
+    private FirebaseAuth mAuth;
     private String email;
     private String password;
-    private FirebaseAuth mAuth;
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -93,6 +94,11 @@ public class LoginFragment extends Fragment {
             e.printStackTrace();
         }
 
+        // Password dimenticata
+        binding.forgotPassword.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
+        });
+
         // Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
             email = binding.textEmailLogin.getText().toString();
@@ -106,7 +112,6 @@ public class LoginFragment extends Fragment {
                                 saveLoginData(email, password);
                                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
                                 //TODO finish();
-
                             } else {
                                 showSnackbar(v, getString(R.string.invalid_login_error_message));
                             }

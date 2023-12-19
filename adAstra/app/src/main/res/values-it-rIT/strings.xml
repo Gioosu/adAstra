@@ -8,6 +8,17 @@
     <string name="missing_account">Non hai un account?</string>
     <string name="sign_up">Registrati</string>
 
+    <string name="reset_your_password">Reimposta la password</string>
+    <string name="enter_your_email">Inserisci il tuo indirizzo e-mail e ti invieremo un link per reimpostare la password</string>
+    <string name="reset_password">Reimposta password</string>
+
+    <string name="check_your_inbox">Controlla la tua casella di posta</string>
+    <string name="sent_a_password">Abbiamo inviato un link per la reimpostazione della password all\'e-mail associata al tuo account</string>
+    <string name="didnt_get_an_email">Non hai ricevuto l\'e-mail?</string>
+    <string name="resend">Invia di nuovo</string>
+    <string name="email_resend">E-mail inviata di nuovo</string>
+    <string name="back_to_login">Ritorna all\'accesso</string>
+
     <string name="signup">Registrazione</string>
     <string name="username">Nome utente</string>
     <string name="password_repeat">Ripeti la password</string>
