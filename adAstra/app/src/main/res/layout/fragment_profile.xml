@@ -30,5 +30,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_end="16dp" />
+
+        <Button
+            android:id="@+id/button_delete_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="128dp"
+            android:text="Button"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_profile" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

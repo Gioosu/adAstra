@@ -6,13 +6,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import it.unimib.adastra.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import it.unimib.adastra.databinding.FragmentProfileBinding;
-import it.unimib.adastra.databinding.FragmentSettingsBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
@@ -26,6 +31,8 @@ public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
+    private FirebaseUser user;
+    private FirebaseFirestore database;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -57,8 +64,22 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        database = FirebaseFirestore.getInstance();
+
+        // Tasto di delete account
+        binding.buttonDeleteAccount.setOnClickListener(v -> {
+            //Firestore eliminazione account
+            database.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
+
+            //Auth eliminazione account
+            user.delete().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User account deleted.");
+                }
+            });
+        });
     }
 }

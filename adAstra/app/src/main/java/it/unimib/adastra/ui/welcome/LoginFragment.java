@@ -6,7 +6,6 @@ import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE
 import static it.unimib.adastra.util.Constants.PASSWORD;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.concurrent.Executor;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
@@ -169,4 +164,3 @@ public class LoginFragment extends Fragment {
         }
     }
 }
-

@@ -18,7 +18,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_signup"
-            android:src="@drawable/solar_system" />
+            android:src="@drawable/app_icon" />
 
         <TextView
             android:id="@+id/signup"

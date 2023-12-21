@@ -35,7 +35,7 @@
             android:id="@+id/imageView_icon_check_inbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/solar_system"
+            android:src="@drawable/app_icon"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_check_inbox" />

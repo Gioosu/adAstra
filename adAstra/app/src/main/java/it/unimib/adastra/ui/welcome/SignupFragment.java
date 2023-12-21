@@ -8,7 +8,6 @@ import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +20,14 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
@@ -40,13 +42,14 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class SignupFragment extends Fragment {
     String TAG = SignupFragment.class.getSimpleName();
     private FragmentSignupBinding binding;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore database;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
     private String username;
     private String email;
     private String password;
     private String passwordRepeat;
-    private FirebaseAuth mAuth;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -65,8 +68,6 @@ public class SignupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -79,12 +80,15 @@ public class SignupFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
 
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
 
-        // Registrazione manuale
+        // Registrazione
         binding.buttonSignUpSignup.setOnClickListener(v -> {
             username = binding.textUsernameSignup.getText().toString();
             email = binding.textEmailSignup.getText().toString();
@@ -100,6 +104,20 @@ public class SignupFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 // Registrazione riuscita, l'email non è già in uso
                                 saveSignupData(username, email, password);
+
+                                // Add a new document with email as an id
+                                Map<String, Object> newUser = new HashMap<>();
+                                newUser.put("username", username);
+                                //newUser.put("birthday", newUser);
+                                newUser.put("imperialSystem", false);
+                                newUser.put("hourFormat", false);
+                                newUser.put("issNotification", false);
+                                newUser.put("eventsNotification", false);
+                                newUser.put("language", 0);
+                                newUser.put("theme", 0);
+
+                                database.collection("users").document(email).set(newUser);
+
                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
                                 //TODO finish();
                             } else {

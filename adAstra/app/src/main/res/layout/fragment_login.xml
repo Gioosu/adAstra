@@ -38,7 +38,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_login"
-            android:src="@drawable/solar_system" />
+            android:src="@drawable/app_icon" />
 
         <TextView
             android:id="@+id/login"
@@ -167,7 +167,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/google_logo"
             android:text="@string/google_login"
             android:textSize="20sp"
             app:icon="@drawable/google_logo"
