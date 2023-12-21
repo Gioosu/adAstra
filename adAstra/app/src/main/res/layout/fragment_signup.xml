@@ -18,7 +18,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_signup"
-            app:srcCompat="@drawable/app_icon" />
+            android:src="@drawable/solar_system" />
 
         <TextView
             android:id="@+id/signup"
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/signup"
+            android:textColor="?android:textColorPrimary"
             android:textSize="32sp"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
             app:layout_constraintTop_toBottomOf="@+id/imageView_icon_signup" />
@@ -65,7 +66,7 @@
                 android:id="@+id/textUsername_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/astronaut_svgrepo_com"
+                android:drawableStart="@drawable/astronaut_outlined"
                 android:drawablePadding="12dp"
                 android:hint="@string/username"
                 android:padding="24dp"
@@ -87,7 +88,7 @@
                 android:id="@+id/textEmail_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/baseline_alternate_email_24"
+                android:drawableStart="@drawable/email"
                 android:drawablePadding="12dp"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
@@ -111,7 +112,7 @@
                 android:id="@+id/textPassword_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/baseline_key_24"
+                android:drawableStart="@drawable/password"
                 android:drawablePadding="12dp"
                 android:hint="@string/password"
                 android:inputType="textPassword"
@@ -135,7 +136,7 @@
                 android:id="@+id/textPasswordRepeat_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/baseline_key_24"
+                android:drawableStart="@drawable/password"
                 android:drawablePadding="12dp"
                 android:hint="@string/password_repeat"
                 android:inputType="text|textPassword"
@@ -149,7 +150,7 @@
             android:id="@+id/button_sign_up_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:paddingLeft="32dp"
             android:paddingTop="12dp"
             android:paddingRight="32dp"

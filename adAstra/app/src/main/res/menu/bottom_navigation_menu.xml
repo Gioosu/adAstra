@@ -4,31 +4,31 @@
     <item
         android:id="@+id/encyclopediaFragment"
         android:enabled="true"
-        android:icon="@drawable/warp_galaxy_svgrepo_com"
+        android:icon="@drawable/warp_galaxy"
         android:title="@string/encyclopedia" />
 
     <item
         android:id="@+id/ISSFragment"
         android:enabled="true"
-        android:icon="@drawable/satellite_signal_svgrepo_com"
+        android:icon="@drawable/iss"
         android:title="@string/ISS" />
 
     <item
         android:id="@+id/homeFragment"
         android:enabled="true"
-        android:icon="@drawable/astronomy_telescope_svgrepo_com"
+        android:icon="@drawable/astronomy_telescope"
         android:title="@string/home" />
 
     <item
         android:id="@+id/eventsFragment"
         android:enabled="true"
-        android:icon="@drawable/meteorite_comet_svgrepo_com"
+        android:icon="@drawable/meteorite_comet"
         android:title="@string/events" />
 
     <item
         android:id="@+id/settingsFragment"
         android:enabled="true"
-        android:icon="@drawable/gear_setting_settings_svgrepo_com"
+        android:icon="@drawable/gear_setting_settings"
         android:title="@string/settings" />
 
 </menu>
