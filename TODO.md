@@ -4,6 +4,7 @@
 
 - [x] Signin
 - [x] Signup
+- [ ] Wifi missing
 - [ ] Homepage
   - [ ] Home Layout
   - [ ] Home Code
