@@ -2,7 +2,6 @@ package it.unimib.adastra.ui.welcome;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
@@ -34,6 +33,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
@@ -77,7 +77,7 @@ public class SignupFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSignupBinding.inflate(inflater, container, false);
@@ -86,7 +86,6 @@ public class SignupFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
 
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
@@ -96,55 +95,30 @@ public class SignupFragment extends Fragment {
 
         // Registrazione
         binding.buttonSignUpSignup.setOnClickListener(v -> {
-            username = binding.textUsernameSignup.getText().toString();
-            email = binding.textEmailSignup.getText().toString();
-            password = binding.textPasswordSignup.getText().toString();
-            passwordRepeat = binding.textPasswordRepeatSignup.getText().toString();
+            username = Objects.requireNonNull(binding.textUsernameSignup.getText()).toString();
+            email = Objects.requireNonNull(binding.textEmailSignup.getText()).toString();
+            password = Objects.requireNonNull(binding.textPasswordSignup.getText()).toString();
+            passwordRepeat = Objects.requireNonNull(binding.textPasswordRepeatSignup.getText()).toString();
 
-            if(isUsernameValid(username)
-                    && isEmailValid(email)
-                    && (isPasswordValid(password)
-                    && isPasswordRepeatValid(password, passwordRepeat))){
+            if (isUsernameValid(username) && isEmailValid(email)
+                    && isPasswordValid(password) && isPasswordRepeatValid(password, passwordRepeat)) {
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                // Add a new document with email as an id
-                                Map<String, Object> newUser = new HashMap<>();
-                                newUser.put(USERNAME, username);
-                                //newUser.put("birthday", newUser);
-                                newUser.put(IMPERIAL_SYSTEM, false);
-                                newUser.put(TIME_FORMAT, false);
-                                newUser.put(ISS_NOTIFICATIONS, true);
-                                newUser.put(EVENTS_NOTIFICATIONS, true);
-                                newUser.put(LANGUAGE, 0);
-                                newUser.put(DARK_THEME, 0);
-
-                                database.collection("users").document(email).set(newUser);
-
-                                // Salvataggio dei dati in locale
+                                createUserInFirestore(username, email);
                                 saveSignupData(username, email, password);
-                                inizializeSettings();
-
+                                initializeSettings();
                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
                                 //TODO finish();
                             } else {
-                                // La registrazione ha fallito, verifica l'errore
-                                Exception exception = task.getException();
-                                if (exception instanceof FirebaseAuthUserCollisionException) {
-                                    // L'email è già in uso
-                                    binding.textEmailSignup.setError(getString(R.string.error_email_already_exists));
-                                } else {
-                                    // Altri errori durante la registrazione
-                                    Snackbar.make(v, getString(R.string.error_signup_failure), Snackbar.LENGTH_LONG).show();
-                                }
+                                handleSignupFailure(task.getException(), v);
                             }
-
                         });
             }
         });
     }
 
-    // Controllo sulla correttezza del nome utente
+    // Controla che il nome utente sia valido
     private boolean isUsernameValid(String username){
         boolean result = username != null && username.length() >= 3 && username.length() <= 10;
 
@@ -155,7 +129,7 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    // Controllo sulla correttezza della e-mail
+    // Controlla che l'email sia valida
     private boolean isEmailValid(String email) {
         boolean result = EmailValidator.getInstance().isValid(email);
 
@@ -166,7 +140,7 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    // Controllo sulla correttezza della password
+    // Controlla che la password sia valida
     private boolean isPasswordValid(String password) {
         boolean result = password != null && password.length() >= 8;
 
@@ -177,7 +151,7 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    // Controllo sull'uguaglianza delle due password
+    // Controlla che le password corrispondano
     private boolean isPasswordRepeatValid(String password, String passwordRepeat){
         boolean result = password.equals(passwordRepeat);
 
@@ -188,7 +162,35 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
-    // Salvataggio dei dati di login nel file crittato
+    // Crea un utente in Firestore
+    private void createUserInFirestore(String username, String email) {
+        Map<String, Object> newUser = new HashMap<>();
+        newUser.put(USERNAME, username);
+        newUser.put(IMPERIAL_SYSTEM, false);
+        newUser.put(TIME_FORMAT, false);
+        newUser.put(ISS_NOTIFICATIONS, true);
+        newUser.put(EVENTS_NOTIFICATIONS, true);
+        newUser.put(LANGUAGE, 0);
+        newUser.put(DARK_THEME, 0);
+
+        database.collection("users").document(email).set(newUser);
+    }
+
+    // Mostra gli errori in caso di mancata registrazione
+    private void handleSignupFailure(Exception exception, View view) {
+        if (exception instanceof FirebaseAuthUserCollisionException) {
+            binding.textEmailSignup.setError(getString(R.string.error_email_already_exists));
+        } else {
+            showSnackbar(view, getString(R.string.error_signup_failure));
+        }
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    // Salva i dati utili al login
     private void saveSignupData(String username, String email, String password) {
         try {
             sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, username);
@@ -196,15 +198,13 @@ public class SignupFragment extends Fragment {
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
-
-            dataEncryptionUtil.writeSecreteDataOnFile(ENCRYPTED_DATA_FILE_NAME,
-                    email.concat(":").concat(password));
         } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
+            // Gestisci l'eccezione in modo appropriato
         }
     }
 
-    private void inizializeSettings() {
+    // Inizializza le impostazioni
+    private void initializeSettings() {
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, IMPERIAL_SYSTEM, false);
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, TIME_FORMAT, false);
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, ISS_NOTIFICATIONS, true);

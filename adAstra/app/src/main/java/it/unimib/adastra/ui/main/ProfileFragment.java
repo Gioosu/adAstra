@@ -61,7 +61,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
@@ -79,7 +79,7 @@ public class ProfileFragment extends Fragment {
 
 
         // Tasto di delete account
-        binding.buttonDeleteAccount.setOnClickListener(v -> new MaterialAlertDialogBuilder(getContext())
+        binding.buttonDeleteAccount.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.confirm_deletion)
                 .setMessage(R.string.confirm_deletion_message)
                 .setPositiveButton(R.string.delete, (dialog, which) -> deleteUserAccount(v))
@@ -87,6 +87,7 @@ public class ProfileFragment extends Fragment {
                 .show());
     }
 
+    // Elimina l'account dell'untente
     private void deleteUserAccount(View v) {
         String userEmail = user.getEmail();
         if (userEmail != null) {
@@ -96,32 +97,32 @@ public class ProfileFragment extends Fragment {
                         // Poi elimina l'account da Firebase Authentication
                         user.delete().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Log.d(TAG, "User account deleted.");
-                                // Pulisci le SharedPreferences
+                                Log.d(TAG, "Account utente eliminato");
+                                // Pulisce le SharedPreferences
                                 try {
                                     sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
                                     dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
                                 } catch (GeneralSecurityException | IOException e) {
                                     throw new RuntimeException(e);
                                 }
-                                // Logout l'utente e reindirizza alla schermata di login
+                                // Logout dell'utente e reindirizza alla schermata di login
                                 FirebaseAuth.getInstance().signOut();
                                 // Redirect to login or intro activity
                                 Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_welcomeActivity);
                             } else {
-                                // Gestisci il caso in cui l'eliminazione da Firebase Authentication fallisce
-                                Log.w(TAG, "Failed to delete user account.", task.getException());
-                                showSnackbar(v, "Errore nell'eliminazione dell'account.");
+                                // Gestisce il caso in cui l'eliminazione da Firebase Authentication fallisce
+                                Log.w(TAG, "Errore nell'eliminazione dell'account", task.getException());
+                                showSnackbar(v, getString(R.string.error_deleting_account));
                             }
                         });
                     })
                     .addOnFailureListener(e -> {
                         // Gestisci il caso in cui l'eliminazione da Firestore fallisce
                         Log.w(TAG, "Failed to delete user data.", e);
-                        showSnackbar(v, "Errore nell'eliminazione dei dati dell'utente.");
+                        showSnackbar(v, getString(R.string.error_deleting_user_data));
                     });
         } else {
-            showSnackbar(v, "Errore: Email dell'utente non disponibile.");
+            showSnackbar(v, getString(R.string.error_user_email_not_available));
         }
     }
 

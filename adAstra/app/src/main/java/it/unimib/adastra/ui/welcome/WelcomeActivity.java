@@ -15,6 +15,9 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        FirebaseApp.initializeApp(this);
+        // Verifica se Firebase è già stato inizializzato
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseApp.initializeApp(this);
+        }
     }
 }

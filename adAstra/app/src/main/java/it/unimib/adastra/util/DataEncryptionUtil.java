@@ -20,7 +20,6 @@ import java.security.GeneralSecurityException;
  * Doc can be read here: <a href="https://developer.android.com/topic/security/data">...</a>
  */
 public class DataEncryptionUtil {
-
     private final Context context;
 
     public DataEncryptionUtil(Context context) {
@@ -66,8 +65,7 @@ public class DataEncryptionUtil {
      * @throws GeneralSecurityException
      * @throws IOException
      */
-    public String readSecretDataWithEncryptedSharedPreferences(String sharedPreferencesFileName,
-                                                               String key)
+    public String readSecretDataWithEncryptedSharedPreferences(String sharedPreferencesFileName, String key)
             throws GeneralSecurityException, IOException {
 
         MasterKey mainKey = new MasterKey.Builder(context)
@@ -183,5 +181,4 @@ public class DataEncryptionUtil {
             }
         }
     }
-
 }

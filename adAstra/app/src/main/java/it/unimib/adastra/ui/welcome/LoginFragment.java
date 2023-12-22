@@ -22,6 +22,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
@@ -61,7 +62,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false);
@@ -74,30 +75,27 @@ public class LoginFragment extends Fragment {
 
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
-        // Login diretto, se dati login presenti nel file crittato
+        // Login diretto, se i dati login sono presenti nel file crittato
         try {
-            if(dataEncryptionUtil.
-                    readSecretDataWithEncryptedSharedPreferences(
-                            ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS) != null &&
-                    dataEncryptionUtil.
-                            readSecretDataWithEncryptedSharedPreferences(
-                                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD) != null){
-                Navigation.findNavController(requireView())
-                        .navigate(R.id.action_loginFragment_to_mainActivity);
+            String email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            String password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
+
+            if (email != null && password != null) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_mainActivity);
             }
         } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
+            showSnackbar(requireView(), getString(R.string.error_reading_credentials));
         }
 
-        // Password dimenticata
-        binding.forgotPassword.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordFragment);
-        });
+        // Pulsante di password dimenticata
+        binding.forgotPassword.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordFragment));
 
         // Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
-            email = binding.textEmailLogin.getText().toString();
-            password = binding.textPasswordLogin.getText().toString();
+            email = Objects.requireNonNull(binding.textEmailLogin.getText()).toString();
+            password = Objects.requireNonNull(binding.textPasswordLogin.getText()).toString();
 
             if(isEmailValid(email) && isPasswordValid(password)) {
                 mAuth.signInWithEmailAndPassword(email, password)
@@ -114,7 +112,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        // Cambio di activity a SignUpActivity
+        // Pulsante di registrazione
         binding.buttonSignupLogin.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment);
             //TODO finish();
@@ -122,12 +120,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    // Visualizzazione di una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
-    }
-
-    // Controllo sulla correttezza della e-mail
+    // Controlla che l'email sia valida
     private boolean isEmailValid(String email) {
         boolean result = EmailValidator.getInstance().isValid(email);
 
@@ -138,7 +131,7 @@ public class LoginFragment extends Fragment {
         return result;
     }
 
-    // Controllo sulla correttezza della password
+    // Controlla che la password sia valida
     private boolean isPasswordValid(String password) {
         boolean result = password != null && password.trim().length() >= 8;
 
@@ -149,7 +142,12 @@ public class LoginFragment extends Fragment {
         return result;
     }
 
-    // Salvataggio dei dati di login nel file crittato
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    // Salva i dati di login nel file crittato
     private void saveLoginData(String email, String password) {
         try {
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(

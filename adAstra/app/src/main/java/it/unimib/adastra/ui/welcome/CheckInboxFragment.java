@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentCheckInboxBinding;
 
@@ -46,12 +48,15 @@ public class CheckInboxFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentCheckInboxBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
+
+    // Chiavi costanti
+    private static final String ARG_EMAIL = "email";
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -60,8 +65,10 @@ public class CheckInboxFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         binding.buttonResend.setOnClickListener(v -> {
-            email = getArguments().getString("email", "");
-            if (!email.isEmpty()) {
+            assert getArguments() != null;
+            email = getArguments().getString(ARG_EMAIL, "");
+            if (isValidEmail(email)) {
+                showSnackbarWithAction(v, getString(R.string.sending_email));
                 mAuth.sendPasswordResetEmail(email)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -76,13 +83,23 @@ public class CheckInboxFragment extends Fragment {
         });
 
         binding.buttonBackToLogin.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_loginFragment);
-            //TODO finish();
+                Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_loginFragment);
+                //TODO finish();
         });
     }
 
-    // Visualizzazione di una snackbar
+    private boolean isValidEmail(String email) {
+        return EmailValidator.getInstance().isValid(email);
+    }
+
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
+
+    private void showSnackbarWithAction(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.ok, v -> snackbar.dismiss());
+        snackbar.show();
+    }
+
 }

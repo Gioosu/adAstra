@@ -70,7 +70,7 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginTop="64dp"
-            android:src="@drawable/observatory_exploration"
+            android:src="@drawable/astronomy_telescope"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"

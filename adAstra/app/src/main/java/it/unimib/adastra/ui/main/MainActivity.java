@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(binding.navHostFragment.getId());
+        assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
@@ -99,12 +100,12 @@ public class MainActivity extends AppCompatActivity {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.error_dialog_title)
                 .setMessage(message)
-                .setPositiveButton(R.string.error_ok, null)
+                .setPositiveButton(R.string.ok, null)
                 .show();
     }
 
 
-    // Inizializza la lingua e il tema secondo le preferenze salvate
+    // Inizializza la lingua e il tema in base alle preferenze salvate
     private void initialize() {
         int languageSetting = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE);
         int themeSetting = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME);

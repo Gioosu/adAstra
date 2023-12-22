@@ -11,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
+
+import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentForgotPasswordBinding;
@@ -26,7 +29,6 @@ import it.unimib.adastra.databinding.FragmentForgotPasswordBinding;
 public class ForgotPasswordFragment extends Fragment {
     private FragmentForgotPasswordBinding binding;
     private String email;
-    private  Bundle bundle;
     private FirebaseAuth mAuth;
 
     public ForgotPasswordFragment() {
@@ -49,7 +51,7 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentForgotPasswordBinding.inflate(inflater, container, false);
@@ -60,33 +62,51 @@ public class ForgotPasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        bundle = new Bundle();
         mAuth = FirebaseAuth.getInstance();
 
         binding.buttonResetPassword.setOnClickListener(v -> {
-            email = binding.textEmailResetPassword.getText().toString();
-            bundle.putString("email", email);
+            email = Objects.requireNonNull(binding.textEmailResetPassword.getText()).toString();
 
-            if (isEmailValid(email)){
-                mAuth.sendPasswordResetEmail(email)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Navigation.findNavController(v).navigate(R.id.action_forgotPasswordFragment_to_checkInboxFragment, bundle);
-                                //TODO finish();
-                            }
-                        });
+            if (isEmailValid(email)) {
+                sendPasswordResetEmail(email, v);
             }
         });
     }
 
-    // Controllo sulla correttezza della e-mail
-    private boolean isEmailValid(String email) {
-        boolean result = EmailValidator.getInstance().isValid(email);
+    // Invia l'email per reimpostare la password
+    private void sendPasswordResetEmail(String email, View view) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        navigateToCheckInbox(email, view);
+                    } else {
+                        showSnackbar(view, getString(R.string.error_email_resend_failed));
+                    }
+                });
+    }
 
-        if (!result) {
+    // Naviga a CheckInboxFragment
+    private void navigateToCheckInbox(String email, View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString("email", email);
+        Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_checkInboxFragment, bundle);
+        //TODO finish();
+    }
+
+    // Controlla che l'email sia valida
+    private boolean isEmailValid(String email) {
+        boolean isValid = EmailValidator.getInstance().isValid(email);
+
+        if (!isValid) {
             binding.textEmailResetPassword.setError(getString(R.string.error_invalid_email));
         }
 
-        return result;
+        return isValid;
     }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
 }

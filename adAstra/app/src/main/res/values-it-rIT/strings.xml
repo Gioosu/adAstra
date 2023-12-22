@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Login -->
     <string name="login">Accesso</string>
     <string name="Log_in">Accedi</string>
     <string name="forgot_password">Password dimenticata?</string>
@@ -8,26 +9,32 @@
     <string name="missing_account">Non hai un account?</string>
     <string name="sign_up">Registrati</string>
 
+    <!-- ForgotPassword -->
     <string name="reset_your_password">Reimposta la password</string>
     <string name="enter_your_email">Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password</string>
     <string name="reset_password">Reimposta password</string>
 
+    <!-- CheckInbox -->
     <string name="check_your_inbox">Controlla la tua casella di posta</string>
     <string name="sent_a_password">Abbiamo inviato un link per la reimpostazione della password all\'email associata al tuo account</string>
     <string name="didnt_get_an_email">Non hai ricevuto l\'email?</string>
     <string name="resend">Invia di nuovo</string>
+    <string name="sending_email">Invio dell\'email in corso…</string>
     <string name="email_resend">Email inviata nuovamente con successo</string>
     <string name="back_to_login">Ritorna all\'accesso</string>
 
+    <!-- Signup -->
     <string name="signup">Registrazione</string>
     <string name="username">Nome utente</string>
     <string name="password_repeat">Ripeti la password</string>
 
+    <!-- Main -->
     <string name="encyclopedia">Enciclopedia</string>
     <string name="events">Eventi</string>
     <string name="profile">Profilo</string>
     <string name="settings">Opzioni</string>
 
+    <!-- Settings -->
     <string name="user_preferences">Preferenze</string>
     <string name="time_format">Formato 12 ore</string>
     <string name="imperial_system">Sistema imperiale</string>
@@ -41,26 +48,32 @@
         <item>Tema chiaro</item>
     </string-array>
     <string name="notification_settings">Impostazioni notifiche</string>
-    <string name="report_issue" >Report an issue</string>
+    <string name="report_issue" >Segnala un problema</string>
 
+    <!-- Profile -->
     <string name="update_username">Aggiorna il nome utente</string>
     <string name="update_email">Aggiorna indirizzo</string>
-    <string name="change_password">Cambia passwors</string>
+    <string name="change_password">Cambia password</string>
     <string name="delete_account">Elimina account</string>
     <string name="confirm_deletion">Conferma eliminazione</string>
-    <string name="confirm_deletion_message">Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile.</string>
+    <string name="confirm_deletion_message">Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile</string>
     <string name="delete">Elimina</string>
     <string name="cancel">Annulla</string>
 
-    <string name="error_user_info_retrieval">Si è verificato un errore durante il recupero delle informazioni dell\'utente</string>
+    <!-- Errors -->
     <string name="error_email_not_found">Email non trovata o utente non loggato</string>
+    <string name="error_user_info_retrieval">Si è verificato un errore durante il recupero delle informazioni dell\'utente</string>
     <string name="error_dialog_title">Errore</string>
+    <string name="error_reading_credentials">Errore durante la lettura delle credenziali.</string>
     <string name="error_invalid_login">Email o password non validi</string>
+    <string name="error_email_resend_failed">Impossibile reinviare l\'email</string>
     <string name="error_invalid_username">"Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
     <string name="error_invalid_email">Indirizzo email non valido</string>
+    <string name="error_email_already_exists">Indirizzo email già in uso</string>
     <string name="error_invalid_password">La password deve essere lunga almeno 8 caratteri</string>
     <string name="error_invalid_password_repeat">Le password devono corrispondere</string>
-    <string name="error_email_already_exists">Indirizzo email già in uso</string>
-    <string name="error_email_resend_failed">Invio email fallito</string>
     <string name="error_signup_failure">Registrazione fallita</string>
+    <string name="error_deleting_account">Errore nell\'eliminazione dell\'account</string>
+    <string name="error_deleting_user_data">Errore nell\'eliminazione dei dati dell\'utente</string>
+    <string name="error_user_email_not_available">Email dell\'utente non disponibile</string>
 </resources>

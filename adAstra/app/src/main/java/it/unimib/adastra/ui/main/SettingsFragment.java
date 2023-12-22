@@ -78,7 +78,7 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
@@ -106,13 +106,12 @@ public class SettingsFragment extends Fragment {
             if (emailFromSharedPreferences != null) {
                 email = emailFromSharedPreferences;
             } else {
-                // Se non è presente nelle SharedPreferences, ottieni l'email dall'utente corrente di FirebaseAuth
+                // Se non è presente nelle SharedPreferences, ottiene l'email dall'utente corrente di FirebaseAuth
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = auth.getCurrentUser();
                 if (currentUser != null && currentUser.getEmail() != null) {
                     email = currentUser.getEmail();
                 } else {
-                    // Gestisci il caso in cui non sia possibile ottenere l'email
                     throw new IllegalStateException("Indirizzo email non disponibile");
                 }
             }
@@ -135,28 +134,28 @@ public class SettingsFragment extends Fragment {
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_profileFragment));
 
-        // Implementazione dello switch di IMPERIAL_FORMAT
+        // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchImperialSystem.isPressed()) {
                 update(IMPERIAL_SYSTEM, isChecked);
             }
         });
 
-        // Implementazione di switch di TIME_FORMAT
+        // Switch di TIME_FORMAT
         binding.switchTimeFormat.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchTimeFormat.isPressed()) {
                 update(TIME_FORMAT, isChecked);
             }
         });
 
-        // Implementazione di switch di ISS_NOTIFICATIONS
+        // Switch di ISS_NOTIFICATIONS
         binding.switchIssNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchIssNotifications.isPressed()) {
                 update(ISS_NOTIFICATIONS, isChecked);
             }
         });
 
-        // Implementazione di switch di EVENTS_NOTIFICATIONS
+        // Switch di EVENTS_NOTIFICATIONS
         binding.switchEventsNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchEventsNotifications.isPressed()) {
                 update(EVENTS_NOTIFICATIONS, isChecked);
@@ -164,13 +163,13 @@ public class SettingsFragment extends Fragment {
         });
 
 
-        // Controlla se l'utente interagisce con lo spinner
+        // Controlla se l'utente interagisce con lo spinner di cambio lingua
         binding.spinnerLanguage.setOnTouchListener((v, event) -> {
             isUserInteractedLanguage = true;
             return false;
         });
 
-        // Implementazione dello spinner di cambio lingua
+        // Spinner di cambio lingua
         binding.spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -197,13 +196,13 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        // Controlla se l'utente interagisce con lo spinner
+        // Controlla se l'utente interagisce con lo spinner di cambio tema
         binding.spinnerDarkTheme.setOnTouchListener((v, event) -> {
             isUserInteractedDarkTheme = true;
             return false;
         });
 
-        // Implementazione dello spinner di cambio tema
+        // Spinner di cambio tema
         binding.spinnerDarkTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -245,7 +244,7 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    // Settaggio delle impostazioni in base alle preferenze salvate
+    // Inizializza le impostazioni in base alle preferenze salvate
     private void initializeSettings() {
         if (arePreferencesSet()) {
             setPreferencesToUI();
@@ -296,41 +295,55 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    // Aggiorna le impostazioni dopo una modifica
     private void updateSetting(String key, Object value) {
-        if (value != null) {
-            if (value instanceof String) {
-                binding.username.setText((String) value);
-                sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, (String) value);
-            } else if (value instanceof Number) {
-                int intValue = ((Number) value).intValue();
-                if (key.equals(LANGUAGE)) {
-                    binding.spinnerLanguage.setSelection(intValue);
-                } else if (key.equals(DARK_THEME)) {
-                    binding.spinnerDarkTheme.setSelection(intValue);
-                }
-                sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, key, intValue);
-            } else if (value instanceof Boolean) {
-                boolean boolValue = (Boolean) value;
-                switch (key) {
-                    case IMPERIAL_SYSTEM:
-                        binding.switchImperialSystem.setChecked(boolValue);
-                        break;
-                    case TIME_FORMAT:
-                        binding.switchTimeFormat.setChecked(boolValue);
-                        break;
-                    case ISS_NOTIFICATIONS:
-                        binding.switchIssNotifications.setChecked(boolValue);
-                        break;
-                    case EVENTS_NOTIFICATIONS:
-                        binding.switchEventsNotifications.setChecked(boolValue);
-                        break;
-                }
-                sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, key, boolValue);
-            }
+        if (value == null) return;
+
+        if (value instanceof String) {
+            updateStringSetting(key, (String) value);
+        } else if (value instanceof Number) {
+            updateNumberSetting(key, ((Number) value).intValue());
+        } else if (value instanceof Boolean) {
+            updateBooleanSetting(key, (Boolean) value);
         }
     }
 
-    // Pulizia dei dati salvati (crittati e non)
+    private void updateStringSetting(String key, String value) {
+        if (USERNAME.equals(key)) {
+            binding.username.setText(value);
+        }
+        sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, value);
+    }
+
+    private void updateNumberSetting(String key, int value) {
+        if (LANGUAGE.equals(key)) {
+            binding.spinnerLanguage.setSelection(value);
+        } else if (DARK_THEME.equals(key)) {
+            binding.spinnerDarkTheme.setSelection(value);
+        }
+        sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, key, value);
+    }
+
+    private void updateBooleanSetting(String key, boolean value) {
+        switch (key) {
+            case IMPERIAL_SYSTEM:
+                binding.switchImperialSystem.setChecked(value);
+                break;
+            case TIME_FORMAT:
+                binding.switchTimeFormat.setChecked(value);
+                break;
+            case ISS_NOTIFICATIONS:
+                binding.switchIssNotifications.setChecked(value);
+                break;
+            case EVENTS_NOTIFICATIONS:
+                binding.switchEventsNotifications.setChecked(value);
+                break;
+        }
+        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, key, value);
+    }
+
+
+    // Pulisce i dati crittati e non quelli crittati
     public void clearData() {
         try {
             sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
