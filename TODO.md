@@ -4,6 +4,7 @@
 
 - [x] Signin
 - [x] Signup
+- [ ] Change Encyclopedia name (shorter)
 - [ ] Wifi missing
 - [ ] Homepage
   - [ ] Home Layout
