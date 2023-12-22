@@ -1,10 +1,16 @@
 package it.unimib.adastra.ui.welcome;
 
+import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
+import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
+import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
+import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.PASSWORD;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.os.Bundle;
@@ -102,21 +108,22 @@ public class SignupFragment extends Fragment {
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                // Registrazione riuscita, l'email non è già in uso
-                                saveSignupData(username, email, password);
-
                                 // Add a new document with email as an id
                                 Map<String, Object> newUser = new HashMap<>();
-                                newUser.put("username", username);
+                                newUser.put(USERNAME, username);
                                 //newUser.put("birthday", newUser);
-                                newUser.put("imperialSystem", false);
-                                newUser.put("hourFormat", false);
-                                newUser.put("issNotification", false);
-                                newUser.put("eventsNotification", false);
-                                newUser.put("language", 0);
-                                newUser.put("theme", 0);
+                                newUser.put(IMPERIAL_SYSTEM, false);
+                                newUser.put(TIME_FORMAT, false);
+                                newUser.put(ISS_NOTIFICATIONS, true);
+                                newUser.put(EVENTS_NOTIFICATIONS, true);
+                                newUser.put(LANGUAGE, 0);
+                                newUser.put(DARK_THEME, 0);
 
                                 database.collection("users").document(email).set(newUser);
+
+                                // Salvataggio dei dati in locale
+                                saveSignupData(username, email, password);
+                                inizializeSettings();
 
                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
                                 //TODO finish();
@@ -125,10 +132,10 @@ public class SignupFragment extends Fragment {
                                 Exception exception = task.getException();
                                 if (exception instanceof FirebaseAuthUserCollisionException) {
                                     // L'email è già in uso
-                                    binding.textEmailSignup.setError(getString(R.string.email_already_exists_error_message));
+                                    binding.textEmailSignup.setError(getString(R.string.error_email_already_exists));
                                 } else {
                                     // Altri errori durante la registrazione
-                                    Snackbar.make(v, getString(R.string.signup_failure_error_message), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(v, getString(R.string.error_signup_failure), Snackbar.LENGTH_LONG).show();
                                 }
                             }
 
@@ -142,7 +149,7 @@ public class SignupFragment extends Fragment {
         boolean result = username != null && username.length() >= 3 && username.length() <= 10;
 
         if (!result){
-            binding.textUsernameSignup.setError(getString(R.string.invalid_username_error_messagge));
+            binding.textUsernameSignup.setError(getString(R.string.error_invalid_username));
         }
 
         return result;
@@ -153,7 +160,7 @@ public class SignupFragment extends Fragment {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            binding.textEmailSignup.setError(getString(R.string.invalid_email_error_message));
+            binding.textEmailSignup.setError(getString(R.string.error_invalid_email));
         }
 
         return result;
@@ -164,7 +171,7 @@ public class SignupFragment extends Fragment {
         boolean result = password != null && password.length() >= 8;
 
         if (!result) {
-            binding.textPasswordSignup.setError(getString(R.string.invalid_password_error_message));
+            binding.textPasswordSignup.setError(getString(R.string.error_invalid_password));
         }
 
         return result;
@@ -175,7 +182,7 @@ public class SignupFragment extends Fragment {
         boolean result = password.equals(passwordRepeat);
 
         if (!result) {
-            binding.textPasswordRepeatSignup.setError(getString(R.string.invalid_password_repeat_error_message));
+            binding.textPasswordRepeatSignup.setError(getString(R.string.error_invalid_password_repeat));
         }
 
         return result;
@@ -195,5 +202,12 @@ public class SignupFragment extends Fragment {
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void inizializeSettings() {
+        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, IMPERIAL_SYSTEM, false);
+        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, TIME_FORMAT, false);
+        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, ISS_NOTIFICATIONS, true);
+        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, EVENTS_NOTIFICATIONS, true);
     }
 }

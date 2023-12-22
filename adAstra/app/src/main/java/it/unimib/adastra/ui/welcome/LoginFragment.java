@@ -108,7 +108,7 @@ public class LoginFragment extends Fragment {
                                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
                                 //TODO finish();
                             } else {
-                                showSnackbar(v, getString(R.string.invalid_login_error_message));
+                                showSnackbar(v, getString(R.string.error_invalid_login));
                             }
                         });
             }
@@ -132,7 +132,7 @@ public class LoginFragment extends Fragment {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            showSnackbar(binding.textEmailLogin, getString(R.string.invalid_login_error_message));
+            showSnackbar(binding.textEmailLogin, getString(R.string.error_invalid_login));
         }
 
         return result;
@@ -143,7 +143,7 @@ public class LoginFragment extends Fragment {
         boolean result = password != null && password.trim().length() >= 8;
 
         if (!result) {
-            showSnackbar(binding.textPasswordLogin, getString(R.string.invalid_login_error_message));
+            showSnackbar(binding.textPasswordLogin, getString(R.string.error_invalid_login));
         }
 
         return result;

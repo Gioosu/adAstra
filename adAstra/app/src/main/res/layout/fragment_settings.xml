@@ -61,6 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:text="@string/username"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -69,18 +70,28 @@
                     app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/profileSettingsButton"
+                    android:id="@+id/floatingActionButton_account_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:clickable="true"
+                    android:src="@drawable/change"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/username" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton_log_out"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:clickable="true"
-                    android:contentDescription="@string/account_settings"
-                    android:src="@drawable/change"
+                    android:src="@drawable/log_out"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/username" />
+                    app:layout_constraintTop_toTopOf="@+id/floatingActionButton_account_settings" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -114,8 +125,8 @@
             android:layout_height="0dp"
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_preferences">
 
             <LinearLayout
@@ -125,101 +136,110 @@
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_imperial_system"
-                    android:layout_width="276dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
                     android:drawableStart="@drawable/ruler"
                     android:drawablePadding="21dp"
                     android:paddingStart="3dp"
                     android:text="@string/imperial_system"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="16sp" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_time_format"
-                    android:layout_width="276dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
                     android:drawableStart="@drawable/clock"
                     android:drawablePadding="24dp"
                     android:text="@string/time_format"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="16sp" />
 
                 <View
                     android:id="@+id/divider_notifications_settings"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="32dp"
                     android:background="?android:attr/listDivider" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_iss_notifications"
-                    android:layout_width="276dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="32dp"
                     android:drawableStart="@drawable/iss_outlined"
-                    android:drawablePadding="24dp"
+                    android:drawablePadding="21dp"
                     android:paddingStart="3dp"
                     android:text="@string/iss_notifications"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="16sp" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_events_notifications"
-                    android:layout_width="276dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="32dp"
                     android:drawableStart="@drawable/meteorite_comet_outlined"
-                    android:drawablePadding="24dp"
+                    android:drawablePadding="21dp"
                     android:paddingStart="3dp"
                     android:text="@string/events_notifications"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="16sp" />
 
                 <View
                     android:id="@+id/divider_general_settings"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="32dp"
                     android:background="?android:attr/listDivider" />
 
                 <TextView
                     android:id="@+id/textView_language"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
                     android:text="@string/language"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:layout_width="276dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="4dp"
+                    android:layout_marginEnd="32dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageView_language"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="3dp"
-                        android:layout_marginEnd="21dp"
-                        android:layout_weight="1"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center|center_horizontal|center_vertical"
+                        android:layout_marginStart="4dp"
                         android:src="@drawable/translate" />
 
                     <Spinner
                         android:id="@+id/spinner_language"
-                        android:layout_width="228dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
                         android:entries="@array/languages_string_array"
                         android:minHeight="48dp"
                         android:spinnerMode="dialog" />
@@ -230,50 +250,110 @@
                     android:id="@+id/textView_theme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
                     android:text="@string/theme"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:layout_width="276dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="4dp"
+                    android:layout_marginEnd="32dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageView_dark_theme"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="24dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/mode_dark" />
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center|center_horizontal|center_vertical"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/dark_theme" />
 
                     <Spinner
                         android:id="@+id/spinner_dark_theme"
-                        android:layout_width="228dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
                         android:entries="@array/dark_theme_string_array"
                         android:minHeight="48dp"
                         android:spinnerMode="dialog" />
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/button_log_out"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="32dp"
+                <View
+                    android:id="@+id/divider_support"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView_report_issue"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center|center_horizontal|center_vertical"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/email_report" />
+
+                    <Button
+                        android:id="@+id/button_report_iussue"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:gravity="start|center_horizontal|center_vertical"
+                        android:text="@string/report_issue"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="16sp"
+                        app:icon="@drawable/arrow_forward"
+                        app:iconGravity="end" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/log_out"
-                    android:textSize="20sp"
-                    app:icon="@drawable/portal"
-                    app:iconGravity="start" />
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView_build_information"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center|center_horizontal|center_vertical"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/build_information" />
+
+                    <Button
+                        android:id="@+id/button_build_informatoin"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:gravity="start|center_horizontal|center_vertical"
+                        android:text="@string/version_text"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="16sp"
+                        app:icon="@drawable/arrow_forward"
+                        app:iconGravity="end" />
+                </LinearLayout>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

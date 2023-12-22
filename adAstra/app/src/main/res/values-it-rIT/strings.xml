@@ -9,14 +9,14 @@
     <string name="sign_up">Registrati</string>
 
     <string name="reset_your_password">Reimposta la password</string>
-    <string name="enter_your_email">Inserisci il tuo indirizzo e-mail e ti invieremo un link per reimpostare la password</string>
+    <string name="enter_your_email">Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password</string>
     <string name="reset_password">Reimposta password</string>
 
     <string name="check_your_inbox">Controlla la tua casella di posta</string>
-    <string name="sent_a_password">Abbiamo inviato un link per la reimpostazione della password all\'e-mail associata al tuo account</string>
-    <string name="didnt_get_an_email">Non hai ricevuto l\'e-mail?</string>
+    <string name="sent_a_password">Abbiamo inviato un link per la reimpostazione della password all\'email associata al tuo account</string>
+    <string name="didnt_get_an_email">Non hai ricevuto l\'email?</string>
     <string name="resend">Invia di nuovo</string>
-    <string name="email_resend">E-mail inviata di nuovo</string>
+    <string name="email_resend">Email inviata nuovamente con successo</string>
     <string name="back_to_login">Ritorna all\'accesso</string>
 
     <string name="signup">Registrazione</string>
@@ -26,29 +26,41 @@
     <string name="encyclopedia">Enciclopedia</string>
     <string name="events">Eventi</string>
     <string name="profile">Profilo</string>
-    <string name="settings">Impostazioni</string>
+    <string name="settings">Opzioni</string>
 
-    <string name="account_settings">Impostazioni dell\'account</string>
     <string name="user_preferences">Preferenze</string>
     <string name="time_format">Formato 12 ore</string>
     <string name="imperial_system">Sistema imperiale</string>
     <string name="iss_notifications">Notifiche della ISS</string>
     <string name="events_notifications">Notifiche degli eventi</string>
+    <string name="language">Lingua</string>
     <string name="theme">Tema</string>
     <string-array name="dark_theme_string_array">
         <item>Impostazioni di sistema</item>
         <item>Tema scuro</item>
         <item>Tema chiaro</item>
     </string-array>
-    <string name="language">Lingua</string>
     <string name="notification_settings">Impostazioni notifiche</string>
-    <string name="log_out">Disconnettiti</string>
+    <string name="report_issue" >Report an issue</string>
 
-    <string name="invalid_login_error_message">E-mail o password non validi</string>
-    <string name="invalid_username_error_messagge">"Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
-    <string name="invalid_email_error_message">Indirizzo e-mail non valido</string>
-    <string name="invalid_password_error_message">La password deve essere lunga almeno 8 caratteri</string>
-    <string name="invalid_password_repeat_error_message">Le password devono corrispondere</string>
-    <string name="email_already_exists_error_message">Indirizzo e-mail già in uso</string>
-    <string name="signup_failure_error_message">Registrazione fallita</string>
+    <string name="update_username">Aggiorna il nome utente</string>
+    <string name="update_email">Aggiorna indirizzo</string>
+    <string name="change_password">Cambia passwors</string>
+    <string name="delete_account">Elimina account</string>
+    <string name="confirm_deletion">Conferma eliminazione</string>
+    <string name="confirm_deletion_message">Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile.</string>
+    <string name="delete">Elimina</string>
+    <string name="cancel">Annulla</string>
+
+    <string name="error_user_info_retrieval">Si è verificato un errore durante il recupero delle informazioni dell\'utente</string>
+    <string name="error_email_not_found">Email non trovata o utente non loggato</string>
+    <string name="error_dialog_title">Errore</string>
+    <string name="error_invalid_login">Email o password non validi</string>
+    <string name="error_invalid_username">"Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
+    <string name="error_invalid_email">Indirizzo email non valido</string>
+    <string name="error_invalid_password">La password deve essere lunga almeno 8 caratteri</string>
+    <string name="error_invalid_password_repeat">Le password devono corrispondere</string>
+    <string name="error_email_already_exists">Indirizzo email già in uso</string>
+    <string name="error_email_resend_failed">Invio email fallito</string>
+    <string name="error_signup_failure">Registrazione fallita</string>
 </resources>

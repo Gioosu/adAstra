@@ -4,8 +4,12 @@ import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
+import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
+import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.annotation.SuppressLint;
@@ -23,17 +27,16 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
@@ -50,12 +53,10 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
-    private FirebaseFirestore database;
     private  DocumentReference user;
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
-    private String email;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -91,28 +92,77 @@ public class SettingsFragment extends Fragment {
 
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
-        database = FirebaseFirestore.getInstance();
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
         activity = getActivity();
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
 
         try {
-            if (dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS) != null){
-                email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-                user = database.collection("users").document(email);
+            // Prova a leggere l'email dalle SharedPreferences cifrate
+            String emailFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+
+            String email;
+            if (emailFromSharedPreferences != null) {
+                email = emailFromSharedPreferences;
             } else {
-                user = database.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                // Se non è presente nelle SharedPreferences, ottieni l'email dall'utente corrente di FirebaseAuth
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if (currentUser != null && currentUser.getEmail() != null) {
+                    email = currentUser.getEmail();
+                } else {
+                    // Gestisci il caso in cui non sia possibile ottenere l'email
+                    throw new IllegalStateException("Indirizzo email non disponibile");
+                }
             }
+            user = database.collection("users").document(email);
         } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Errore durante la lettura delle impostazioni dell'utente: ", e);
         }
 
         initializeSettings();
 
-        // Tasto di modifica dell'account
-        binding.profileSettingsButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_profileFragment);
+        // Tasto di log out
+        binding.floatingActionButtonLogOut.setOnClickListener(v -> {
+            clearData();
+            FirebaseAuth.getInstance().signOut();
+            Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
+            //TODO finish();
         });
+
+        // Tasto di modifica dell'account
+        binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_profileFragment));
+
+        // Implementazione dello switch di IMPERIAL_FORMAT
+        binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (binding.switchImperialSystem.isPressed()) {
+                update(IMPERIAL_SYSTEM, isChecked);
+            }
+        });
+
+        // Implementazione di switch di TIME_FORMAT
+        binding.switchTimeFormat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (binding.switchTimeFormat.isPressed()) {
+                update(TIME_FORMAT, isChecked);
+            }
+        });
+
+        // Implementazione di switch di ISS_NOTIFICATIONS
+        binding.switchIssNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (binding.switchIssNotifications.isPressed()) {
+                update(ISS_NOTIFICATIONS, isChecked);
+            }
+        });
+
+        // Implementazione di switch di EVENTS_NOTIFICATIONS
+        binding.switchEventsNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (binding.switchEventsNotifications.isPressed()) {
+                update(EVENTS_NOTIFICATIONS, isChecked);
+            }
+        });
+
 
         // Controlla se l'utente interagisce con lo spinner
         binding.spinnerLanguage.setOnTouchListener((v, event) -> {
@@ -120,7 +170,7 @@ public class SettingsFragment extends Fragment {
             return false;
         });
 
-        // Settaggio della lingua attraverso lo spinner
+        // Implementazione dello spinner di cambio lingua
         binding.spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -129,18 +179,12 @@ public class SettingsFragment extends Fragment {
 
                     switch (selectedLanguage) {
                         case "English":
-                            updateDatabase("language", 0);
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
-                            if (activity instanceof MainActivity) {
-                                ((MainActivity) activity).setLocale("en");
-                            }
+                            update(LANGUAGE, 0);
+                            ((MainActivity) activity).setLocale("en");
                             break;
                         case "Italiano":
-                            updateDatabase("language", 1);
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
-                            if (activity instanceof MainActivity) {
-                                ((MainActivity) activity).setLocale("it");
-                            }
+                            update(LANGUAGE, 1);
+                            ((MainActivity) activity).setLocale("it");
                             break;
                     }
 
@@ -159,7 +203,7 @@ public class SettingsFragment extends Fragment {
             return false;
         });
 
-        // Settaggio del tema chiaro/scuro attraverso lo switch
+        // Implementazione dello spinner di cambio tema
         binding.spinnerDarkTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -169,20 +213,17 @@ public class SettingsFragment extends Fragment {
                     switch (selectedTheme) {
                         case "OS setting":
                         case "Impostazioni di sistema":
-                            updateDatabase("theme", 0);
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
+                            update(DARK_THEME, 0);
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                             break;
                         case "Dark theme":
                         case "Tema scuro":
-                            updateDatabase("theme", 1);
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 1);
+                            update(DARK_THEME, 1);
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                             break;
                         case "Light theme":
                         case "Tema chiaro":
-                            updateDatabase("theme", 2);
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 2);
+                            update(DARK_THEME, 2);
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                             break;
                     }
@@ -195,69 +236,102 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        // Tasto di log out
-        binding.buttonLogOut.setOnClickListener(v -> {
-            clearData();
-            FirebaseAuth.getInstance().signOut();
-            Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
-            //TODO finish();
+        binding.buttonReportIussue.setOnClickListener(v -> {
+
         });
 
+        binding.buttonBuildInformatoin.setOnClickListener(v -> {
 
-
+        });
     }
 
     // Settaggio delle impostazioni in base alle preferenze salvate
-    private void initializeSettings(){
-        if (sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME) != null
-        && sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME) != -1
-        && sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE) != -1){
-            binding.username.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
-            binding.spinnerDarkTheme.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
-            binding.spinnerLanguage.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
+    private void initializeSettings() {
+        if (arePreferencesSet()) {
+            setPreferencesToUI();
         } else {
-            user.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    binding.username.setText(document.getString("username"));
-                    Number themeNumber = document.getLong("theme");
-                    if (themeNumber != null) {
-                        binding.spinnerDarkTheme.setSelection(themeNumber.intValue());
-                    }
-                    Number languageNumber = document.getLong("language");
-                    if (themeNumber != null) {
-                        binding.spinnerLanguage.setSelection(languageNumber.intValue());
-                    }
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            });
+            fetchAndSetUserSettings();
         }
     }
 
-    // Aggiorna il database
-    private void updateDatabase(String key, int value){
-        user.update(key, value).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
+    private boolean arePreferencesSet() {
+        return sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME) != null
+                && sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME) != -1
+                && sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE) != -1;
+    }
+
+    private void setPreferencesToUI() {
+        binding.username.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
+        binding.switchImperialSystem.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, IMPERIAL_SYSTEM));
+        binding.switchTimeFormat.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, TIME_FORMAT));
+        binding.switchIssNotifications.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, ISS_NOTIFICATIONS));
+        binding.switchEventsNotifications.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, EVENTS_NOTIFICATIONS));
+        binding.spinnerLanguage.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
+        binding.spinnerDarkTheme.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
+    }
+
+    private void fetchAndSetUserSettings() {
+        user.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot document = task.getResult();
+                updateUIAndPreferences(document);
+            } else {
+                Log.e(TAG, "Errore nel recupero delle impostazioni: ", task.getException());
+            }
+        });
+    }
+
+    private void updateUIAndPreferences(DocumentSnapshot document) {
+        if (document.exists()) {
+            updateSetting(USERNAME, document.getString(USERNAME));
+            updateSetting(IMPERIAL_SYSTEM, document.getBoolean(IMPERIAL_SYSTEM));
+            updateSetting(TIME_FORMAT, document.getBoolean(TIME_FORMAT));
+            updateSetting(ISS_NOTIFICATIONS, document.getBoolean(ISS_NOTIFICATIONS));
+            updateSetting(EVENTS_NOTIFICATIONS, document.getBoolean(EVENTS_NOTIFICATIONS));
+            updateSetting(LANGUAGE, document.getLong(LANGUAGE));
+            updateSetting(DARK_THEME, document.getLong(DARK_THEME));
+            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+        } else {
+            Log.d(TAG, "Nessun documento trovato");
+        }
+    }
+
+    private void updateSetting(String key, Object value) {
+        if (value != null) {
+            if (value instanceof String) {
+                binding.username.setText((String) value);
+                sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, (String) value);
+            } else if (value instanceof Number) {
+                int intValue = ((Number) value).intValue();
+                if (key.equals(LANGUAGE)) {
+                    binding.spinnerLanguage.setSelection(intValue);
+                } else if (key.equals(DARK_THEME)) {
+                    binding.spinnerDarkTheme.setSelection(intValue);
+                }
+                sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, key, intValue);
+            } else if (value instanceof Boolean) {
+                boolean boolValue = (Boolean) value;
+                switch (key) {
+                    case IMPERIAL_SYSTEM:
+                        binding.switchImperialSystem.setChecked(boolValue);
+                        break;
+                    case TIME_FORMAT:
+                        binding.switchTimeFormat.setChecked(boolValue);
+                        break;
+                    case ISS_NOTIFICATIONS:
+                        binding.switchIssNotifications.setChecked(boolValue);
+                        break;
+                    case EVENTS_NOTIFICATIONS:
+                        binding.switchEventsNotifications.setChecked(boolValue);
+                        break;
+                }
+                sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, key, boolValue);
+            }
+        }
     }
 
     // Pulizia dei dati salvati (crittati e non)
-    public void clearData(){
+    public void clearData() {
         try {
             sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
             dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
@@ -265,5 +339,25 @@ public class SettingsFragment extends Fragment {
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Aggiorna il database Firebase con il nuovo valore per la chiave specificata
+    private void update(String key, Object value) {
+        if (value instanceof String) {
+            sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, (String) value);
+        } else if (value instanceof Number) {
+            int intValue = ((Number) value).intValue();
+            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, key, intValue);
+        } else if (value instanceof Boolean) {
+            boolean boolValue = (Boolean) value;
+            sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, key, boolValue);
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(key, value);
+
+        user.update(updates)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated with " + key + ": " + value))
+                .addOnFailureListener(e -> Log.w(TAG, "Error updating document for " + key + " with value " + value, e));
     }
 }

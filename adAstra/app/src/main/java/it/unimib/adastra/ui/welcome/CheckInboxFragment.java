@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentCheckInboxBinding;
-import it.unimib.adastra.databinding.FragmentForgotPasswordBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,13 +61,18 @@ public class CheckInboxFragment extends Fragment {
 
         binding.buttonResend.setOnClickListener(v -> {
             email = getArguments().getString("email", "");
-
-            mAuth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            showSnackbar(v, getString(R.string.email_resend));
-                        }
-                    });
+            if (!email.isEmpty()) {
+                mAuth.sendPasswordResetEmail(email)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                showSnackbar(v, getString(R.string.email_resend));
+                            } else {
+                                showSnackbar(v, getString(R.string.error_email_resend_failed));
+                            }
+                        });
+            } else {
+                showSnackbar(v, getString(R.string.error_invalid_email));
+            }
         });
 
         binding.buttonBackToLogin.setOnClickListener(v -> {

@@ -9,8 +9,10 @@ public class Constants {
     public static final String USERNAME = "username";
     public static final String IMPERIAL_SYSTEM = "imperial_system";
     public static final String TIME_FORMAT = "time_format";
-    public static final String DARK_THEME = "dark_theme";
+    public static final String ISS_NOTIFICATIONS = "iss_notifications";
+    public static final String EVENTS_NOTIFICATIONS = "events_notifications";
     public static final String LANGUAGE = "language";
+    public static final String DARK_THEME = "dark_theme";
 
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.encrypted_preferences";

@@ -6,6 +6,7 @@ import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -17,7 +18,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,6 +32,7 @@ import java.util.Locale;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityMainBinding;
+import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
@@ -36,31 +41,33 @@ public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
-    private DataEncryptionUtil dataEncryptionUtil;
-    private NavController navController;
-    private FirebaseFirestore database;
     private DocumentReference user;
-    private String email;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = FirebaseFirestore.getInstance();
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
         sharedPreferencesUtil = new SharedPreferencesUtil(this);
-        dataEncryptionUtil = new DataEncryptionUtil(this);
-
+        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(this);
 
         try {
-            if (dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS) != null){
-                email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            String email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            if (email != null) {
                 user = database.collection("users").document(email);
             } else {
-                user = database.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser != null && currentUser.getEmail() != null) {
+                    user = database.collection("users").document(currentUser.getEmail());
+                } else {
+                    redirectToLogin(R.string.error_email_not_found);
+                    return;
+                }
             }
         } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
+            showErrorDialog(R.string.error_user_info_retrieval);
+            return;
         }
 
         initialize();
@@ -70,90 +77,93 @@ public class MainActivity extends AppCompatActivity {
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(binding.navHostFragment.getId());
-        navController = navHostFragment.getNavController();
+        NavController navController = navHostFragment.getNavController();
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
     }
 
-    // Inizializza la lingua in base alle preferenze salvate
+    //  Reindirizza l'utente alla schermata di login e mostra un messaggio di errore
+    private void redirectToLogin(int message) {
+        // Utilizza Snackbar invece di Toast
+        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).setAction("Login", view -> {
+            // Intenzione per la schermata di login
+            Intent loginIntent = new Intent(this, WelcomeActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }).show();
+    }
+
+    // Mostra un dialogo di errore con il messaggio fornito
+    private void showErrorDialog(int message) {
+        // Mostra un dialogo di errore
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.error_dialog_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.error_ok, null)
+                .show();
+    }
+
+
+    // Inizializza la lingua e il tema secondo le preferenze salvate
     private void initialize() {
-        if (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE) != -1){
-            switch (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE)) {
-                case 0:
-                    setLocale("en");
-                    break;
-                case 1:
-                    setLocale("it");
-                    break;
-            }
-        } else {
-            user.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    Number languageNumber = document.getLong("language");
-                    if (languageNumber != null) {
-                        switch (languageNumber.intValue()) {
-                            case 0:
-                                setLocale("en");
-                                break;
-                            case 1:
-                                setLocale("it");
-                                break;
-                        }
-                    }
+        int languageSetting = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE);
+        int themeSetting = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME);
 
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            });
+        if (languageSetting != -1) {
+            setLocaleBasedOnSetting(languageSetting);
         }
 
-        if (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME) != -1){
-            switch (sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME)) {
-                case 0:
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                    break;
-                case 1:
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    break;
-                case 2:
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    break;
-            }
-        } else {
-            user.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    Number themeNumber = document.getLong("theme");
-                    if (themeNumber != null) {
-                        switch (themeNumber.intValue()) {
-                            case 0:
-                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                                break;
-                            case 1:
-                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                                break;
-                            case 2:
-                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                                break;
-                        }
-                    }
-
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            });
+        if (themeSetting != -1) {
+            setThemeBasedOnSetting(themeSetting);
         }
+
+        if (languageSetting == -1 || themeSetting == -1) {
+            fetchSettingsFromFirestore();
+        }
+    }
+
+    private void setLocaleBasedOnSetting(int setting) {
+        switch (setting) {
+            case 0:
+                setLocale("en");
+                break;
+            case 1:
+                setLocale("it");
+                break;
+        }
+    }
+
+    private void setThemeBasedOnSetting(int setting) {
+        switch (setting) {
+            case 0:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case 1:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case 2:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+        }
+    }
+
+    private void fetchSettingsFromFirestore() {
+        user.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    Number languageNumber = document.getLong(LANGUAGE);
+                    Number themeNumber = document.getLong(DARK_THEME);
+                    if (languageNumber != null) setLocaleBasedOnSetting(languageNumber.intValue());
+                    if (themeNumber != null) setThemeBasedOnSetting(themeNumber.intValue());
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
     }
 
     // Imposta la lingua

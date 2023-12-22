@@ -56,7 +56,7 @@
     <color name="md_theme_dark_outline">#FEFBFF</color> <!-- Contorno di switch -->
     <color name="md_theme_dark_inverseOnSurface">#000E5E</color> <!-- Scritte di Snackbar -->
     <color name="md_theme_dark_inverseSurface">#FBBE00</color> <!-- Snackbar -->
-    <color name="md_theme_dark_inversePrimary">#8836B6</color>
+    <color name="md_theme_dark_inversePrimary">#670020</color>
     <color name="md_theme_dark_textColorPrimary">#FEFBFF</color> <!-- Scritte di TextView e Spinner -->
     <color name="md_theme_dark_shadow">#000000</color>
     <color name="md_theme_dark_surfaceTint">#E6B4FF</color>

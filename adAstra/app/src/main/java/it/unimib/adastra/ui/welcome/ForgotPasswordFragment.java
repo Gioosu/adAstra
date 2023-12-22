@@ -7,19 +7,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentForgotPasswordBinding;
-import it.unimib.adastra.databinding.FragmentLoginBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,7 +84,7 @@ public class ForgotPasswordFragment extends Fragment {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            binding.textEmailResetPassword.setError(getString(R.string.invalid_email_error_message));
+            binding.textEmailResetPassword.setError(getString(R.string.error_invalid_email));
         }
 
         return result;
