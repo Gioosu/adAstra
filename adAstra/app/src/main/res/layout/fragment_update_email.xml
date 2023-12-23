@@ -42,7 +42,6 @@
             android:id="@+id/imageView3"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginTop="16dp"
             android:src="@drawable/email"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"

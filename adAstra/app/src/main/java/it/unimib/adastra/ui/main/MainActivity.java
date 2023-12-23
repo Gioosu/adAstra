@@ -12,12 +12,9 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -32,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Locale;
+import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityMainBinding;
@@ -45,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DocumentReference user;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,18 +81,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-        setSupportActionBar(binding.materialToolbar);
+        setSupportActionBar(binding.materialToolbarMain);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(Objects.requireNonNull(navController.getCurrentDestination()).getLabel());
 
         // Imposta il listener per i cambiamenti di destinazione
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            // Imposta il titolo della Toolbar in base alla destinazione corrente
             CharSequence label = destination.getLabel();
             if (label != null) {
-                binding.materialToolbar.setTitle(label);
+                binding.materialToolbarMain.setTitle(label);
             }
         });
     }
-
 
     //  Reindirizza l'utente alla schermata di login e mostra un messaggio di errore
     private void redirectToLogin(int message) {

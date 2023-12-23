@@ -35,6 +35,8 @@
     <string name="settings">Opzioni</string>
 
     <!-- Settings -->
+    <string name="log_out">Disconnettiti</string>
+    <string name="account_settings">Impostazioni account</string>
     <string name="user_preferences">Preferenze</string>
     <string name="time_format">Formato 12 ore</string>
     <string name="imperial_system">Sistema imperiale</string>
@@ -63,6 +65,10 @@
     <!-- UpdateUsername -->
     <string name="new_username">Nuovo nome utente</string>
     <string name="save">Salva</string>
+
+    <!-- UpdateEmail -->
+    <string name="new_email_address">Nuovo indirizzo email</string>
+    <string name="account_password">Password adAstra</string>
 
     <!-- Errors -->
     <string name="error_email_not_found">Email non trovata o utente non loggato</string>

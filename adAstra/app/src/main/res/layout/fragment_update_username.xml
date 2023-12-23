@@ -42,7 +42,6 @@
             android:id="@+id/imageView_update_username"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginTop="16dp"
             android:src="@drawable/astronaut_outlined"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_username"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username"

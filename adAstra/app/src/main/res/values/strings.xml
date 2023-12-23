@@ -41,6 +41,8 @@
     <string name="settings">Settings</string>
 
     <!-- Settings -->
+    <string name="log_out">Log out</string>
+    <string name="account_settings">Account settings</string>
     <string name="user_preferences">Preferences</string>
     <string name="time_format">12-hour format</string>
     <string name="imperial_system">Imperial system</string>
@@ -75,6 +77,10 @@
     <string name="new_username">New username</string>
     <string name="save">Save</string>
 
+    <!-- UpdateEmail -->
+    <string name="new_email_address">New email address</string>
+    <string name="account_password">adAstra password</string>
+
     <!-- Errors -->
     <string name="error_email_not_found">Email not found or user not logged in</string>
     <string name="error_user_info_retrieval">An error occurred while retrieving user information</string>
@@ -91,8 +97,4 @@
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>
     <string name="error_user_email_not_available">User email not available</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="new_email_address">New email address</string>
-    <string name="account_password">Account password</string>
 </resources>
