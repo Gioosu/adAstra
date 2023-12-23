@@ -34,7 +34,7 @@
 
     <!-- Main -->
     <string name="encyclopedia">Encyclopedia</string>
-    <string name="ISS" translatable="false">ISS</string>
+    <string name="iss" translatable="false">ISS</string>
     <string name="home" translatable="false">Home</string>
     <string name="events">Events</string>
     <string name="profile">Profile</string>
@@ -58,10 +58,10 @@
         <item>Light theme</item>
     </string-array>
     <string name="notification_settings">Notification settings</string>
-    <string name="report_issue" >Report an issue</string>
+    <string name="report_issue">Report an issue</string>
     <string name="version_text" translatable="false">0.00.0</string>
 
-    <!-- Profile -->
+    <!-- AccountSettings -->
     <string name="update_username">Update username</string>
     <string name="update_email">Update email address</string>
     <string name="change_password">Change password</string>
@@ -70,6 +70,10 @@
     <string name="confirm_deletion_message">Are you sure you want to delete your account? This action cannot be undone</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+
+    <!-- UpdateUsername -->
+    <string name="new_username">New username</string>
+    <string name="save">Save</string>
 
     <!-- Errors -->
     <string name="error_email_not_found">Email not found or user not logged in</string>
@@ -87,4 +91,8 @@
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>
     <string name="error_user_email_not_available">User email not available</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_email_address">New email address</string>
+    <string name="account_password">Account password</string>
 </resources>

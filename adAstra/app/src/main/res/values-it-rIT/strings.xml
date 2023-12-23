@@ -50,15 +50,19 @@
     <string name="notification_settings">Impostazioni notifiche</string>
     <string name="report_issue" >Segnala un problema</string>
 
-    <!-- Profile -->
-    <string name="update_username">Aggiorna il nome utente</string>
-    <string name="update_email">Aggiorna indirizzo</string>
+    <!-- AccountSettngs -->
+    <string name="update_username">Aggiorna nome utente</string>
+    <string name="update_email">Aggiorna indirizzo email</string>
     <string name="change_password">Cambia password</string>
     <string name="delete_account">Elimina account</string>
     <string name="confirm_deletion">Conferma eliminazione</string>
     <string name="confirm_deletion_message">Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile</string>
     <string name="delete">Elimina</string>
     <string name="cancel">Annulla</string>
+
+    <!-- UpdateUsername -->
+    <string name="new_username">Nuovo nome utente</string>
+    <string name="save">Salva</string>
 
     <!-- Errors -->
     <string name="error_email_not_found">Email non trovata o utente non loggato</string>

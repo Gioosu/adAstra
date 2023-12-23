@@ -132,7 +132,7 @@ public class SettingsFragment extends Fragment {
 
         // Tasto di modifica dell'account
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_profileFragment));
+                Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountActivity));
 
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {

@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.main;
+package it.unimib.adastra.ui.account;
 
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
@@ -24,24 +24,24 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentProfileBinding;
+import it.unimib.adastra.databinding.FragmentAccountSettingsBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link AccountSettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
-    String TAG = ProfileFragment.class.getSimpleName();
-    private FragmentProfileBinding binding;
+public class AccountSettingsFragment extends Fragment {
+    String TAG = AccountSettingsFragment.class.getSimpleName();
+    private FragmentAccountSettingsBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
     private FirebaseUser user;
     private FirebaseFirestore database;
 
-    public ProfileFragment() {
+    public AccountSettingsFragment() {
         // Required empty public constructor
     }
 
@@ -51,8 +51,8 @@ public class ProfileFragment extends Fragment {
      *
      * @return A new instance of fragment ProfileFragment.
      */
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
+    public static AccountSettingsFragment newInstance() {
+        return new AccountSettingsFragment();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        binding = FragmentAccountSettingsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -76,7 +76,13 @@ public class ProfileFragment extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseFirestore.getInstance();
 
+        // Tasto di UpdateUsername
+        binding.buttonUpdateUsername.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateUsernameFragment));
 
+        // Tasto di UpdateEmail
+        binding.buttonUpdateEmail.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateEmailFragment));
 
         // Tasto di delete account
         binding.buttonDeleteAccount.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
@@ -108,7 +114,7 @@ public class ProfileFragment extends Fragment {
                                 // Logout dell'utente e reindirizza alla schermata di login
                                 FirebaseAuth.getInstance().signOut();
                                 // Redirect to login or intro activity
-                                Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_welcomeActivity);
+                                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
                             } else {
                                 // Gestisce il caso in cui l'eliminazione da Firebase Authentication fallisce
                                 Log.w(TAG, "Errore nell'eliminazione dell'account", task.getException());

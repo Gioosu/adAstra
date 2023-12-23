@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.welcome.WelcomeActivity">
+    tools:context=".ui.account.AccountActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/welcome_nav_host_fragment"
+        android:id="@+id/account_nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,6 +16,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/welcome_nav_graph" />
-
+        app:navGraph="@navigation/account_nav_graph" />
 </androidx.constraintlayout.widget.ConstraintLayout>

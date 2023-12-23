@@ -12,9 +12,12 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -76,12 +79,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(binding.navHostFragment.getId());
+                .findFragmentById(binding.mainNavHostFragment.getId());
         assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
+        setSupportActionBar(binding.materialToolbar);
+
+        // Imposta il listener per i cambiamenti di destinazione
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // Imposta il titolo della Toolbar in base alla destinazione corrente
+            CharSequence label = destination.getLabel();
+            if (label != null) {
+                binding.materialToolbar.setTitle(label);
+            }
+        });
     }
+
 
     //  Reindirizza l'utente alla schermata di login e mostra un messaggio di errore
     private void redirectToLogin(int message) {

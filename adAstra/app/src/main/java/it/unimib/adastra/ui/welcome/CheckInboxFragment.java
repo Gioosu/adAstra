@@ -101,5 +101,4 @@ public class CheckInboxFragment extends Fragment {
         snackbar.setAction(R.string.ok, v -> snackbar.dismiss());
         snackbar.show();
     }
-
 }

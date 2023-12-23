@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_nav_graph"
+    app:startDestination="@id/accountSettingsFragment">
+
+    <fragment
+        android:id="@+id/accountSettingsFragment"
+        android:name="it.unimib.adastra.ui.account.AccountSettingsFragment"
+        android:label="fragment_account_settings"
+        tools:layout="@layout/fragment_account_settings" >
+        <action
+            android:id="@+id/action_accountSettingsFragment_to_welcomeActivity_account"
+            app:destination="@id/welcomeActivity_account" />
+        <action
+            android:id="@+id/action_accountSettingsFragment_to_updateUsernameFragment"
+            app:destination="@id/updateUsernameFragment" />
+        <action
+            android:id="@+id/action_accountSettingsFragment_to_updateEmailFragment"
+            app:destination="@id/updateEmailFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/welcomeActivity_account"
+        android:name="it.unimib.adastra.ui.welcome.WelcomeActivity"
+        android:label="activity_welcome"
+        tools:layout="@layout/activity_welcome" />
+    <fragment
+        android:id="@+id/updateUsernameFragment"
+        android:name="it.unimib.adastra.ui.account.UpdateUsernameFragment"
+        android:label="fragment_update_username"
+        tools:layout="@layout/fragment_update_username" />
+    <fragment
+        android:id="@+id/updateEmailFragment"
+        android:name="it.unimib.adastra.ui.account.UpdateEmailFragment"
+        android:label="fragment_update_email"
+        tools:layout="@layout/fragment_update_email" />
+</navigation>

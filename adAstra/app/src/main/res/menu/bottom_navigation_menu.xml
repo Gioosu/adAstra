@@ -11,7 +11,7 @@
         android:id="@+id/ISSFragment"
         android:enabled="true"
         android:icon="@drawable/iss"
-        android:title="@string/ISS" />
+        android:title="@string/iss" />
 
     <item
         android:id="@+id/homeFragment"
