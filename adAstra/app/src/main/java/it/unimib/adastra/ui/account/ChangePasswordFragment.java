@@ -12,23 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentAccountSettingsBinding;
-import it.unimib.adastra.databinding.FragmentUpdateUsernameBinding;
-import it.unimib.adastra.ui.main.MainActivity;
-import it.unimib.adastra.util.SharedPreferencesUtil;
+import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
+import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link UpdateUsernameFragment#newInstance} factory method to
+ * Use the {@link ChangePasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UpdateUsernameFragment extends Fragment {
-    String TAG = UpdateUsernameFragment.class.getSimpleName();
-    private FragmentUpdateUsernameBinding binding;
-    private SharedPreferencesUtil sharedPreferencesUtil;
+public class ChangePasswordFragment extends Fragment {
+    String TAG = ChangePasswordFragment.class.getSimpleName();
+    private FragmentChangePasswordBinding binding;
+    private DataEncryptionUtil dataEncryptionUtil;;
     private Activity activity;
 
-    public UpdateUsernameFragment() {
+    public ChangePasswordFragment() {
         // Required empty public constructor
     }
 
@@ -36,10 +35,10 @@ public class UpdateUsernameFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment UpdateUsernameFragment.
+     * @return A new instance of fragment ChangePasswordFragment.
      */
-    public static UpdateUsernameFragment newInstance() {
-        return new UpdateUsernameFragment();
+    public static ChangePasswordFragment newInstance(String param1, String param2) {
+        return new ChangePasswordFragment();
     }
 
     @Override
@@ -51,28 +50,19 @@ public class UpdateUsernameFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentUpdateUsernameBinding.inflate(inflater, container, false);
+        binding = FragmentChangePasswordBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
 
-        initialize();
-
         // Tasto di Cancel
-        binding.buttonCancelUpdateUsername.setOnClickListener(v -> {
+        binding.buttonCancelChangePassword.setOnClickListener(v -> {
             ((AccountActivity) activity).onSupportNavigateUp();
         });
-    }
-
-    // Inizializza la TextView
-    private void initialize() {
-        assert getArguments() != null;
-        String username = getArguments().getString("username", "");
-        binding.textViewUsernameUpdateUsername.setText(username);
     }
 }

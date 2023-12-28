@@ -127,7 +127,7 @@ public class SettingsFragment extends Fragment {
             clearData();
             FirebaseAuth.getInstance().signOut();
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
-            //TODO finish();
+            activity.finish();
         });
 
         // Tasto di modifica dell'account

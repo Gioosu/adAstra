@@ -26,7 +26,7 @@
     <!-- Signup -->
     <string name="signup">Registrazione</string>
     <string name="username">Nome utente</string>
-    <string name="password_repeat">Ripeti la password</string>
+    <string name="confirm_password">Conferma la password</string>
 
     <!-- Main -->
     <string name="encyclopedia">Enciclopedia</string>
@@ -70,6 +70,11 @@
     <string name="new_email_address">Nuovo indirizzo email</string>
     <string name="account_password">Password adAstra</string>
 
+    <!-- ChangePassword -->
+    <string name="current_password">Password attuale</string>
+    <string name="new_password">Nuova password</string>
+    <string name="confirm_new_password">Conferma la nuova password</string>
+
     <!-- Errors -->
     <string name="error_email_not_found">Email non trovata o utente non loggato</string>
     <string name="error_user_info_retrieval">Si è verificato un errore durante il recupero delle informazioni dell\'utente</string>
@@ -81,7 +86,7 @@
     <string name="error_invalid_email">Indirizzo email non valido</string>
     <string name="error_email_already_exists">Indirizzo email già in uso</string>
     <string name="error_invalid_password">La password deve essere lunga almeno 8 caratteri</string>
-    <string name="error_invalid_password_repeat">Le password devono corrispondere</string>
+    <string name="error_invalid_confirm_password">Le password devono corrispondere</string>
     <string name="error_signup_failure">Registrazione fallita</string>
     <string name="error_deleting_account">Errore nell\'eliminazione dell\'account</string>
     <string name="error_deleting_user_data">Errore nell\'eliminazione dei dati dell\'utente</string>

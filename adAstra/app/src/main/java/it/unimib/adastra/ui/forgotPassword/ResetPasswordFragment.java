@@ -1,5 +1,6 @@
-package it.unimib.adastra.ui.welcome;
+package it.unimib.adastra.ui.forgotPassword;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,19 +20,20 @@ import org.apache.commons.validator.routines.EmailValidator;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentForgotPasswordBinding;
+import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ForgotPasswordFragment#newInstance} factory method to
+ * Use the {@link ResetPasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForgotPasswordFragment extends Fragment {
-    private FragmentForgotPasswordBinding binding;
+public class ResetPasswordFragment extends Fragment {
+    private FragmentResetPasswordBinding binding;
     private String email;
     private FirebaseAuth mAuth;
+    private Activity activity;
 
-    public ForgotPasswordFragment() {
+    public ResetPasswordFragment() {
         // Required empty public constructor
     }
 
@@ -41,8 +43,8 @@ public class ForgotPasswordFragment extends Fragment {
      *
      * @return A new instance of fragment ForgotPasswordFragment.
      */
-    public static ForgotPasswordFragment newInstance() {
-        return new ForgotPasswordFragment();
+    public static ResetPasswordFragment newInstance() {
+        return new ResetPasswordFragment();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class ForgotPasswordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentForgotPasswordBinding.inflate(inflater, container, false);
+        binding = FragmentResetPasswordBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -63,6 +65,7 @@ public class ForgotPasswordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        activity = getActivity();
 
         binding.buttonResetPassword.setOnClickListener(v -> {
             email = Objects.requireNonNull(binding.textEmailResetPassword.getText()).toString();
@@ -90,7 +93,7 @@ public class ForgotPasswordFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("email", email);
         Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_checkInboxFragment, bundle);
-        //TODO finish();
+        activity.finish();
     }
 
     // Controlla che l'email sia valida

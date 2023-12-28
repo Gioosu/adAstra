@@ -30,7 +30,7 @@
     <!-- Signup -->
     <string name="signup">Signup</string>
     <string name="username">Username</string>
-    <string name="password_repeat">Repeat password</string>
+    <string name="confirm_password">Confirm password</string>
 
     <!-- Main -->
     <string name="encyclopedia">Encyclopedia</string>
@@ -81,6 +81,11 @@
     <string name="new_email_address">New email address</string>
     <string name="account_password">adAstra password</string>
 
+    <!-- ChangePassword -->
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+
     <!-- Errors -->
     <string name="error_email_not_found">Email not found or user not logged in</string>
     <string name="error_user_info_retrieval">An error occurred while retrieving user information</string>
@@ -92,7 +97,7 @@
     <string name="error_invalid_email">Invalid email address</string>
     <string name="error_email_already_exists">Email address already in use</string>
     <string name="error_invalid_password">Password must be at least 8 characters</string>
-    <string name="error_invalid_password_repeat">Passwords must match</string>
+    <string name="error_invalid_confirm_password">Passwords must match</string>
     <string name="error_signup_failure">Signup  failed</string>
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.welcome.CheckInboxFragment">
+    tools:context=".ui.forgotPassword.CheckInboxFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/check_your_inbox"
             android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
+            android:textSize="24sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
             app:layout_constraintTop_toBottomOf="@+id/imageView_icon_check_inbox" />

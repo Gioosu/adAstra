@@ -5,6 +5,7 @@ import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     private String email;
     private String password;
+    private Activity activity;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -74,6 +76,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        activity = getActivity();
 
         // Login diretto, se i dati login sono presenti nel file crittato
         try {
@@ -84,13 +87,14 @@ public class LoginFragment extends Fragment {
 
             if (email != null && password != null) {
                 Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_mainActivity);
+                activity.finish();
             }
         } catch (GeneralSecurityException | IOException e) {
             showSnackbar(requireView(), getString(R.string.error_reading_credentials));
         }
 
         // Pulsante di password dimenticata
-        binding.forgotPassword.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordFragment));
+        binding.forgotPassword.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordActivity));
 
         // Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
@@ -104,7 +108,7 @@ public class LoginFragment extends Fragment {
                                 //Salvataggio dei dati di login nel file crittato
                                 saveLoginData(email, password);
                                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
-                                //TODO finish();
+                                activity.finish();
                             } else {
                                 showSnackbar(v, getString(R.string.error_invalid_login));
                             }
@@ -113,11 +117,8 @@ public class LoginFragment extends Fragment {
         });
 
         // Pulsante di registrazione
-        binding.buttonSignupLogin.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment);
-            //TODO finish();
-            //TODO Trovare un modo per cancellare l'activity Login DOPO che si ha raggiunto la main page attraverso questo pulsante
-        });
+        binding.buttonSignupLogin.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment));
     }
 
     // Controlla che l'email sia valida

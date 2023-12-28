@@ -17,8 +17,8 @@
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
-            app:destination="@id/forgotPasswordFragment" />
+            android:id="@+id/action_loginFragment_to_forgotPasswordActivity"
+            app:destination="@id/forgotPasswordActivity" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -34,25 +34,9 @@
             android:id="@+id/action_signupFragment_to_mainActivity"
             app:destination="@id/mainActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/forgotPasswordFragment"
-        android:name="it.unimib.adastra.ui.welcome.ForgotPasswordFragment"
-        android:label="fragment_forgot_password"
-        tools:layout="@layout/fragment_forgot_password" >
-        <action
-            android:id="@+id/action_forgotPasswordFragment_to_checkInboxFragment"
-            app:destination="@id/checkInboxFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/checkInboxFragment"
-        android:name="it.unimib.adastra.ui.welcome.CheckInboxFragment"
-        android:label="fragment_check_inbox"
-        tools:layout="@layout/fragment_check_inbox" >
-        <action
-            android:id="@+id/action_checkInboxFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <argument
-            android:name="email"
-            app:argType="string" />
-    </fragment>
+    <activity
+        android:id="@+id/forgotPasswordActivity"
+        android:name="it.unimib.adastra.ui.forgotPassword.ForgotPasswordActivity"
+        android:label="activity_forgot_password"
+        tools:layout="@layout/activity_forgot_password" />
 </navigation>

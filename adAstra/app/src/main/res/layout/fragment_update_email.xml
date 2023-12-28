@@ -84,7 +84,8 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_update_email">
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_update_email"
+            app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordInputEditText_update_email"
@@ -92,8 +93,20 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/password"
                 android:drawablePadding="16dp"
-                android:hint="@string/account_password" />
+                android:hint="@string/account_password"
+                android:paddingEnd="44dp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_forgot_password_update_email"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/forgot_password"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
+            app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout_update_email" />
 
         <Button
             android:id="@+id/button_cancel_update_email"
@@ -101,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:text="@string/cancel"
+            android:textSize="16sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/button_save_update_email"
             app:layout_constraintEnd_toStartOf="@+id/button_save_update_email"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -112,8 +126,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="@string/save"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/guideline_botton_update_email"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
             app:layout_constraintStart_toEndOf="@+id/button_cancel_update_email" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

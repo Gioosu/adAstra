@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.account;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
+import it.unimib.adastra.databinding.FragmentUpdateUsernameBinding;
+import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +23,10 @@ import it.unimib.adastra.R;
  * create an instance of this fragment.
  */
 public class UpdateEmailFragment extends Fragment {
+    String TAG = UpdateEmailFragment.class.getSimpleName();
+    private FragmentUpdateEmailBinding binding;
+    private DataEncryptionUtil dataEncryptionUtil;;
+    private Activity activity;
 
     public UpdateEmailFragment() {
         // Required empty public constructor
@@ -39,14 +48,31 @@ public class UpdateEmailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_update_email, container, false);
+        binding = FragmentUpdateEmailBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        activity = getActivity();
+
+        initialize();
+
+        // Tasto di Cancel
+        binding.buttonCancelUpdateEmail.setOnClickListener(v -> {
+            ((AccountActivity) activity).onSupportNavigateUp();
+        });
+    }
+
+    // Inizializza la TextView
+    private void initialize() {
+        assert getArguments() != null;
+        String email = getArguments().getString("email", "");
+        binding.textViewEmailUpdateEmail.setText(email);
     }
 }

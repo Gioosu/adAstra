@@ -1,5 +1,6 @@
-package it.unimib.adastra.ui.welcome;
+package it.unimib.adastra.ui.forgotPassword;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class CheckInboxFragment extends Fragment {
     private FragmentCheckInboxBinding binding;
     private FirebaseAuth mAuth;
     private String email;
+    private Activity activity;
     public CheckInboxFragment() {
         // Required empty public constructor
     }
@@ -55,18 +57,15 @@ public class CheckInboxFragment extends Fragment {
         return binding.getRoot();
     }
 
-    // Chiavi costanti
-    private static final String ARG_EMAIL = "email";
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mAuth = FirebaseAuth.getInstance();
+        activity = getActivity();
 
         binding.buttonResend.setOnClickListener(v -> {
             assert getArguments() != null;
-            email = getArguments().getString(ARG_EMAIL, "");
+            email = getArguments().getString("email", "");
             if (isValidEmail(email)) {
                 showSnackbarWithAction(v, getString(R.string.sending_email));
                 mAuth.sendPasswordResetEmail(email)
@@ -83,8 +82,8 @@ public class CheckInboxFragment extends Fragment {
         });
 
         binding.buttonBackToLogin.setOnClickListener(v -> {
-                Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_loginFragment);
-                //TODO finish();
+                Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_welcomeActivity2);
+                activity.finish();
         });
     }
 

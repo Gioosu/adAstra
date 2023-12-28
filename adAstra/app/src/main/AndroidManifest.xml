@@ -13,6 +13,9 @@
         android:theme="@style/Theme.AdAstra"
         tools:targetApi="31">
         <activity
+            android:name=".ui.forgotPassword.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.account.AccountActivity"
             android:exported="false" />
         <activity

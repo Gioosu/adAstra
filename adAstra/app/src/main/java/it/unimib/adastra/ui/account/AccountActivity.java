@@ -31,7 +31,7 @@ public class AccountActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
 
         setSupportActionBar(binding.materialToolbarAccountSettings);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Objects.requireNonNull(getSupportActionBar()).setTitle(Objects.requireNonNull(navController.getCurrentDestination()).getLabel());
 
@@ -44,9 +44,17 @@ public class AccountActivity extends AppCompatActivity {
         });
     }
 
+    // Gestisce il tasto indietro della ToolBar
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.account_nav_host_fragment);
-        return navController.navigateUp() || super.onSupportNavigateUp();
+
+        if (navController.getCurrentDestination().getId() == R.id.accountSettingsFragment) {
+            finish();
+            return true;
+        } else {
+            // Comportamento standard di navigateUp
+            return navController.navigateUp() || super.onSupportNavigateUp();
+        }
     }
 }

@@ -12,6 +12,7 @@ import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +56,8 @@ public class SignupFragment extends Fragment {
     private String username;
     private String email;
     private String password;
-    private String passwordRepeat;
+    private String confirmPassword;
+    private Activity activity;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -92,16 +94,17 @@ public class SignupFragment extends Fragment {
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
+        activity = getActivity();
 
         // Registrazione
         binding.buttonSignUpSignup.setOnClickListener(v -> {
             username = Objects.requireNonNull(binding.textUsernameSignup.getText()).toString();
             email = Objects.requireNonNull(binding.textEmailSignup.getText()).toString();
             password = Objects.requireNonNull(binding.textPasswordSignup.getText()).toString();
-            passwordRepeat = Objects.requireNonNull(binding.textPasswordRepeatSignup.getText()).toString();
+            confirmPassword = Objects.requireNonNull(binding.textConfirmPasswordSignup.getText()).toString();
 
             if (isUsernameValid(username) && isEmailValid(email)
-                    && isPasswordValid(password) && isPasswordRepeatValid(password, passwordRepeat)) {
+                    && isPasswordValid(password) && isConfirmPasswordValid(password, confirmPassword)) {
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -109,7 +112,7 @@ public class SignupFragment extends Fragment {
                                 saveSignupData(username, email, password);
                                 initializeSettings();
                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
-                                //TODO finish();
+                                activity.finish();
                             } else {
                                 handleSignupFailure(task.getException(), v);
                             }
@@ -152,11 +155,11 @@ public class SignupFragment extends Fragment {
     }
 
     // Controlla che le password corrispondano
-    private boolean isPasswordRepeatValid(String password, String passwordRepeat){
-        boolean result = password.equals(passwordRepeat);
+    private boolean isConfirmPasswordValid(String password, String confirmPassword){
+        boolean result = password.equals(confirmPassword);
 
         if (!result) {
-            binding.textPasswordRepeatSignup.setError(getString(R.string.error_invalid_password_repeat));
+            binding.textConfirmPasswordSignup.setError(getString(R.string.error_invalid_confirm_password));
         }
 
         return result;
