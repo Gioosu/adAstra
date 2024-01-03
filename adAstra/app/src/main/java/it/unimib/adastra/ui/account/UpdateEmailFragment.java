@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ public class UpdateEmailFragment extends Fragment {
     private FragmentUpdateEmailBinding binding;
     private DataEncryptionUtil dataEncryptionUtil;;
     private Activity activity;
-
+    private FragmentUpdateEmailBinding fragment;
     public UpdateEmailFragment() {
         // Required empty public constructor
     }
@@ -66,6 +67,11 @@ public class UpdateEmailFragment extends Fragment {
         // Tasto di Cancel
         binding.buttonCancelUpdateEmail.setOnClickListener(v -> {
             ((AccountActivity) activity).onSupportNavigateUp();
+        });
+
+        // Pulsante di password dimenticata
+        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_forgotPasswordActivity);
         });
     }
 

@@ -61,7 +61,7 @@
     </string-array>
     <string name="notification_settings">Notification settings</string>
     <string name="report_issue">Report an issue</string>
-    <string name="version_text" translatable="false">0.00.0</string>
+    <string name="version_text" translatable="false">0.00.1</string>
 
     <!-- AccountSettings -->
     <string name="update_username">Update username</string>

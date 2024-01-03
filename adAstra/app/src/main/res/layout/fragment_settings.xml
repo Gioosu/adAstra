@@ -316,7 +316,7 @@
                         android:src="@drawable/email_report" />
 
                     <Button
-                        android:id="@+id/button_report_iussue"
+                        android:id="@+id/button_report_issue"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -347,7 +347,7 @@
                         android:src="@drawable/build_information" />
 
                     <Button
-                        android:id="@+id/button_build_informatoin"
+                        android:id="@+id/button_build_information"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

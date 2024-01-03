@@ -42,12 +42,12 @@
         android:name="it.unimib.adastra.ui.account.UpdateEmailFragment"
         android:label="@string/update_email"
         tools:layout="@layout/fragment_update_email" >
-        <action
-            android:id="@+id/action_updateEmailFragment_to_forgotPasswordFragment2"
-            app:destination="@id/forgotPasswordFragment2" />
         <argument
             android:name="email"
             app:argType="string" />
+        <action
+            android:id="@+id/action_updateEmailFragment_to_forgotPasswordActivity"
+            app:destination="@id/forgotPasswordActivity" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"
@@ -55,21 +55,12 @@
         android:label="@string/change_password"
         tools:layout="@layout/fragment_change_password" >
         <action
-            android:id="@+id/action_changePasswordFragment_to_forgotPasswordFragment2"
-            app:destination="@id/forgotPasswordFragment2" />
+            android:id="@+id/action_changePasswordFragment_to_forgotPasswordActivity"
+            app:destination="@id/forgotPasswordActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/forgotPasswordFragment2"
-        android:name="it.unimib.adastra.ui.forgotPassword.ResetPasswordFragment"
-        android:label="fragment_forgot_password"
-        tools:layout="@layout/fragment_reset_password" >
-        <action
-            android:id="@+id/action_forgotPasswordFragment2_to_checkInboxFragment2"
-            app:destination="@id/checkInboxFragment2" />
-    </fragment>
-    <fragment
-        android:id="@+id/checkInboxFragment2"
-        android:name="it.unimib.adastra.ui.forgotPassword.CheckInboxFragment"
-        android:label="fragment_check_inbox"
-        tools:layout="@layout/fragment_check_inbox" />
+    <activity
+        android:id="@+id/forgotPasswordActivity"
+        android:name="it.unimib.adastra.ui.forgotPassword.ForgotPasswordActivity"
+        android:label="activity_forgot_password"
+        tools:layout="@layout/activity_forgot_password" />
 </navigation>

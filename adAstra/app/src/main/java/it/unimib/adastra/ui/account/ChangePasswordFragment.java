@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,11 @@ public class ChangePasswordFragment extends Fragment {
         // Tasto di Cancel
         binding.buttonCancelChangePassword.setOnClickListener(v -> {
             ((AccountActivity) activity).onSupportNavigateUp();
+        });
+
+        // Pulsante di password dimenticata
+        binding.buttonForgotPasswordChangePassword.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_forgotPasswordActivity);
         });
     }
 }

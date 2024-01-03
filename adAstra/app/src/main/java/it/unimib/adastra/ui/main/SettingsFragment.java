@@ -43,6 +43,10 @@ import it.unimib.adastra.databinding.FragmentSettingsBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
+//import per invio email
+import android.content.Intent;
+import android.net.Uri;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SettingsFragment#newInstance} factory method to
@@ -235,11 +239,11 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        binding.buttonReportIussue.setOnClickListener(v -> {
-
+        binding.buttonReportIssue.setOnClickListener(v -> {
+            sendEmail();
         });
 
-        binding.buttonBuildInformatoin.setOnClickListener(v -> {
+        binding.buttonBuildInformation.setOnClickListener(v -> {
 
         });
     }
@@ -372,5 +376,21 @@ public class SettingsFragment extends Fragment {
         user.update(updates)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated with " + key + ": " + value))
                 .addOnFailureListener(e -> Log.w(TAG, "Error updating document for " + key + " with value " + value, e));
+    }
+    private void sendEmail() {
+        // the report will be sent to adAstra developers email.
+        String[] TO = {"Adiutoriumadastra@gmail.com"};
+        String[] CC = {""}; //TODO: inserire email dei developer
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        //emailIntent.putExtra(Intent.EXTRA_CC, CC);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Report Issue");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Descrivi il problema qui...");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Invia email..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            //Toast.makeText(MainActivity.this, "Nessun client email installato.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
