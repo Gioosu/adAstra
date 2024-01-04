@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -43,9 +44,12 @@ import it.unimib.adastra.databinding.FragmentSettingsBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
-//import per invio email
+//Invio email
 import android.content.Intent;
 import android.net.Uri;
+
+//Visualizzazione della versione
+import it.unimib.adastra.BuildConfig;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +65,6 @@ public class SettingsFragment extends Fragment {
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
-
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -243,8 +246,9 @@ public class SettingsFragment extends Fragment {
             sendEmail();
         });
 
+        // visualizzazione della versione ed easter egg
+        binding.buttonBuildInformation.setText(BuildConfig.VERSION_NAME);
         binding.buttonBuildInformation.setOnClickListener(v -> {
-
         });
     }
 
@@ -380,17 +384,15 @@ public class SettingsFragment extends Fragment {
     private void sendEmail() {
         // the report will be sent to adAstra developers email.
         String[] TO = {"Adiutoriumadastra@gmail.com"};
-        String[] CC = {""}; //TODO: inserire email dei developer
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("message/rfc822");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-        //emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Report Issue");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Descrivi il problema qui...");
-
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_issue));
         try {
-            startActivity(Intent.createChooser(emailIntent, "Invia email..."));
+            getActivity().startActivity(Intent.createChooser(emailIntent, ""));
         } catch (android.content.ActivityNotFoundException ex) {
-            //Toast.makeText(MainActivity.this, "Nessun client email installato.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.buttonReportIssue,
+                    R.string.no_email_client_found, Snackbar.LENGTH_LONG).show();
         }
     }
 }

@@ -121,28 +121,6 @@ public class SignupFragment extends Fragment {
         });
     }
 
-    // Controla che il nome utente sia valido
-    private boolean isUsernameValid(String username){
-        boolean result = username != null && username.length() >= 3 && username.length() <= 10;
-
-        if (!result){
-            binding.textUsernameSignup.setError(getString(R.string.error_invalid_username));
-        }
-
-        return result;
-    }
-
-    // Controlla che l'email sia valida
-    private boolean isEmailValid(String email) {
-        boolean result = EmailValidator.getInstance().isValid(email);
-
-        if (!result) {
-            binding.textEmailSignup.setError(getString(R.string.error_invalid_email));
-        }
-
-        return result;
-    }
-
     // Controlla che la password sia valida
     private boolean isPasswordValid(String password) {
         boolean result = password != null && password.length() >= 8;
@@ -160,6 +138,27 @@ public class SignupFragment extends Fragment {
 
         if (!result) {
             binding.textConfirmPasswordSignup.setError(getString(R.string.error_invalid_confirm_password));
+        }
+
+        return result;
+    }
+    // Controla che il nome utente sia valido
+    private boolean isUsernameValid(String username){
+        boolean result = username != null && username.length() >= 3 && username.length() <= 10;
+
+        if (!result){
+            binding.textUsernameSignup.setError(getString(R.string.error_invalid_username));
+        }
+
+        return result;
+    }
+
+    // Controlla che l'email sia valida
+    private boolean isEmailValid(String email) {
+        boolean result = EmailValidator.getInstance().isValid(email);
+
+        if (!result) {
+            binding.textEmailSignup.setError(getString(R.string.error_invalid_email));
         }
 
         return result;

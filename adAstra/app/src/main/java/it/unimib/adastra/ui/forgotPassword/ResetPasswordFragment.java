@@ -93,7 +93,6 @@ public class ResetPasswordFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("email", email);
         Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_checkInboxFragment, bundle);
-        activity.finish();
     }
 
     // Controlla che l'email sia valida

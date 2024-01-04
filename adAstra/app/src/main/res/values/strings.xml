@@ -102,4 +102,9 @@
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>
     <string name="error_user_email_not_available">User email not available</string>
+    <string name="no_email_client_found">No email client found on this device</string>
+    <string name="password_changed">Password changed succesfully</string>
+    <string name="error_incorrect_password">Incorrect password</string>
+    <string name="username_update">Username updated</string>
+    <string name="error_username_update">Username updating failed</string>
 </resources>

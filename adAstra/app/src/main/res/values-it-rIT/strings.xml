@@ -91,4 +91,9 @@
     <string name="error_deleting_account">Errore nell\'eliminazione dell\'account</string>
     <string name="error_deleting_user_data">Errore nell\'eliminazione dei dati dell\'utente</string>
     <string name="error_user_email_not_available">Email dell\'utente non disponibile</string>
+    <string name="no_email_client_found">Nessun client email trovato sul dispositivo</string>
+    <string name="password_changed">Password modificata con successo</string>
+    <string name="error_incorrect_password">Password errata</string>
+    <string name="username_update">Nome utente aggiornato</string>
+    <string name="error_username_update">Aggiornamento del nome utente fallito</string>
 </resources>
