@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,31 +82,32 @@ public class UpdateUsernameFragment extends Fragment {
             ((AccountActivity) activity).onSupportNavigateUp();
         });
 
-        // Bottone Save
+        // Bottone di Save
         binding.buttonSaveUpdateUsername.setOnClickListener( v -> {
             String newUsername = binding.usernameInputEditTextUpdateUsername.getText().toString();
             if(isUsernameValid(newUsername)) {
+                sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, newUsername);
+
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String userId = user.getUid();
-
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                 Map<String, Object> updates = new HashMap<>();
                 updates.put(USERNAME, newUsername);
-
+                Log.d(TAG, "Bottone premuto");
                 db.collection("users").document(userId)
                         .update(updates)
                         .addOnSuccessListener(aVoid -> {
-                            // TODO: snellire utilizzo snackbar e risolvere errore update
-                            // Aggiorna nome utente nel file shared_prefs
-                            sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, newUsername);
+                            //TODO: correggere snackbar
                             Snackbar.make(view, R.string.username_update, Snackbar.LENGTH_LONG).show();
-                            ((AccountActivity) activity).onSupportNavigateUp();
-
+                            Log.d(TAG, "Nome utente aggiornato");
                         })
                         .addOnFailureListener(e -> {
                             Snackbar.make(view, R.string.error_username_update, Snackbar.LENGTH_LONG).show();
+                            Log.d(TAG, "Aggiornamento del nome utente fallito");
                         });
+
+                ((AccountActivity) activity).onSupportNavigateUp();
             }
         });
     }

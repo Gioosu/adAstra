@@ -96,4 +96,5 @@
     <string name="error_incorrect_password">Password errata</string>
     <string name="username_update">Nome utente aggiornato</string>
     <string name="error_username_update">Aggiornamento del nome utente fallito</string>
+    <string name="error_password_change_failed">Cambio password fallito</string>
 </resources>

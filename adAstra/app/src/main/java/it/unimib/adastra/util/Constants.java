@@ -6,6 +6,7 @@ package it.unimib.adastra.util;
 public class Constants {
     // Constants for Settings
     public static final String SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.preferences";
+    public static final String USER_ID = "user_id";
     public static final String USERNAME = "username";
     public static final String IMPERIAL_SYSTEM = "imperial_system";
     public static final String TIME_FORMAT = "time_format";

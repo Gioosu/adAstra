@@ -11,6 +11,7 @@ import static it.unimib.adastra.util.Constants.PASSWORD;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
+import static it.unimib.adastra.util.Constants.USER_ID;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -108,8 +110,11 @@ public class SignupFragment extends Fragment {
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                createUserInFirestore(username, email);
-                                saveSignupData(username, email, password);
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                assert user != null;
+                                String userId = user.getUid();
+                                createUserInFirestore(userId, username, email);
+                                saveSignupData(userId, username, email, password);
                                 initializeSettings();
                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
                                 activity.finish();
@@ -165,9 +170,10 @@ public class SignupFragment extends Fragment {
     }
 
     // Crea un utente in Firestore
-    private void createUserInFirestore(String username, String email) {
+    private void createUserInFirestore(String userId, String username, String email) {
         Map<String, Object> newUser = new HashMap<>();
         newUser.put(USERNAME, username);
+        newUser.put(EMAIL_ADDRESS, email);
         newUser.put(IMPERIAL_SYSTEM, false);
         newUser.put(TIME_FORMAT, false);
         newUser.put(ISS_NOTIFICATIONS, true);
@@ -175,7 +181,7 @@ public class SignupFragment extends Fragment {
         newUser.put(LANGUAGE, 0);
         newUser.put(DARK_THEME, 0);
 
-        database.collection("users").document(email).set(newUser);
+        database.collection("users").document(userId).set(newUser);
     }
 
     // Mostra gli errori in caso di mancata registrazione
@@ -193,9 +199,11 @@ public class SignupFragment extends Fragment {
     }
 
     // Salva i dati utili al login
-    private void saveSignupData(String username, String email, String password) {
+    private void saveSignupData(String userId, String username, String email, String password) {
         try {
             sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, username);
+            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, USER_ID, userId);
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(

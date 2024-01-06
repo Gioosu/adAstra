@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.main;
 
+import static androidx.core.content.ContextCompat.getSystemService;
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
@@ -11,9 +12,13 @@ import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
+import static it.unimib.adastra.util.Constants.USER_ID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,10 +66,11 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
-    private  DocumentReference user;
+    private DocumentReference user;
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
+
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -106,23 +112,23 @@ public class SettingsFragment extends Fragment {
 
         try {
             // Prova a leggere l'email dalle SharedPreferences cifrate
-            String emailFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            String userIdFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, USER_ID);
 
-            String email;
-            if (emailFromSharedPreferences != null) {
-                email = emailFromSharedPreferences;
+            String userId;
+            if (userIdFromSharedPreferences != null) {
+                userId = userIdFromSharedPreferences;
             } else {
                 // Se non è presente nelle SharedPreferences, ottiene l'email dall'utente corrente di FirebaseAuth
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = auth.getCurrentUser();
-                if (currentUser != null && currentUser.getEmail() != null) {
-                    email = currentUser.getEmail();
+                if (currentUser != null) {
+                    userId = currentUser.getUid();
                 } else {
                     throw new IllegalStateException("Indirizzo email non disponibile");
                 }
             }
-            user = database.collection("users").document(email);
+            user = database.collection("users").document(userId);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException("Errore durante la lettura delle impostazioni dell'utente: ", e);
         }
@@ -186,11 +192,9 @@ public class SettingsFragment extends Fragment {
                     switch (selectedLanguage) {
                         case "English":
                             update(LANGUAGE, 0);
-                            ((MainActivity) activity).setLocale("en");
                             break;
                         case "Italiano":
                             update(LANGUAGE, 1);
-                            ((MainActivity) activity).setLocale("it");
                             break;
                     }
 
@@ -198,6 +202,7 @@ public class SettingsFragment extends Fragment {
                     activity.recreate();
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -237,6 +242,7 @@ public class SettingsFragment extends Fragment {
                     isUserInteractedDarkTheme = false;
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -381,6 +387,7 @@ public class SettingsFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated with " + key + ": " + value))
                 .addOnFailureListener(e -> Log.w(TAG, "Error updating document for " + key + " with value " + value, e));
     }
+
     private void sendEmail() {
         // the report will be sent to adAstra developers email.
         String[] TO = {"Adiutoriumadastra@gmail.com"};

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,23 +91,32 @@ public class ChangePasswordFragment extends Fragment {
             String currPassword = Objects.requireNonNull(binding.currentPasswordInputEditText.getText()).toString();
             String newPassword = Objects.requireNonNull(binding.newPasswordInputEditText.getText()).toString();
             String confirmNewPassword = Objects.requireNonNull(binding.confirmNewPasswordInputEditText.getText()).toString();
+
             try {
                 if(isCurrentPasswordValid(currPassword) && isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)){
+                    try {
+                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, newPassword);
+                    } catch (GeneralSecurityException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    //TODO: correggere snackbar
                     // Aggiorna il database con la nuova password
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    Log.d(TAG, "user " + user);
+                    Log.d(TAG, "user ID " + user.getUid());
                     user.updatePassword(newPassword)
                             .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
                                         // Sovrascrive la nuova password in EncriptedSharedPreferences
-                                        try {
-                                            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, newPassword);
-                                        } catch (GeneralSecurityException | IOException e) {
-                                            throw new RuntimeException(e);
-                                        }
+                                        Log.d(TAG, "password cambiata con successo");
                                         Snackbar.make(view, R.string.password_changed, Snackbar.LENGTH_LONG).show();
-                                        ((AccountActivity) activity).onSupportNavigateUp();
+                                    } else {
+                                        Snackbar.make(view, R.string.error_password_change_failed, Snackbar.LENGTH_LONG).show();
+                                        Log.d(TAG, "cambio password fallito");
                                     }
                                 });
+
+                    ((AccountActivity) activity).onSupportNavigateUp();
                 }
             } catch (GeneralSecurityException | IOException e) {
                 throw new RuntimeException(e);

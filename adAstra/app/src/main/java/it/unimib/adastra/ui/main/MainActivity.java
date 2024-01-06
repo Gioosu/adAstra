@@ -91,6 +91,14 @@ public class MainActivity extends AppCompatActivity {
                 binding.materialToolbarMain.setTitle(label);
             }
         });
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int valore = extras.getInt("destination");
+            if (valore != 0) {
+                navController.navigate(valore);
+            }
+        }
     }
 
     //  Reindirizza l'utente alla schermata di login e mostra un messaggio di errore

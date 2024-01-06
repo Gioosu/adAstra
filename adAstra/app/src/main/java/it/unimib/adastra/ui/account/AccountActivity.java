@@ -6,6 +6,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import java.util.Objects;
@@ -50,6 +52,9 @@ public class AccountActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.account_nav_host_fragment);
 
         if (navController.getCurrentDestination().getId() == R.id.accountSettingsFragment) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("destination", R.id.settingsFragment);
+            startActivity(intent);
             finish();
             return true;
         } else {

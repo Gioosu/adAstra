@@ -107,4 +107,5 @@
     <string name="error_incorrect_password">Incorrect password</string>
     <string name="username_update">Username updated</string>
     <string name="error_username_update">Username updating failed</string>
+    <string name="error_password_change_failed">Password change failed</string>
 </resources>
