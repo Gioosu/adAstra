@@ -101,7 +101,6 @@ public class SettingsFragment extends Fragment {
         isUserInteractedDarkTheme = false;
 
         try {
-            // Prova a leggere l'ID dalle SharedPreferences cifrate
             String userIdFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, USER_ID);
 
@@ -389,7 +388,7 @@ public class SettingsFragment extends Fragment {
             requireActivity().startActivity(Intent.createChooser(emailIntent, ""));
         } catch (android.content.ActivityNotFoundException ex) {
             Snackbar.make(binding.buttonReportIssue,
-                    R.string.no_email_client_found, Snackbar.LENGTH_LONG).show();
+                    R.string.error_email_not_found, Snackbar.LENGTH_LONG).show();
         }
     }
 }

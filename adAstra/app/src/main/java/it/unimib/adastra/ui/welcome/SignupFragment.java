@@ -16,6 +16,7 @@ import static it.unimib.adastra.util.Constants.USER_ID;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,8 +181,16 @@ public class SignupFragment extends Fragment {
         newUser.put(TIME_FORMAT, false);
         newUser.put(ISS_NOTIFICATIONS, true);
         newUser.put(EVENTS_NOTIFICATIONS, true);
-        newUser.put(LANGUAGE, 0);
         newUser.put(DARK_THEME, 0);
+
+        Locale current = Resources.getSystem().getConfiguration().getLocales().get(0);
+        String languageCode = current.getLanguage();
+
+        if (languageCode.equals("it")) {
+            newUser.put(LANGUAGE, 1);
+        } else {
+            newUser.put(LANGUAGE, 0);
+        }
 
         database.collection("users").document(userId).set(newUser);
     }

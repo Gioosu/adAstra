@@ -65,6 +65,7 @@
     <!-- UpdateUsername -->
     <string name="new_username">Nuovo nome utente</string>
     <string name="save">Salva</string>
+    <string name="username_update">Nome utente aggiornato</string>
 
     <!-- UpdateEmail -->
     <string name="new_email_address">Nuovo indirizzo email</string>
@@ -74,9 +75,10 @@
     <string name="current_password">Password attuale</string>
     <string name="new_password">Nuova password</string>
     <string name="confirm_new_password">Conferma la nuova password</string>
+    <string name="password_changed">Password modificata con successo</string>
 
     <!-- Errors -->
-    <string name="error_email_not_found">Email non trovata o utente non loggato</string>
+    <string name="error_email_not_found">Email non trovata</string>
     <string name="error_user_info_retrieval">Si è verificato un errore durante il recupero delle informazioni dell\'utente</string>
     <string name="error_dialog_title">Errore</string>
     <string name="error_reading_credentials">Errore durante la lettura delle credenziali.</string>
@@ -91,11 +93,7 @@
     <string name="error_deleting_account">Errore nell\'eliminazione dell\'account</string>
     <string name="error_deleting_user_data">Errore nell\'eliminazione dei dati dell\'utente</string>
     <string name="error_user_email_not_available">Email dell\'utente non disponibile</string>
-
-    <string name="no_email_client_found">Nessun client email trovato sul dispositivo</string>
-    <string name="password_changed">Password modificata con successo</string>
     <string name="error_incorrect_password">Password errata</string>
-    <string name="username_update">Nome utente aggiornato</string>
     <string name="error_username_update">Aggiornamento del nome utente fallito</string>
     <string name="error_password_change_failed">Cambio password fallito</string>
 </resources>

@@ -99,21 +99,24 @@ public class ChangePasswordFragment extends Fragment {
                     user.updatePassword(newPassword)
                             .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
-                                        // Sovrascrive la nuova password in EncriptedSharedPreferences
                                         Log.d(TAG, "password cambiata con successo");
-                                        Snackbar.make(view, R.string.password_changed, Snackbar.LENGTH_LONG).show();
+                                        showSnackbar(v, getString(R.string.password_changed));
+                                        ((AccountActivity) activity).onSupportNavigateUp();
                                     } else {
-                                        Snackbar.make(view, R.string.error_password_change_failed, Snackbar.LENGTH_LONG).show();
                                         Log.d(TAG, "cambio password fallito");
+                                        showSnackbar(v, getString(R.string.error_password_change_failed));
                                     }
                                 });
-
-                    ((AccountActivity) activity).onSupportNavigateUp();
                 }
             } catch (GeneralSecurityException | IOException e) {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     // Controlla che la password attuale per l'account in uso sia corretta

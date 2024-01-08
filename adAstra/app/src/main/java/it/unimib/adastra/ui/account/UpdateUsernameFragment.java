@@ -93,16 +93,14 @@ public class UpdateUsernameFragment extends Fragment {
                 db.collection("users").document(userId)
                         .update(updates)
                         .addOnSuccessListener(aVoid -> {
-                            //TODO: correggere snackbar
-                            Snackbar.make(view, R.string.username_update, Snackbar.LENGTH_LONG).show();
                             Log.d(TAG, "Nome utente aggiornato");
+                            showSnackbar(v, getString(R.string.username_update));
+                            ((AccountActivity) activity).onSupportNavigateUp();
                         })
                         .addOnFailureListener(e -> {
-                            Snackbar.make(view, R.string.error_username_update, Snackbar.LENGTH_LONG).show();
                             Log.d(TAG, "Aggiornamento del nome utente fallito");
+                            showSnackbar(v, getString(R.string.error_username_update));
                         });
-
-                ((AccountActivity) activity).onSupportNavigateUp();
             }
         });
     }
@@ -123,5 +121,10 @@ public class UpdateUsernameFragment extends Fragment {
         }
 
         return result;
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

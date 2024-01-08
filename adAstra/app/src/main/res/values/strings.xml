@@ -76,6 +76,7 @@
     <!-- UpdateUsername -->
     <string name="new_username">New username</string>
     <string name="save">Save</string>
+    <string name="username_update">Username updated</string>
 
     <!-- UpdateEmail -->
     <string name="new_email_address">New email address</string>
@@ -85,9 +86,10 @@
     <string name="current_password">Current password</string>
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm new password</string>
+    <string name="password_changed">Password changed succesfully</string>
 
     <!-- Errors -->
-    <string name="error_email_not_found">Email not found or user not logged in</string>
+    <string name="error_email_not_found">Email not found</string>
     <string name="error_user_info_retrieval">An error occurred while retrieving user information</string>
     <string name="error_dialog_title">Error</string>
     <string name="error_reading_credentials">Error during reading credentials</string>
@@ -102,11 +104,7 @@
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>
     <string name="error_user_email_not_available">User email not available</string>
-
-    <string name="no_email_client_found">No email client found on this device</string>
-    <string name="password_changed">Password changed succesfully</string>
     <string name="error_incorrect_password">Incorrect password</string>
-    <string name="username_update">Username updated</string>
     <string name="error_username_update">Username updating failed</string>
     <string name="error_password_change_failed">Password change failed</string>
 </resources>

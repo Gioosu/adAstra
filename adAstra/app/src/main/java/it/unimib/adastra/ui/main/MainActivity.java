@@ -1,12 +1,11 @@
 package it.unimib.adastra.ui.main;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.USER_ID;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -18,8 +17,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -33,7 +30,6 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityMainBinding;
-import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
@@ -53,21 +49,25 @@ public class MainActivity extends AppCompatActivity {
         DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(this);
 
         try {
-            String email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-            if (email != null) {
-                user = database.collection("users").document(email);
+            String userIdFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
+                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, USER_ID);
+
+            String userId;
+            if (userIdFromSharedPreferences != null) {
+                userId = userIdFromSharedPreferences;
             } else {
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null && currentUser.getEmail() != null) {
-                    user = database.collection("users").document(currentUser.getEmail());
+                // Se non è presente nelle SharedPreferences, ottiene l'ID dall'utente corrente di FirebaseAuth
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if (currentUser != null) {
+                    userId = currentUser.getUid();
                 } else {
-                    redirectToLogin(R.string.error_email_not_found);
-                    return;
+                    throw new IllegalStateException("ID dell'utente non disponibile");
                 }
             }
+            user = database.collection("users").document(userId);
         } catch (GeneralSecurityException | IOException e) {
-            showErrorDialog(R.string.error_user_info_retrieval);
-            return;
+            throw new RuntimeException("Errore durante la lettura delle impostazioni dell'utente: ", e);
         }
 
         initialize();
@@ -75,45 +75,18 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.materialToolbarMain);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("My title");
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(binding.mainNavHostFragment.getId());
-        assert navHostFragment != null;
-        NavController navController = navHostFragment.getNavController();
+                .findFragmentById(R.id.main_nav_host_fragment);
+        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) ->
+                binding.materialToolbarMain.setTitle(destination.getLabel()));
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-        setSupportActionBar(binding.materialToolbarMain);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(Objects.requireNonNull(navController.getCurrentDestination()).getLabel());
-
-        // Imposta il listener per i cambiamenti di destinazione
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            CharSequence label = destination.getLabel();
-            if (label != null) {
-                binding.materialToolbarMain.setTitle(label);
-            }
-        });
     }
-
-    // Reindirizza l'utente alla schermata di login e mostra un messaggio di errore
-    private void redirectToLogin(int message) {
-        // Utilizza Snackbar invece di Toast
-        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).setAction("Login", view -> {
-            // Intenzione per la schermata di login
-            Intent loginIntent = new Intent(this, WelcomeActivity.class);
-            startActivity(loginIntent);
-            finish();
-        }).show();
-    }
-
-    // Mostra un dialogo di errore con il messaggio fornito
-    private void showErrorDialog(int message) {
-        // Mostra un dialogo di errore
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.error_dialog_title)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, null)
-                .show();
-    }
-
 
     // Inizializza la lingua e il tema in base alle preferenze salvate
     private void initialize() {

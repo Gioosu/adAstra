@@ -183,8 +183,48 @@ public class AccountSettingsFragment extends Fragment {
         sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, value);
     }
 
-    // Elimina l'account dell'untente
+    // Elimina l'account dell'utente
     private void deleteUserAccount(View v) {
+        String userId = currentUser.getUid();
+
+        // Prima elimina l'account da Firebase Authentication
+        try {
+            currentUser.delete().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Account utente eliminato da Firebase Authentication");
+                    // Successivamente elimina i dati dell'utente da Firestore
+                    database.collection("users").document(userId).delete()
+                            .addOnSuccessListener(aVoid -> {
+                                // Pulisce le SharedPreferences
+                                try {
+                                    sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
+                                    dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+                                } catch (GeneralSecurityException | IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                // Logout dell'utente e reindirizza alla schermata di login
+                                FirebaseAuth.getInstance().signOut();
+                                // Redirect to login or intro activity
+                                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Caso in cui l'eliminazione da Firestore fallisce
+                                Log.w(TAG, "Errore nell'eliminazione dei dati da Firestore", e);
+                                showSnackbar(v, getString(R.string.error_deleting_user_data));
+                            });
+                } else {
+                    // Caso in cui l'eliminazione da Firebase Authentication fallisce
+                    Log.w(TAG, "Errore nell'eliminazione dell'account da Firebase Authentication", task.getException());
+                    showSnackbar(v, getString(R.string.error_deleting_account));
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Errore nell'eliminazione dell'account da Firebase Authentication", e);
+            showSnackbar(v, getString(R.string.error_deleting_account));
+        }
+    }
+
+    /*private void deleteUserAccount(View v) {
         String userId = currentUser.getUid();
         // Prima elimina i dati dell'utente da Firestore
         database.collection("users").document(userId).delete()
@@ -213,10 +253,10 @@ public class AccountSettingsFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     // Caso in cui l'eliminazione da Firestore fallisce
-                    Log.w(TAG, "Failed to delete user data.", e);
+                    Log.w(TAG, "Errore nell'eliminazione dei dati", e);
                     showSnackbar(v, getString(R.string.error_deleting_user_data));
                 });
-    }
+    }*/
 
     // Visuala una snackbar
     private void showSnackbar(View view, String message) {
