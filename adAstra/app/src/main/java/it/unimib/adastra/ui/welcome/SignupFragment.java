@@ -14,6 +14,7 @@ import static it.unimib.adastra.util.Constants.USERNAME;
 import static it.unimib.adastra.util.Constants.USER_ID;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -98,7 +100,7 @@ public class SignupFragment extends Fragment {
         database = FirebaseFirestore.getInstance();
         activity = getActivity();
 
-        // Registrazione
+        // Bottone di Sign up
         binding.buttonSignUpSignup.setOnClickListener(v -> {
             username = Objects.requireNonNull(binding.textUsernameSignup.getText()).toString();
             email = Objects.requireNonNull(binding.textEmailSignup.getText()).toString();
@@ -147,7 +149,7 @@ public class SignupFragment extends Fragment {
 
         return result;
     }
-    // Controla che il nome utente sia valido
+    // Controlla che il nome utente sia valido
     private boolean isUsernameValid(String username){
         boolean result = username != null && username.length() >= 3 && username.length() <= 10;
 
@@ -219,5 +221,16 @@ public class SignupFragment extends Fragment {
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, TIME_FORMAT, false);
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, ISS_NOTIFICATIONS, true);
         sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, EVENTS_NOTIFICATIONS, true);
+
+        Locale current = Resources.getSystem().getConfiguration().getLocales().get(0);
+        String languageCode = current.getLanguage();
+
+        if (languageCode.equals("it")) {
+            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
+        } else {
+            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
+        }
+
+        sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
     }
 }

@@ -63,6 +63,7 @@ public class CheckInboxFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         activity = getActivity();
 
+        // Bottone di Resend
         binding.buttonResend.setOnClickListener(v -> {
             assert getArguments() != null;
             email = getArguments().getString("email", "");
@@ -81,6 +82,7 @@ public class CheckInboxFragment extends Fragment {
             }
         });
 
+        // Bottone di Back to login
         binding.buttonBackToLogin.setOnClickListener(v -> {
                 Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_welcomeActivity2);
                 activity.finish();

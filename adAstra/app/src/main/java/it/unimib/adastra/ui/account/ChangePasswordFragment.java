@@ -5,23 +5,19 @@ import static it.unimib.adastra.util.Constants.PASSWORD;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.play.core.integrity.b;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -29,7 +25,6 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
-import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
@@ -40,7 +35,7 @@ import it.unimib.adastra.util.DataEncryptionUtil;
 public class ChangePasswordFragment extends Fragment {
     String TAG = ChangePasswordFragment.class.getSimpleName();
     private FragmentChangePasswordBinding binding;
-    private DataEncryptionUtil dataEncryptionUtil;;
+    private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
 
     public ChangePasswordFragment() {
@@ -53,7 +48,7 @@ public class ChangePasswordFragment extends Fragment {
      *
      * @return A new instance of fragment ChangePasswordFragment.
      */
-    public static ChangePasswordFragment newInstance(String param1, String param2) {
+    public static ChangePasswordFragment newInstance() {
         return new ChangePasswordFragment();
     }
 
@@ -76,17 +71,15 @@ public class ChangePasswordFragment extends Fragment {
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
 
-        // Pulsante di Forgot password
-        binding.buttonForgotPasswordChangePassword.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_forgotPasswordActivity);
-        });
+        // Bottone di Forgot password
+        binding.buttonForgotPasswordChangePassword.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_forgotPasswordActivity));
 
-        // Tasto di Cancel
-        binding.buttonCancelChangePassword.setOnClickListener(v -> {
-            ((AccountActivity) activity).onSupportNavigateUp();
-        });
+        // Bottone di Cancel
+        binding.buttonCancelChangePassword.setOnClickListener(v ->
+                ((AccountActivity) activity).onSupportNavigateUp());
 
-        // Pulsante di Save
+        // Bottone di Save
         binding.buttonSaveChangePassword.setOnClickListener(v -> {
             String currPassword = Objects.requireNonNull(binding.currentPasswordInputEditText.getText()).toString();
             String newPassword = Objects.requireNonNull(binding.newPasswordInputEditText.getText()).toString();
@@ -99,11 +92,10 @@ public class ChangePasswordFragment extends Fragment {
                     } catch (GeneralSecurityException | IOException e) {
                         throw new RuntimeException(e);
                     }
-                    //TODO: correggere snackbar
                     // Aggiorna il database con la nuova password
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     Log.d(TAG, "user " + user);
-                    Log.d(TAG, "user ID " + user.getUid());
+                    Log.d(TAG, "user ID " + Objects.requireNonNull(user).getUid());
                     user.updatePassword(newPassword)
                             .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {

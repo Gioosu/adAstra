@@ -1,8 +1,6 @@
 package it.unimib.adastra.ui.main;
 
-import static androidx.core.content.ContextCompat.getSystemService;
 import static it.unimib.adastra.util.Constants.DARK_THEME;
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
@@ -16,9 +14,7 @@ import static it.unimib.adastra.util.Constants.USER_ID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,17 +40,11 @@ import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
-
-//Invio email
-import android.content.Intent;
-import android.net.Uri;
-
-//Visualizzazione della versione
-import it.unimib.adastra.BuildConfig;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,7 +101,7 @@ public class SettingsFragment extends Fragment {
         isUserInteractedDarkTheme = false;
 
         try {
-            // Prova a leggere l'email dalle SharedPreferences cifrate
+            // Prova a leggere l'ID dalle SharedPreferences cifrate
             String userIdFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
                     ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, USER_ID);
 
@@ -119,13 +109,13 @@ public class SettingsFragment extends Fragment {
             if (userIdFromSharedPreferences != null) {
                 userId = userIdFromSharedPreferences;
             } else {
-                // Se non è presente nelle SharedPreferences, ottiene l'email dall'utente corrente di FirebaseAuth
+                // Se non è presente nelle SharedPreferences, ottiene l'ID dall'utente corrente di FirebaseAuth
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = auth.getCurrentUser();
                 if (currentUser != null) {
                     userId = currentUser.getUid();
                 } else {
-                    throw new IllegalStateException("Indirizzo email non disponibile");
+                    throw new IllegalStateException("ID dell'utente non disponibile");
                 }
             }
             user = database.collection("users").document(userId);
@@ -135,7 +125,7 @@ public class SettingsFragment extends Fragment {
 
         initializeSettings();
 
-        // Tasto di log out
+        // Bottone di Log out
         binding.floatingActionButtonLogOut.setOnClickListener(v -> {
             clearData();
             FirebaseAuth.getInstance().signOut();
@@ -143,7 +133,7 @@ public class SettingsFragment extends Fragment {
             activity.finish();
         });
 
-        // Tasto di modifica dell'account
+        // Bottone di Modifica dell'account
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountActivity));
 
@@ -248,11 +238,11 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        binding.buttonReportIssue.setOnClickListener(v -> {
-            sendEmail();
-        });
+        // Bottone di Report
+        binding.buttonReportIssue.setOnClickListener(v ->
+                sendEmail());
 
-        // visualizzazione della versione ed easter egg
+        // Bottone di Version code
         binding.buttonBuildInformation.setText(BuildConfig.VERSION_NAME);
         binding.buttonBuildInformation.setOnClickListener(v -> {
         });
@@ -396,7 +386,7 @@ public class SettingsFragment extends Fragment {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_issue));
         try {
-            getActivity().startActivity(Intent.createChooser(emailIntent, ""));
+            requireActivity().startActivity(Intent.createChooser(emailIntent, ""));
         } catch (android.content.ActivityNotFoundException ex) {
             Snackbar.make(binding.buttonReportIssue,
                     R.string.no_email_client_found, Snackbar.LENGTH_LONG).show();

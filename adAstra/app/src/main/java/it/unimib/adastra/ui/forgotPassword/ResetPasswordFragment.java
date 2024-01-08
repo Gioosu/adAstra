@@ -1,16 +1,14 @@
 package it.unimib.adastra.ui.forgotPassword;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +29,6 @@ public class ResetPasswordFragment extends Fragment {
     private FragmentResetPasswordBinding binding;
     private String email;
     private FirebaseAuth mAuth;
-    private Activity activity;
 
     public ResetPasswordFragment() {
         // Required empty public constructor
@@ -65,8 +62,8 @@ public class ResetPasswordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-        activity = getActivity();
 
+        // Bottone di Reset Password
         binding.buttonResetPassword.setOnClickListener(v -> {
             email = Objects.requireNonNull(binding.textEmailResetPassword.getText()).toString();
 
@@ -110,5 +107,4 @@ public class ResetPasswordFragment extends Fragment {
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
-
 }

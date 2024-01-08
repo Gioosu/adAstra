@@ -93,7 +93,7 @@ public class LoginFragment extends Fragment {
             showSnackbar(requireView(), getString(R.string.error_reading_credentials));
         }
 
-        // Pulsante di password dimenticata
+        // Bottone di Forgot password
         binding.forgotPassword.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordActivity));
 
         // Login manuale
@@ -116,7 +116,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        // Pulsante di registrazione
+        // Bottone di Sign up
         binding.buttonSignupLogin.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment));
     }

@@ -106,7 +106,7 @@ public class AccountSettingsFragment extends Fragment {
 
         initialize();
 
-        // Tasto di Update username
+        // Bottone di Update username
         binding.buttonUpdateUsername.setOnClickListener(v -> {
             String username = (String) binding.textViewUsernameAccountSettings.getText();
             Bundle bundle = new Bundle();
@@ -114,18 +114,18 @@ public class AccountSettingsFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateUsernameFragment, bundle);
         });
 
-        // Tasto di Update email
+        // Bottone di Update email
         binding.buttonUpdateEmail.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString("email", email);
             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateEmailFragment, bundle);
         });
 
-        // Tasto di Change password
+        // Bottone di Change password
         binding.buttonChangePassword.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_changePasswordFragment));
 
-        // Tasto di Delete account
+        // Bottone di Delete account
         binding.buttonDeleteAccount.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.confirm_deletion)
                 .setMessage(R.string.confirm_deletion_message)
@@ -205,20 +205,20 @@ public class AccountSettingsFragment extends Fragment {
                             // Redirect to login or intro activity
                             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
                         } else {
-                            // Gestisce il caso in cui l'eliminazione da Firebase Authentication fallisce
+                            // Caso in cui l'eliminazione da Firebase Authentication fallisce
                             Log.w(TAG, "Errore nell'eliminazione dell'account", task.getException());
                             showSnackbar(v, getString(R.string.error_deleting_account));
                         }
                     });
                 })
                 .addOnFailureListener(e -> {
-                    // Gestisci il caso in cui l'eliminazione da Firestore fallisce
+                    // Caso in cui l'eliminazione da Firestore fallisce
                     Log.w(TAG, "Failed to delete user data.", e);
                     showSnackbar(v, getString(R.string.error_deleting_user_data));
                 });
     }
 
-    // Visualizzazione di una snackbar
+    // Visuala una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }

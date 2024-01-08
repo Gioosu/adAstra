@@ -5,18 +5,15 @@ import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,11 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentAccountSettingsBinding;
 import it.unimib.adastra.databinding.FragmentUpdateUsernameBinding;
-import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
@@ -77,19 +73,18 @@ public class UpdateUsernameFragment extends Fragment {
 
         initialize();
 
-        // Tasto di Cancel
-        binding.buttonCancelUpdateUsername.setOnClickListener(v -> {
-            ((AccountActivity) activity).onSupportNavigateUp();
-        });
+        // Bottone di Cancel
+        binding.buttonCancelUpdateUsername.setOnClickListener(v ->
+                ((AccountActivity) activity).onSupportNavigateUp());
 
         // Bottone di Save
         binding.buttonSaveUpdateUsername.setOnClickListener( v -> {
-            String newUsername = binding.usernameInputEditTextUpdateUsername.getText().toString();
+            String newUsername = Objects.requireNonNull(binding.usernameInputEditTextUpdateUsername.getText()).toString();
             if(isUsernameValid(newUsername)) {
                 sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, newUsername);
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String userId = user.getUid();
+                String userId = Objects.requireNonNull(user).getUid();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                 Map<String, Object> updates = new HashMap<>();

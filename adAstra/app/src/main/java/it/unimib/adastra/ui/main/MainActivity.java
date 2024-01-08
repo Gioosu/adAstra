@@ -91,17 +91,9 @@ public class MainActivity extends AppCompatActivity {
                 binding.materialToolbarMain.setTitle(label);
             }
         });
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            int valore = extras.getInt("destination");
-            if (valore != 0) {
-                navController.navigate(valore);
-            }
-        }
     }
 
-    //  Reindirizza l'utente alla schermata di login e mostra un messaggio di errore
+    // Reindirizza l'utente alla schermata di login e mostra un messaggio di errore
     private void redirectToLogin(int message) {
         // Utilizza Snackbar invece di Toast
         Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).setAction("Login", view -> {

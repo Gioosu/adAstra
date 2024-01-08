@@ -1,21 +1,16 @@
 package it.unimib.adastra.ui.account;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityAccountBinding;
-import it.unimib.adastra.databinding.ActivityMainBinding;
-import it.unimib.adastra.ui.main.MainActivity;
 
 public class AccountActivity extends AppCompatActivity {
     String TAG = AccountActivity.class.getSimpleName();
@@ -51,10 +46,7 @@ public class AccountActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.account_nav_host_fragment);
 
-        if (navController.getCurrentDestination().getId() == R.id.accountSettingsFragment) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("destination", R.id.settingsFragment);
-            startActivity(intent);
+        if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == R.id.accountSettingsFragment) {
             finish();
             return true;
         } else {
