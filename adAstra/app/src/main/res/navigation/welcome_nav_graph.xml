@@ -31,12 +31,21 @@
         android:label="fragment_signup"
         tools:layout="@layout/fragment_signup" >
         <action
-            android:id="@+id/action_signupFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
+            android:id="@+id/action_signupFragment_to_emailVerificationFragment"
+            app:destination="@id/emailVerificationFragment" />
     </fragment>
     <activity
         android:id="@+id/forgotPasswordActivity"
         android:name="it.unimib.adastra.ui.forgotPassword.ForgotPasswordActivity"
         android:label="activity_forgot_password"
         tools:layout="@layout/activity_forgot_password" />
+    <fragment
+        android:id="@+id/emailVerificationFragment"
+        android:name="it.unimib.adastra.ui.welcome.EmailVerificationFragment"
+        android:label="fragment_email_verification"
+        tools:layout="@layout/fragment_email_verification" >
+        <action
+            android:id="@+id/action_emailVerificationFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
+    </fragment>
 </navigation>

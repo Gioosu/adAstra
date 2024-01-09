@@ -68,7 +68,6 @@
                 android:drawablePadding="16dp"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                android:padding="24dp"
                 android:textColorHint="#546E7A"
                 tools:ignore="TextContrastCheck" />
 
@@ -92,7 +91,6 @@
                 android:drawablePadding="16dp"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:padding="24dp"
                 android:paddingEnd="44dp"
                 tools:ignore="TextContrastCheck" />
 
@@ -119,7 +117,7 @@
             android:paddingRight="32dp"
             android:paddingBottom="12dp"
             android:text="@string/Log_in"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
             app:layout_constraintTop_toBottomOf="@+id/forgot_password" />

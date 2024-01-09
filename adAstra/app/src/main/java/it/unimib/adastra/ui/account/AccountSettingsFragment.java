@@ -35,8 +35,6 @@ public class AccountSettingsFragment extends Fragment {
     private FragmentAccountSettingsBinding binding;
     private FirebaseFirestore database;
     private FirebaseUser currentUser;
-    private DocumentReference user;
-    private String email;
 
     public AccountSettingsFragment() {
         // Required empty public constructor

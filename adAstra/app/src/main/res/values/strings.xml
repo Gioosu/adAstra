@@ -32,6 +32,10 @@
     <string name="username">Username</string>
     <string name="confirm_password">Confirm password</string>
 
+    <!-- Email verification -->
+    <string name="verify_email">Verify your email</string>
+    <string name="sent_a_verification">We sent an account verification link to the email</string>
+
     <!-- Main -->
     <string name="encyclopedia">Encyclopedia</string>
     <string name="iss" translatable="false">ISS</string>
@@ -107,4 +111,5 @@
     <string name="error_incorrect_password">Incorrect password</string>
     <string name="error_username_update">Username updating failed</string>
     <string name="error_password_change_failed">Password change failed</string>
+    <string name="error_email_not_verified">Email not verified</string>
 </resources>

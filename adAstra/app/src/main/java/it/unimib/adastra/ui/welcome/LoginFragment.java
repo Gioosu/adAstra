@@ -52,7 +52,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -67,14 +66,8 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
         activity = getActivity();
-
-        // Login rapido
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_mainActivity);
-            activity.finish();
-        }
 
         // Bottone di Forgot password
         binding.forgotPassword.setOnClickListener(v ->
@@ -89,8 +82,14 @@ public class LoginFragment extends Fragment {
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task-> {
                             if (task.isSuccessful()) {
-                                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
-                                activity.finish();
+                                FirebaseUser user = mAuth.getCurrentUser();
+
+                                if (Objects.requireNonNull(user).isEmailVerified()){
+                                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                                    activity.finish();
+                                } else {
+                                    showSnackbar(v, getString(R.string.error_invalid_login));
+                                }
                             } else {
                                 showSnackbar(v, getString(R.string.error_invalid_login));
                             }

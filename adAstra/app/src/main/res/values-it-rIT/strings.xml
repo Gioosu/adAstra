@@ -28,6 +28,10 @@
     <string name="username">Nome utente</string>
     <string name="confirm_password">Conferma la password</string>
 
+    <!-- Email verification -->
+    <string name="verify_email">Verifica la tua email</string>
+    <string name="sent_a_verification">Abbiamo inviato un link per la verifica dell\'account all\'email</string>
+
     <!-- Main -->
     <string name="encyclopedia">Enciclopedia</string>
     <string name="events">Eventi</string>
@@ -96,4 +100,5 @@
     <string name="error_incorrect_password">Password errata</string>
     <string name="error_username_update">Aggiornamento del nome utente fallito</string>
     <string name="error_password_change_failed">Cambio password fallito</string>
+    <string name="error_email_not_verified">Email non verificata</string>
 </resources>

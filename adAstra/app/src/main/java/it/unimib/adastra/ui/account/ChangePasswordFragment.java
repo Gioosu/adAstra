@@ -82,14 +82,13 @@ public class ChangePasswordFragment extends Fragment {
                 Objects.requireNonNull(user).updatePassword(newPassword)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Log.d(TAG, "password cambiata con successo");
-                                showSnackbar(v, getString(R.string.password_changed));
-                                ((AccountActivity) activity).onSupportNavigateUp();
+                                Log.d(TAG, "Password cambiata con successo");
                             } else {
-                                Log.d(TAG, "cambio password fallito");
-                                showSnackbar(v, getString(R.string.error_password_change_failed));
+                                Log.d(TAG, "Cambio password fallito");
                             }
                         });
+
+                ((AccountActivity) activity).onSupportNavigateUp();
             }
         });
     }
@@ -114,10 +113,5 @@ public class ChangePasswordFragment extends Fragment {
         }
 
         return result;
-    }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

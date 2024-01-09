@@ -1,16 +1,16 @@
 package it.unimib.adastra.ui.forgotPassword;
 
+import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +30,7 @@ public class CheckInboxFragment extends Fragment {
     private FirebaseAuth mAuth;
     private String email;
     private Activity activity;
+
     public CheckInboxFragment() {
         // Required empty public constructor
     }
@@ -60,13 +61,13 @@ public class CheckInboxFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mAuth = FirebaseAuth.getInstance();
         activity = getActivity();
 
         // Bottone di Resend
         binding.buttonResend.setOnClickListener(v -> {
-            assert getArguments() != null;
-            email = getArguments().getString("email", "");
+            email = requireArguments().getString(EMAIL_ADDRESS, "");
             if (isValidEmail(email)) {
                 showSnackbarWithAction(v, getString(R.string.sending_email));
                 mAuth.sendPasswordResetEmail(email)
@@ -82,10 +83,10 @@ public class CheckInboxFragment extends Fragment {
             }
         });
 
-        // Bottone di Back to login
-        binding.buttonBackToLogin.setOnClickListener(v -> {
-                Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_welcomeActivity2);
-                activity.finish();
+        // Bottone di Ok
+        binding.buttonOk.setOnClickListener(v -> {
+            //Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_welcomeActivity_forgot_password);
+            activity.finish();
         });
     }
 
@@ -93,13 +94,12 @@ public class CheckInboxFragment extends Fragment {
         return EmailValidator.getInstance().isValid(email);
     }
 
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
-    }
-
     private void showSnackbarWithAction(View view, String message) {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.ok, v -> snackbar.dismiss());
-        snackbar.show();
+        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
+    }
+
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

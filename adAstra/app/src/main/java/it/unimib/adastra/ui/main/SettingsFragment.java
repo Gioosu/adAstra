@@ -97,16 +97,16 @@ public class SettingsFragment extends Fragment {
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
 
+        // Bottone di Account settings
+        binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountActivity));
+
         // Bottone di Log out
         binding.floatingActionButtonLogOut.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
             activity.finish();
         });
-
-        // Bottone di Modifica dell'account
-        binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountActivity));
 
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {

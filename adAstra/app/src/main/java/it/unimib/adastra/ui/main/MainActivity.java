@@ -3,6 +3,7 @@ package it.unimib.adastra.ui.main;
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityMainBinding;
+import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,8 +44,13 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null) {
+            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+            startActivity(intent);
+            finish();
+
             throw new IllegalStateException("ID dell'utente non disponibile");
         }
+
         String userId = currentUser.getUid();
         user = database.collection("users").document(userId);
 

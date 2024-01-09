@@ -104,10 +104,10 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView__check_inbox" />
 
         <Button
-            android:id="@+id/button_back_to_login"
+            android:id="@+id/button_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/back_to_login"
+            android:text="@string/ok"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"

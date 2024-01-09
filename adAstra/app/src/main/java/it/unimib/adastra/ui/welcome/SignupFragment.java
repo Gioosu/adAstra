@@ -12,6 +12,7 @@ import static it.unimib.adastra.util.Constants.USERNAME;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,12 +103,19 @@ public class SignupFragment extends Fragment {
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                assert user != null;
-                                String userId = user.getUid();
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                String userId = Objects.requireNonNull(user).getUid();
                                 createUserInFirestore(userId, username, email);
-                                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
-                                activity.finish();
+
+                                user.sendEmailVerification()
+                                        .addOnCompleteListener(verificationTask -> {
+                                            if (verificationTask.isSuccessful()) {
+                                                Log.d(TAG, "Invio dell'email di verifica avvenuto con successo");
+                                                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_emailVerificationFragment);
+                                            } else {
+                                                Log.d(TAG, "Invio dell'email di verifica fallito");
+                                            }
+                                        });
                             } else {
                                 handleSignupFailure(task.getException(), v);
                             }

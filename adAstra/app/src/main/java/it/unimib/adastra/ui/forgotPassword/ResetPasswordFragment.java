@@ -1,5 +1,7 @@
 package it.unimib.adastra.ui.forgotPassword;
 
+import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +90,7 @@ public class ResetPasswordFragment extends Fragment {
     // Naviga a CheckInboxFragment
     private void navigateToCheckInbox(String email, View view) {
         Bundle bundle = new Bundle();
-        bundle.putString("email", email);
+        bundle.putString(EMAIL_ADDRESS, email);
         Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_checkInboxFragment, bundle);
     }
 
