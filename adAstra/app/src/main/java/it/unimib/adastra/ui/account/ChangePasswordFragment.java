@@ -74,10 +74,11 @@ public class ChangePasswordFragment extends Fragment {
 
         // Bottone di Save
         binding.buttonSaveChangePassword.setOnClickListener(v -> {
+            String currentPassword = Objects.requireNonNull(binding.currentPasswordInputEditText.getText()).toString();
             String newPassword = Objects.requireNonNull(binding.newPasswordInputEditText.getText()).toString();
             String confirmNewPassword = Objects.requireNonNull(binding.confirmNewPasswordInputEditText.getText()).toString();
 
-            if (isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)){
+            if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(currentPassword, newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Objects.requireNonNull(user).updatePassword(newPassword)
                         .addOnCompleteListener(task -> {
@@ -93,9 +94,15 @@ public class ChangePasswordFragment extends Fragment {
         });
     }
 
-    // Controlla che la password corrisponda ai criteri minimi di sicurezza
-    private boolean isNewPasswordValid(String password) {
-        boolean result = password != null && password.length() >= 8;
+    // Controlla che la password coincida con quella corrente
+    private boolean isCurrentPasswordValid(String password){
+        //TODO Implementare il controllo che la password coincida con quella corrente
+        return true;
+    }
+
+    // Controlla che la password sia valida
+    private boolean isNewPasswordValid(String password, String newPassword) {
+        boolean result = password != null && newPassword != null && password.length() >= 8 && !password.equals(newPassword);
 
         if (!result) {
             binding.newPasswordInputEditText.setError(getString(R.string.error_invalid_password));

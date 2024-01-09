@@ -4,6 +4,7 @@ import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,8 +82,23 @@ public class UpdateEmailFragment extends Fragment {
         binding.buttonSaveUpdateEmail.setOnClickListener(v -> {
             String newEmail = Objects.requireNonNull(binding.textViewEmailUpdateEmail.getText()).toString();
             if (isEmailValid(newEmail)) {
-                updateEmail(v, newEmail);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                if (user != null) {
+                    user.verifyBeforeUpdateEmail(newEmail)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "Email aggiornata con successo");
+                                } else {
+                                    Log.d(TAG, "Errore nell'aggiornamento dell'email.");
+                                }
+                            });
+                } else {
+                    Log.d(TAG, "Utente non loggato");
+                }
             }
+
+            ((AccountActivity) activity).onSupportNavigateUp();
         });
     }
 
@@ -99,23 +115,6 @@ public class UpdateEmailFragment extends Fragment {
         }
 
         return result;
-    }
-
-    private void updateEmail(View view, String newEmail) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            user.updateEmail(newEmail)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            showSnackbar(view, "Email aggiornata con successo.");
-                        } else {
-                            showSnackbar(view, "Errore nell'aggiornamento dell'email.");
-                        }
-                    });
-        } else {
-            showSnackbar(view, "Utente non loggato.");
-        }
     }
 
     private void showSnackbar(View view, String message) {
