@@ -22,23 +22,17 @@ public class AccountActivity extends AppCompatActivity {
         binding = ActivityAccountBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(binding.accountNavHostFragment.getId());
-        assert navHostFragment != null;
-        NavController navController = navHostFragment.getNavController();
-
         setSupportActionBar(binding.materialToolbarAccountSettings);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(Objects.requireNonNull(navController.getCurrentDestination()).getLabel());
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
 
-        // Imposta il listener per i cambiamenti di destinazione
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            CharSequence label = destination.getLabel();
-            if (label != null) {
-                binding.materialToolbarAccountSettings.setTitle(label);
-            }
-        });
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.account_nav_host_fragment);
+        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) ->
+                binding.materialToolbarAccountSettings.setTitle(destination.getLabel()));
     }
 
     // Gestisce il tasto indietro della ToolBar
@@ -50,7 +44,6 @@ public class AccountActivity extends AppCompatActivity {
             finish();
             return true;
         } else {
-            // Comportamento standard di navigateUp
             return navController.navigateUp() || super.onSupportNavigateUp();
         }
     }

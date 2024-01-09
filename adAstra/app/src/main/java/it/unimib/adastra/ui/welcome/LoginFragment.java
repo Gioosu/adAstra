@@ -1,10 +1,5 @@
 package it.unimib.adastra.ui.welcome;
 
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.adastra.util.Constants.PASSWORD;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,16 +13,14 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
-import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +29,6 @@ import it.unimib.adastra.util.DataEncryptionUtil;
  */
 public class LoginFragment extends Fragment {
     String TAG = LoginFragment.class.getSimpleName();
-    private DataEncryptionUtil dataEncryptionUtil;
     private FragmentLoginBinding binding;
     private FirebaseAuth mAuth;
     private String email;
@@ -75,26 +67,18 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
 
-        // Login diretto, se i dati login sono presenti nel file crittato
-        try {
-            String email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-            String password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
-
-            if (email != null && password != null) {
-                Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_mainActivity);
-                activity.finish();
-            }
-        } catch (GeneralSecurityException | IOException e) {
-            showSnackbar(requireView(), getString(R.string.error_reading_credentials));
+        // Login rapido
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_mainActivity);
+            activity.finish();
         }
 
         // Bottone di Forgot password
-        binding.forgotPassword.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordActivity));
+        binding.forgotPassword.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordActivity));
 
         // Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
@@ -105,8 +89,6 @@ public class LoginFragment extends Fragment {
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task-> {
                             if (task.isSuccessful()) {
-                                //Salvataggio dei dati di login nel file crittato
-                                saveLoginData(email, password);
                                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
                                 activity.finish();
                             } else {
@@ -146,20 +128,5 @@ public class LoginFragment extends Fragment {
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
-    }
-
-    // Salva i dati di login nel file crittato
-    private void saveLoginData(String email, String password) {
-        try {
-            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
-            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
-
-            dataEncryptionUtil.writeSecreteDataOnFile(ENCRYPTED_DATA_FILE_NAME,
-                    email.concat(":").concat(password));
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
     }
 }

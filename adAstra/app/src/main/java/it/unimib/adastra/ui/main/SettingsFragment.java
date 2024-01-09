@@ -1,23 +1,19 @@
 package it.unimib.adastra.ui.main;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_DATA_FILE_NAME;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
-import static it.unimib.adastra.util.Constants.USER_ID;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,16 +31,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
-import it.unimib.adastra.util.DataEncryptionUtil;
-import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +46,6 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class SettingsFragment extends Fragment {
     String TAG = SettingsFragment.class.getSimpleName();
     private FragmentSettingsBinding binding;
-    private SharedPreferencesUtil sharedPreferencesUtil;
-    private DataEncryptionUtil dataEncryptionUtil;
     private DocumentReference user;
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
@@ -88,45 +78,27 @@ public class SettingsFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         FirebaseFirestore database = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalStateException("ID dell'utente non disponibile");
+        }
+        String userId = currentUser.getUid();
+        user = database.collection("users").document(userId);
+
+        fetchAndSetUserSettings();
+
         activity = getActivity();
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
 
-        try {
-            String userIdFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, USER_ID);
-
-            String userId;
-            if (userIdFromSharedPreferences != null) {
-                userId = userIdFromSharedPreferences;
-            } else {
-                // Se non è presente nelle SharedPreferences, ottiene l'ID dall'utente corrente di FirebaseAuth
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = auth.getCurrentUser();
-                if (currentUser != null) {
-                    userId = currentUser.getUid();
-                } else {
-                    throw new IllegalStateException("ID dell'utente non disponibile");
-                }
-            }
-            user = database.collection("users").document(userId);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException("Errore durante la lettura delle impostazioni dell'utente: ", e);
-        }
-
-        initializeSettings();
-
         // Bottone di Log out
         binding.floatingActionButtonLogOut.setOnClickListener(v -> {
-            clearData();
             FirebaseAuth.getInstance().signOut();
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
             activity.finish();
@@ -167,7 +139,10 @@ public class SettingsFragment extends Fragment {
 
         // Controlla se l'utente interagisce con lo spinner di cambio lingua
         binding.spinnerLanguage.setOnTouchListener((v, event) -> {
-            isUserInteractedLanguage = true;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                isUserInteractedLanguage = true;
+                v.performClick();
+            }
             return false;
         });
 
@@ -199,7 +174,10 @@ public class SettingsFragment extends Fragment {
 
         // Controlla se l'utente interagisce con lo spinner di cambio tema
         binding.spinnerDarkTheme.setOnTouchListener((v, event) -> {
-            isUserInteractedDarkTheme = true;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                isUserInteractedDarkTheme = true;
+                v.performClick();
+            }
             return false;
         });
 
@@ -247,43 +225,18 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    // Inizializza le impostazioni in base alle preferenze salvate
-    private void initializeSettings() {
-        if (arePreferencesSet()) {
-            setPreferencesToUI();
-        } else {
-            fetchAndSetUserSettings();
-        }
-    }
-
-    private boolean arePreferencesSet() {
-        return sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME) != null
-                && sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME) != -1
-                && sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE) != -1;
-    }
-
-    private void setPreferencesToUI() {
-        binding.username.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
-        binding.switchImperialSystem.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, IMPERIAL_SYSTEM));
-        binding.switchTimeFormat.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, TIME_FORMAT));
-        binding.switchIssNotifications.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, ISS_NOTIFICATIONS));
-        binding.switchEventsNotifications.setChecked(sharedPreferencesUtil.readBooleanData(SHARED_PREFERENCES_FILE_NAME, EVENTS_NOTIFICATIONS));
-        binding.spinnerLanguage.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
-        binding.spinnerDarkTheme.setSelection(sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
-    }
-
     private void fetchAndSetUserSettings() {
         user.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot document = task.getResult();
-                updateUIAndPreferences(document);
+                updateUI(document);
             } else {
                 Log.e(TAG, "Errore nel recupero delle impostazioni: ", task.getException());
             }
         });
     }
 
-    private void updateUIAndPreferences(DocumentSnapshot document) {
+    private void updateUI(DocumentSnapshot document) {
         if (document.exists()) {
             updateSetting(USERNAME, document.getString(USERNAME));
             updateSetting(IMPERIAL_SYSTEM, document.getBoolean(IMPERIAL_SYSTEM));
@@ -315,7 +268,6 @@ public class SettingsFragment extends Fragment {
         if (USERNAME.equals(key)) {
             binding.username.setText(value);
         }
-        sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, value);
     }
 
     private void updateNumberSetting(String key, int value) {
@@ -324,7 +276,6 @@ public class SettingsFragment extends Fragment {
         } else if (DARK_THEME.equals(key)) {
             binding.spinnerDarkTheme.setSelection(value);
         }
-        sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, key, value);
     }
 
     private void updateBooleanSetting(String key, boolean value) {
@@ -342,33 +293,10 @@ public class SettingsFragment extends Fragment {
                 binding.switchEventsNotifications.setChecked(value);
                 break;
         }
-        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, key, value);
-    }
-
-
-    // Pulisce i dati crittati e non quelli crittati
-    public void clearData() {
-        try {
-            sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
-            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-            dataEncryptionUtil.clearSecretDataOnFile(ENCRYPTED_DATA_FILE_NAME);
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     // Aggiorna il database Firebase con il nuovo valore per la chiave specificata
     private void update(String key, Object value) {
-        if (value instanceof String) {
-            sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, (String) value);
-        } else if (value instanceof Number) {
-            int intValue = ((Number) value).intValue();
-            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, key, intValue);
-        } else if (value instanceof Boolean) {
-            boolean boolValue = (Boolean) value;
-            sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, key, boolValue);
-        }
-
         Map<String, Object> updates = new HashMap<>();
         updates.put(key, value);
 

@@ -2,21 +2,16 @@ package it.unimib.adastra.ui.welcome;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
-import static it.unimib.adastra.util.Constants.PASSWORD;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
-import static it.unimib.adastra.util.Constants.USER_ID;
 
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +29,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -43,8 +36,6 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
-import it.unimib.adastra.util.DataEncryptionUtil;
-import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +47,6 @@ public class SignupFragment extends Fragment {
     private FragmentSignupBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore database;
-    private SharedPreferencesUtil sharedPreferencesUtil;
-    private DataEncryptionUtil dataEncryptionUtil;
     private String username;
     private String email;
     private String password;
@@ -95,8 +84,6 @@ public class SignupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
         activity = getActivity();
@@ -108,8 +95,10 @@ public class SignupFragment extends Fragment {
             password = Objects.requireNonNull(binding.textPasswordSignup.getText()).toString();
             confirmPassword = Objects.requireNonNull(binding.textConfirmPasswordSignup.getText()).toString();
 
-            if (isUsernameValid(username) && isEmailValid(email)
-                    && isPasswordValid(password) && isConfirmPasswordValid(password, confirmPassword)) {
+            if (isUsernameValid(username)
+                    && isEmailValid(email)
+                    && isPasswordValid(password)
+                    && isConfirmPasswordValid(password, confirmPassword)) {
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -117,8 +106,6 @@ public class SignupFragment extends Fragment {
                                 assert user != null;
                                 String userId = user.getUid();
                                 createUserInFirestore(userId, username, email);
-                                saveSignupData(userId, username, email, password);
-                                initializeSettings();
                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_mainActivity);
                                 activity.finish();
                             } else {
@@ -150,6 +137,7 @@ public class SignupFragment extends Fragment {
 
         return result;
     }
+
     // Controlla che il nome utente sia valido
     private boolean isUsernameValid(String username){
         boolean result = username != null && username.length() >= 3 && username.length() <= 10;
@@ -207,39 +195,5 @@ public class SignupFragment extends Fragment {
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
-    }
-
-    // Salva i dati utili al login
-    private void saveSignupData(String userId, String username, String email, String password) {
-        try {
-            sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, username);
-            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, USER_ID, userId);
-            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
-            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
-        } catch (GeneralSecurityException | IOException e) {
-            // Gestisci l'eccezione in modo appropriato
-        }
-    }
-
-    // Inizializza le impostazioni
-    private void initializeSettings() {
-        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, IMPERIAL_SYSTEM, false);
-        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, TIME_FORMAT, false);
-        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, ISS_NOTIFICATIONS, true);
-        sharedPreferencesUtil.writeBooleanData(SHARED_PREFERENCES_FILE_NAME, EVENTS_NOTIFICATIONS, true);
-
-        Locale current = Resources.getSystem().getConfiguration().getLocales().get(0);
-        String languageCode = current.getLanguage();
-
-        if (languageCode.equals("it")) {
-            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
-        } else {
-            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
-        }
-
-        sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
     }
 }

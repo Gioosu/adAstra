@@ -1,8 +1,6 @@
 package it.unimib.adastra.ui.account;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.os.Bundle;
@@ -24,13 +22,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentAccountSettingsBinding;
-import it.unimib.adastra.util.DataEncryptionUtil;
-import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,8 +33,6 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class AccountSettingsFragment extends Fragment {
     String TAG = AccountSettingsFragment.class.getSimpleName();
     private FragmentAccountSettingsBinding binding;
-    private SharedPreferencesUtil sharedPreferencesUtil;
-    private DataEncryptionUtil dataEncryptionUtil;
     private FirebaseFirestore database;
     private FirebaseUser currentUser;
     private DocumentReference user;
@@ -77,47 +68,25 @@ public class AccountSettingsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+
         database = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        try {
-            // Prova a leggere l'email dalle SharedPreferences cifrate
-            String emailFromSharedPreferences = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(
-                    ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-
-            if (emailFromSharedPreferences != null) {
-                email = emailFromSharedPreferences;
-            } else {
-                // Se non è presente nelle SharedPreferences, ottiene l'email dall'utente corrente di FirebaseAuth
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = auth.getCurrentUser();
-                if (currentUser != null && currentUser.getEmail() != null) {
-                    email = currentUser.getEmail();
-                } else {
-                    throw new IllegalStateException("Indirizzo email non disponibile");
-                }
-            }
-            user = database.collection("users").document(email);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException("Errore durante la lettura delle impostazioni dell'utente: ", e);
-        }
-
-        initialize();
+        fetchAndSetUserSettings();
 
         // Bottone di Update username
         binding.buttonUpdateUsername.setOnClickListener(v -> {
-            String username = (String) binding.textViewUsernameAccountSettings.getText();
+            String username = binding.textViewUsernameAccountSettings.getText().toString();
             Bundle bundle = new Bundle();
-            bundle.putString("username", username);
+            bundle.putString(USERNAME, username);
             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateUsernameFragment, bundle);
         });
 
         // Bottone di Update email
         binding.buttonUpdateEmail.setOnClickListener(v -> {
+            String email = binding.textViewEmailAccountSettings.getText().toString();
             Bundle bundle = new Bundle();
-            bundle.putString("email", email);
+            bundle.putString(EMAIL_ADDRESS, email);
             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateEmailFragment, bundle);
         });
 
@@ -134,33 +103,30 @@ public class AccountSettingsFragment extends Fragment {
                 .show());
     }
 
-    // Inizializza la pagina
-    private void initialize() {
-        if (sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME) != null) {
-            binding.textViewUsernameAccountSettings.setText(sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME));
-        } else {
-            fetchAndSetUserSettings();
-        }
-
-        binding.textViewEmailAccountSettings.setText(email);
-    }
-
     private void fetchAndSetUserSettings() {
-        user.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot document = task.getResult();
-                updateUIAndPreferences(document);
-            } else {
-                Log.e(TAG, "Errore nel recupero delle inoformazioni: ", task.getException());
-            }
-        });
+        if (currentUser != null) {
+            DocumentReference userDoc = database.collection("users").document(currentUser.getUid());
+            userDoc.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    DocumentSnapshot document = task.getResult();
+                    updateUI(document);
+                } else {
+                    Log.e(TAG, "Errore nel recupero delle informazioni: ", task.getException());
+                }
+            });
+        }
     }
 
-    private void updateUIAndPreferences(DocumentSnapshot document) {
+    private void updateUI(DocumentSnapshot document) {
         if (document.exists()) {
-            updateSetting(USERNAME, document.getString(USERNAME));
-
-            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+            String username = document.getString(USERNAME);
+            String email = document.getString(EMAIL_ADDRESS);
+            if (username != null) {
+                binding.textViewUsernameAccountSettings.setText(username);
+            }
+            if (email != null) {
+                binding.textViewEmailAccountSettings.setText(email);
+            }
         } else {
             Log.d(TAG, "Nessun documento trovato");
         }
@@ -179,8 +145,6 @@ public class AccountSettingsFragment extends Fragment {
         if (USERNAME.equals(key)) {
             binding.textViewUsernameAccountSettings.setText(value);
         }
-
-        sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, key, value);
     }
 
     // Elimina l'account dell'utente
@@ -195,13 +159,6 @@ public class AccountSettingsFragment extends Fragment {
                     // Successivamente elimina i dati dell'utente da Firestore
                     database.collection("users").document(userId).delete()
                             .addOnSuccessListener(aVoid -> {
-                                // Pulisce le SharedPreferences
-                                try {
-                                    sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
-                                    dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                                } catch (GeneralSecurityException | IOException e) {
-                                    throw new RuntimeException(e);
-                                }
                                 // Logout dell'utente e reindirizza alla schermata di login
                                 FirebaseAuth.getInstance().signOut();
                                 // Redirect to login or intro activity
@@ -224,41 +181,7 @@ public class AccountSettingsFragment extends Fragment {
         }
     }
 
-    /*private void deleteUserAccount(View v) {
-        String userId = currentUser.getUid();
-        // Prima elimina i dati dell'utente da Firestore
-        database.collection("users").document(userId).delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Poi elimina l'account da Firebase Authentication
-                    currentUser.delete().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Account utente eliminato");
-                            // Pulisce le SharedPreferences
-                            try {
-                                sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
-                                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                            } catch (GeneralSecurityException | IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                            // Logout dell'utente e reindirizza alla schermata di login
-                            FirebaseAuth.getInstance().signOut();
-                            // Redirect to login or intro activity
-                            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
-                        } else {
-                            // Caso in cui l'eliminazione da Firebase Authentication fallisce
-                            Log.w(TAG, "Errore nell'eliminazione dell'account", task.getException());
-                            showSnackbar(v, getString(R.string.error_deleting_account));
-                        }
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    // Caso in cui l'eliminazione da Firestore fallisce
-                    Log.w(TAG, "Errore nell'eliminazione dei dati", e);
-                    showSnackbar(v, getString(R.string.error_deleting_user_data));
-                });
-    }*/
-
-    // Visuala una snackbar
+    // Mostra una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }

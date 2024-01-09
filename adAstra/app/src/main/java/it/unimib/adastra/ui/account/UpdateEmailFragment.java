@@ -1,5 +1,7 @@
 package it.unimib.adastra.ui.account;
 
+import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +15,6 @@ import androidx.navigation.Navigation;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
-import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +24,6 @@ import it.unimib.adastra.util.DataEncryptionUtil;
 public class UpdateEmailFragment extends Fragment {
     String TAG = UpdateEmailFragment.class.getSimpleName();
     private FragmentUpdateEmailBinding binding;
-    private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
 
     public UpdateEmailFragment() {
@@ -56,24 +56,23 @@ public class UpdateEmailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+
         activity = getActivity();
 
         initialize();
 
+        // Pulsante di Forgot password
+        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_forgotPasswordActivity));
+
         // Tasto di Cancel
         binding.buttonCancelUpdateEmail.setOnClickListener(v ->
                 ((AccountActivity) activity).onSupportNavigateUp());
-
-        // Pulsante di password dimenticata
-        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_forgotPasswordActivity));
     }
 
     // Inizializza la TextView
     private void initialize() {
-        assert getArguments() != null;
-        String email = getArguments().getString("email", "");
+        String email = requireArguments().getString(EMAIL_ADDRESS, "");
         binding.textViewEmailUpdateEmail.setText(email);
     }
 }

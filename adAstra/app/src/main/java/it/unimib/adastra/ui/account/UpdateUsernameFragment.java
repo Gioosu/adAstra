@@ -1,6 +1,5 @@
 package it.unimib.adastra.ui.account;
 
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
@@ -25,7 +24,6 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentUpdateUsernameBinding;
-import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +33,6 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class UpdateUsernameFragment extends Fragment {
     String TAG = UpdateUsernameFragment.class.getSimpleName();
     private FragmentUpdateUsernameBinding binding;
-    private SharedPreferencesUtil sharedPreferencesUtil;
     private Activity activity;
 
     public UpdateUsernameFragment() {
@@ -68,7 +65,6 @@ public class UpdateUsernameFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         activity = getActivity();
 
         initialize();
@@ -78,18 +74,15 @@ public class UpdateUsernameFragment extends Fragment {
                 ((AccountActivity) activity).onSupportNavigateUp());
 
         // Bottone di Save
-        binding.buttonSaveUpdateUsername.setOnClickListener( v -> {
+        binding.buttonSaveUpdateUsername.setOnClickListener(v -> {
             String newUsername = Objects.requireNonNull(binding.usernameInputEditTextUpdateUsername.getText()).toString();
-            if(isUsernameValid(newUsername)) {
-                sharedPreferencesUtil.writeStringData(SHARED_PREFERENCES_FILE_NAME, USERNAME, newUsername);
-
+            if (isUsernameValid(newUsername)) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String userId = Objects.requireNonNull(user).getUid();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                 Map<String, Object> updates = new HashMap<>();
                 updates.put(USERNAME, newUsername);
-                Log.d(TAG, "Bottone premuto");
                 db.collection("users").document(userId)
                         .update(updates)
                         .addOnSuccessListener(aVoid -> {
@@ -113,10 +106,10 @@ public class UpdateUsernameFragment extends Fragment {
     }
 
     // Controllo che il nome utente sia valido
-    private boolean isUsernameValid(String username){
+    private boolean isUsernameValid(String username) {
         boolean result = username != null && username.length() >= 3 && username.length() <= 10;
 
-        if (!result){
+        if (!result) {
             binding.usernameInputEditTextUpdateUsername.setError(getString(R.string.error_invalid_username));
         }
 

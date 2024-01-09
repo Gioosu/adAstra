@@ -27,8 +27,8 @@ import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
  */
 public class ResetPasswordFragment extends Fragment {
     private FragmentResetPasswordBinding binding;
-    private String email;
     private FirebaseAuth mAuth;
+    private String email;
 
     public ResetPasswordFragment() {
         // Required empty public constructor
