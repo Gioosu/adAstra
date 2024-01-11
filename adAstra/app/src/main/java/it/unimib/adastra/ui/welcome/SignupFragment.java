@@ -6,6 +6,7 @@ import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
+import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
@@ -37,6 +38,7 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +55,7 @@ public class SignupFragment extends Fragment {
     private String password;
     private String confirmPassword;
     private Activity activity;
+    private SharedPreferencesUtil sharedPreferencesUtil;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -106,7 +109,9 @@ public class SignupFragment extends Fragment {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 String userId = Objects.requireNonNull(user).getUid();
                                 createUserInFirestore(userId, username, email);
+                                createSharedPreferences();
 
+                                // Invia email di verifica
                                 user.sendEmailVerification()
                                         .addOnCompleteListener(verificationTask -> {
                                             if (verificationTask.isSuccessful()) {
@@ -168,6 +173,24 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
+    // Crea le sharedPreferences per inizializzare le impostazioni
+    private void createSharedPreferences() {
+        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
+
+        Locale current = Resources.getSystem().getConfiguration().getLocales().get(0);
+        String languageCode = current.getLanguage();
+
+        // Inizializzo la lingua
+        if (languageCode.equals("it")) {
+            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
+        } else {
+            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
+        }
+
+        // Inizializzo il tema
+            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
+    }
+
     // Crea un utente in Firestore
     private void createUserInFirestore(String userId, String username, String email) {
         Map<String, Object> newUser = new HashMap<>();
@@ -177,16 +200,6 @@ public class SignupFragment extends Fragment {
         newUser.put(TIME_FORMAT, false);
         newUser.put(ISS_NOTIFICATIONS, true);
         newUser.put(EVENTS_NOTIFICATIONS, true);
-        newUser.put(DARK_THEME, 0);
-
-        Locale current = Resources.getSystem().getConfiguration().getLocales().get(0);
-        String languageCode = current.getLanguage();
-
-        if (languageCode.equals("it")) {
-            newUser.put(LANGUAGE, 1);
-        } else {
-            newUser.put(LANGUAGE, 0);
-        }
 
         database.collection("users").document(userId).set(newUser);
     }

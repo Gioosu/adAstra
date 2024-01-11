@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.main;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,6 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
     public HomeFragment() {
         // Required empty public constructor
     }

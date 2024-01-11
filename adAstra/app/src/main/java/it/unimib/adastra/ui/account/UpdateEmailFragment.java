@@ -70,15 +70,16 @@ public class UpdateEmailFragment extends Fragment {
 
         initialize();
 
-        // Pulsante di Forgot password
+        // Bottone di Forgot password
         binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_forgotPasswordActivity));
 
-        // Tasto di Cancel
+        // Bottone di Cancel
         binding.buttonCancelUpdateEmail.setOnClickListener(v ->
                 ((AccountActivity) activity).onSupportNavigateUp());
 
-        // Pulsante di Save
+        // Bottone di Save
+        // TODO non aggiorna email
         binding.buttonSaveUpdateEmail.setOnClickListener(v -> {
             String newEmail = Objects.requireNonNull(binding.textViewEmailUpdateEmail.getText()).toString();
             if (isEmailValid(newEmail)) {
@@ -115,6 +116,12 @@ public class UpdateEmailFragment extends Fragment {
         }
 
         return result;
+    }
+
+    // Controlla che la password coincida con quella corrente
+    private boolean isCurrentPasswordValid(String password){
+        //TODO Implementare il controllo che la password coincida con quella corrente
+        return true;
     }
 
     private void showSnackbar(View view, String message) {

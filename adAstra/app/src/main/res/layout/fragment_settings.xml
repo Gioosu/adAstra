@@ -221,7 +221,7 @@
                     android:text="@string/language"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="normal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -260,7 +260,7 @@
                     android:text="@string/theme"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="normal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

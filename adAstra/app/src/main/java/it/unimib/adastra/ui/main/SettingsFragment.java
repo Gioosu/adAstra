@@ -5,6 +5,7 @@ import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
+import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
@@ -37,6 +38,7 @@ import java.util.Map;
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +52,7 @@ public class SettingsFragment extends Fragment {
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
+    private SharedPreferencesUtil sharedPreferencesUtil;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -82,6 +85,8 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+       sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
+
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
@@ -96,6 +101,8 @@ public class SettingsFragment extends Fragment {
         activity = getActivity();
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
+
+        ((MainActivity) activity).setToolBarTitle(getString(R.string.settings));
 
         // Bottone di Account settings
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
@@ -155,10 +162,10 @@ public class SettingsFragment extends Fragment {
 
                     switch (selectedLanguage) {
                         case "English":
-                            update(LANGUAGE, 0);
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
                             break;
                         case "Italiano":
-                            update(LANGUAGE, 1);
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
                             break;
                     }
 
@@ -191,17 +198,17 @@ public class SettingsFragment extends Fragment {
                     switch (selectedTheme) {
                         case "OS setting":
                         case "Impostazioni di sistema":
-                            update(DARK_THEME, 0);
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                             break;
                         case "Dark theme":
                         case "Tema scuro":
-                            update(DARK_THEME, 1);
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 1);
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                             break;
                         case "Light theme":
                         case "Tema chiaro":
-                            update(DARK_THEME, 2);
+                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 2);
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                             break;
                     }
@@ -243,12 +250,13 @@ public class SettingsFragment extends Fragment {
             updateSetting(TIME_FORMAT, document.getBoolean(TIME_FORMAT));
             updateSetting(ISS_NOTIFICATIONS, document.getBoolean(ISS_NOTIFICATIONS));
             updateSetting(EVENTS_NOTIFICATIONS, document.getBoolean(EVENTS_NOTIFICATIONS));
-            updateSetting(LANGUAGE, document.getLong(LANGUAGE));
-            updateSetting(DARK_THEME, document.getLong(DARK_THEME));
             Log.d(TAG, "DocumentSnapshot data: " + document.getData());
         } else {
             Log.d(TAG, "Nessun documento trovato");
         }
+
+        updateSetting(LANGUAGE, sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
+        updateSetting(DARK_THEME, sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
     }
 
     // Aggiorna le impostazioni dopo una modifica

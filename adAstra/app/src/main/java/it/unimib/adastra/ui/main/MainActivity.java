@@ -2,7 +2,9 @@ package it.unimib.adastra.ui.main;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
+import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -27,12 +29,14 @@ import java.util.Objects;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityMainBinding;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 
 public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
     private DocumentReference user;
+    SharedPreferencesUtil sharedPreferencesUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         String userId = currentUser.getUid();
         user = database.collection("users").document(userId);
 
+        fetchSettingsFromSharedPreferences();
         fetchSettingsFromFirestore();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -78,10 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    Number languageNumber = document.getLong(LANGUAGE);
-                    Number themeNumber = document.getLong(DARK_THEME);
-                    if (languageNumber != null) setLocaleBasedOnSetting(languageNumber.intValue());
-                    if (themeNumber != null) setThemeBasedOnSetting(themeNumber.intValue());
+                   // ...
                 } else {
                     Log.d(TAG, "No such document");
                 }
@@ -89,6 +91,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "get failed with ", task.getException());
             }
         });
+    }
+    private void fetchSettingsFromSharedPreferences() {
+        sharedPreferencesUtil = new SharedPreferencesUtil(this);
+        int languageID = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE);
+        if (languageID != -1) {
+            setLocaleBasedOnSetting(languageID);
+        }
+
+        int themeID = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME);
+        if (themeID != -1) setThemeBasedOnSetting(themeID);
     }
 
     private void setLocaleBasedOnSetting(int setting) {
@@ -124,5 +136,9 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = resources.getConfiguration();
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
+
+    public void setToolBarTitle(String title) {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 }

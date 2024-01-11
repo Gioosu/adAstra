@@ -6,106 +6,116 @@
     android:layout_height="match_parent"
     tools:context=".ui.welcome.EmailVerificationFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_horizontal_email_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="16dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_sx_email_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_horizontal_email_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="16dp" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_dx_email_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_sx_email_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
 
-        <ImageView
-            android:id="@+id/imageView_email_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/app_icon"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
-            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_email_verification" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_dx_email_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
 
-        <TextView
-            android:id="@+id/textView_verify_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/verify_email"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_email_verification" />
+            <ImageView
+                android:id="@+id/imageView_email_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/app_icon"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
+                app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
+                app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_email_verification" />
 
-        <TextView
-            android:id="@+id/textView_sent_a_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/sent_a_verification"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
-            app:layout_constraintTop_toBottomOf="@+id/textView_verify_email" />
+            <TextView
+                android:id="@+id/textView_verify_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/verify_email"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
+                app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_email_verification" />
 
-        <ImageView
-            android:id="@+id/imageView_observatory_exploration"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:layout_marginTop="64dp"
-            android:src="@drawable/observatory_exploration"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
-            app:layout_constraintTop_toBottomOf="@+id/textView_sent_a_verification" />
+            <TextView
+                android:id="@+id/textView_sent_a_verification"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/sent_a_verification"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
+                app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
+                app:layout_constraintTop_toBottomOf="@+id/textView_verify_email" />
 
-        <TextView
-            android:id="@+id/textView_didnt_get_email_email_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:text="@string/didnt_get_an_email"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/button_resend_email_verification"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_observatory_exploration" />
+            <ImageView
+                android:id="@+id/imageView_observatory_exploration"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginTop="64dp"
+                android:src="@drawable/observatory_exploration"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
+                app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
+                app:layout_constraintTop_toBottomOf="@+id/textView_sent_a_verification" />
 
-        <Button
-            android:id="@+id/button_resend_email_verification"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/resend"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@+id/textView_didnt_get_email_email_verification"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
-            app:layout_constraintStart_toEndOf="@+id/textView_didnt_get_email_email_verification" />
+            <TextView
+                android:id="@+id/textView_didnt_get_email_email_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:text="@string/didnt_get_an_email"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/button_resend_email_verification"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_observatory_exploration" />
 
-        <Button
-            android:id="@+id/button_ok_email_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ok"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
-            app:layout_constraintTop_toBottomOf="@+id/button_resend_email_verification" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/button_resend_email_verification"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/resend"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView_didnt_get_email_email_verification"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
+                app:layout_constraintStart_toEndOf="@+id/textView_didnt_get_email_email_verification" />
+
+            <Button
+                android:id="@+id/button_ok_email_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/ok"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="@+id/guideline_sx_email_verification"
+                app:layout_constraintTop_toBottomOf="@+id/button_resend_email_verification" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
 </FrameLayout>

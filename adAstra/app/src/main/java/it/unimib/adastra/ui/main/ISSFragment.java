@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.main;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,7 +17,6 @@ import it.unimib.adastra.R;
  * create an instance of this fragment.
  */
 public class ISSFragment extends Fragment {
-
     public ISSFragment() {
         // Required empty public constructor
     }
