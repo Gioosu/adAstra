@@ -65,7 +65,10 @@ public class UpdateUsernameFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         activity = getActivity();
+
+        ((AccountActivity) activity).setToolBarTitle(getString(R.string.update_username));
 
         initialize();
 

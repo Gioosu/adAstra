@@ -4,12 +4,10 @@ import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -19,9 +17,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -35,31 +30,20 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
-    private DocumentReference user;
-    SharedPreferencesUtil sharedPreferencesUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-
         // Ottiene l'ID utente da FirebaseAuth
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = auth.getCurrentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
             startActivity(intent);
             finish();
-
-            throw new IllegalStateException("ID dell'utente non disponibile");
         }
 
-        String userId = currentUser.getUid();
-        user = database.collection("users").document(userId);
-
         fetchSettingsFromSharedPreferences();
-        fetchSettingsFromFirestore();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -77,32 +61,17 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
     }
 
-    private void fetchSettingsFromFirestore() {
-        user.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                   // ...
-                } else {
-                    Log.d(TAG, "No such document");
-                }
-            } else {
-                Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
-    }
+    // Prende le impostazioni da SharedPreferences
     private void fetchSettingsFromSharedPreferences() {
-        sharedPreferencesUtil = new SharedPreferencesUtil(this);
+        SharedPreferencesUtil sharedPreferencesUtil = new SharedPreferencesUtil(this);
         int languageID = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE);
-        if (languageID != -1) {
-            setLocaleBasedOnSetting(languageID);
-        }
-
         int themeID = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME);
-        if (themeID != -1) setThemeBasedOnSetting(themeID);
+
+        setLocaleBasedOnSetting(languageID);
+        setThemeBasedOnSetting(themeID);
     }
 
+    // Imposta la lingua
     private void setLocaleBasedOnSetting(int setting) {
         switch (setting) {
             case 0:
@@ -112,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
                 setLocale("it");
                 break;
         }
+    }
+
+    private void setLocale(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     private void setThemeBasedOnSetting(int setting) {
@@ -126,16 +104,6 @@ public class MainActivity extends AppCompatActivity {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 break;
         }
-    }
-
-    // Imposta la lingua
-    public void setLocale(String languageCode) {
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Resources resources = getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     public void setToolBarTitle(String title) {

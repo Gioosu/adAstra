@@ -55,6 +55,7 @@
     </string-array>
     <string name="notification_settings">Impostazioni notifiche</string>
     <string name="report_issue" >Segnala un problema</string>
+    <string name="build_infomation">Informazioni sulla versione</string>
 
     <!-- AccountSettngs -->
     <string name="update_username">Aggiorna nome utente</string>

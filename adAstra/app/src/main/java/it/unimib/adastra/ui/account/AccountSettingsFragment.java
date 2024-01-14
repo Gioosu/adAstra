@@ -3,6 +3,7 @@ package it.unimib.adastra.ui.account;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,9 +68,11 @@ public class AccountSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Activity activity = getActivity();
         database = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        ((AccountActivity) activity).setToolBarTitle(getString(R.string.account_settings));
         fetchAndSetUserSettings();
 
         // Bottone di Update username

@@ -65,7 +65,8 @@
     </string-array>
     <string name="notification_settings">Notification settings</string>
     <string name="report_issue">Report an issue</string>
-    <string name="version_text" translatable="false">0.00.1</string>
+    <string name="build_code" translatable="false">0.00.1</string>
+    <string name="build_infomation">Build information</string>
 
     <!-- AccountSettings -->
     <string name="update_username">Update username</string>
@@ -90,7 +91,7 @@
     <string name="current_password">Current password</string>
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm new password</string>
-    <string name="password_changed">Password changed succesfully</string>
+    <string name="password_changed">Password changed successfully</string>
 
     <!-- Errors -->
     <string name="error_email_not_found">Email not found</string>

@@ -68,6 +68,8 @@ public class UpdateEmailFragment extends Fragment {
 
         activity = getActivity();
 
+        ((AccountActivity) activity).setToolBarTitle(getString(R.string.update_email));
+
         initialize();
 
         // Bottone di Forgot password

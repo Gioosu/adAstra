@@ -10,7 +10,7 @@
     <color name="md_theme_light_onSecondaryContainer">#001372</color> <!-- Scritta selezionata di BottonBar -->
     <color name="md_theme_light_tertiary">#BD0041</color>
     <color name="md_theme_light_onTertiary">#FFFFFF</color>
-    <color name="md_theme_light_tertiaryContainer">#FFD9DC</color>
+    <color name="md_theme_light_tertiaryContainer">#FEFBFF</color>
     <color name="md_theme_light_onTertiaryContainer">#400010</color>
     <color name="md_theme_light_error">#BA1A1A</color>
     <color name="md_theme_light_errorContainer">#FFDAD6</color>

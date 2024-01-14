@@ -19,6 +19,7 @@
                 android:id="@+id/imageView_icon_signup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/app_icon"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2_dx_signup"
                 app:layout_constraintStart_toStartOf="@+id/guideline_sx_singup"
@@ -118,7 +119,7 @@
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:paddingEnd="44dp"
-                    tools:ignore="TextContrastCheck" />
+                    tools:ignore="RtlSymmetry,TextContrastCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -141,7 +142,7 @@
                     android:hint="@string/confirm_password"
                     android:inputType="text|textPassword"
                     android:paddingEnd="44dp"
-                    tools:ignore="TextContrastCheck" />
+                    tools:ignore="RtlSymmetry,TextContrastCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -151,10 +152,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
-                android:paddingLeft="32dp"
-                android:paddingTop="12dp"
-                android:paddingRight="32dp"
-                android:paddingBottom="12dp"
                 android:text="@string/sign_up"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"

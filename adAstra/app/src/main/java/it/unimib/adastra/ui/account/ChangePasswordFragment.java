@@ -64,6 +64,8 @@ public class ChangePasswordFragment extends Fragment {
 
         activity = getActivity();
 
+        ((AccountActivity) activity).setToolBarTitle(getString(R.string.change_password));
+
         // Bottone di Forgot password
         binding.buttonForgotPasswordChangePassword.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_forgotPasswordActivity));

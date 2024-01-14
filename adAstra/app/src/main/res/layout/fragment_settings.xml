@@ -47,10 +47,11 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:id="@+id/imageView_profile_settings"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/profile"
                     android:src="@drawable/alien"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -61,37 +62,42 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView_profile_settings" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/floatingActionButton_account_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:contentDescription="@string/account_settings"
                     android:src="@drawable/change_icon"
+                    app:fabCustomSize="48dp"
+                    app:fabSize="auto"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/username" />
+                    app:layout_constraintTop_toBottomOf="@+id/username"
+                    android:focusable="true" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/floatingActionButton_log_out"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:contentDescription="@string/log_out"
                     android:src="@drawable/log_out"
+                    app:fabCustomSize="48dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/floatingActionButton_account_settings" />
+                    app:layout_constraintTop_toTopOf="@+id/floatingActionButton_account_settings"
+                    android:focusable="true" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -147,7 +153,8 @@
                     android:paddingStart="3dp"
                     android:text="@string/imperial_system"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_time_format"
@@ -185,7 +192,8 @@
                     android:paddingStart="3dp"
                     android:text="@string/iss_notifications"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_events_notifications"
@@ -200,7 +208,8 @@
                     android:paddingStart="3dp"
                     android:text="@string/events_notifications"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <View
                     android:id="@+id/divider_general_settings"
@@ -237,6 +246,7 @@
                         android:layout_height="32dp"
                         android:layout_gravity="center|center_horizontal|center_vertical"
                         android:layout_marginStart="4dp"
+                        android:contentDescription="@string/language"
                         android:src="@drawable/translate" />
 
                     <Spinner
@@ -276,6 +286,7 @@
                         android:layout_height="32dp"
                         android:layout_gravity="center|center_horizontal|center_vertical"
                         android:layout_marginStart="4dp"
+                        android:contentDescription="@string/theme"
                         android:src="@drawable/dark_theme" />
 
                     <Spinner
@@ -312,6 +323,7 @@
                         android:layout_height="32dp"
                         android:layout_gravity="center|center_horizontal|center_vertical"
                         android:layout_marginStart="4dp"
+                        android:contentDescription="@string/report_issue"
                         android:src="@drawable/email_report" />
 
                     <Button
@@ -325,7 +337,8 @@
                         android:textColor="?android:textColorPrimary"
                         android:textSize="16sp"
                         app:icon="@drawable/arrow_forward"
-                        app:iconGravity="end" />
+                        app:iconGravity="end"
+                        tools:ignore="DuplicateSpeakableTextCheck" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -343,6 +356,7 @@
                         android:layout_height="32dp"
                         android:layout_gravity="center|center_horizontal|center_vertical"
                         android:layout_marginStart="4dp"
+                        android:contentDescription="@string/build_infomation"
                         android:src="@drawable/build_information" />
 
                     <Button
@@ -351,8 +365,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
+                        android:contentDescription="@string/build_code"
                         android:gravity="start|center_horizontal|center_vertical"
-                        android:text="@string/version_text"
                         android:textColor="?android:textColorPrimary"
                         android:textSize="16sp"
                         app:icon="@drawable/arrow_forward"

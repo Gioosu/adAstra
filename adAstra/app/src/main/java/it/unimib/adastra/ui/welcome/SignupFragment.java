@@ -109,7 +109,6 @@ public class SignupFragment extends Fragment {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 String userId = Objects.requireNonNull(user).getUid();
                                 createUserInFirestore(userId, username, email);
-                                createSharedPreferences();
 
                                 // Invia email di verifica
                                 user.sendEmailVerification()
@@ -171,24 +170,6 @@ public class SignupFragment extends Fragment {
         }
 
         return result;
-    }
-
-    // Crea le sharedPreferences per inizializzare le impostazioni
-    private void createSharedPreferences() {
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
-
-        Locale current = Resources.getSystem().getConfiguration().getLocales().get(0);
-        String languageCode = current.getLanguage();
-
-        // Inizializzo la lingua
-        if (languageCode.equals("it")) {
-            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
-        } else {
-            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
-        }
-
-        // Inizializzo il tema
-            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
     }
 
     // Crea un utente in Firestore
