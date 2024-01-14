@@ -11,9 +11,6 @@
         android:label="@string/account_settings"
         tools:layout="@layout/fragment_account_settings" >
         <action
-            android:id="@+id/action_accountSettingsFragment_to_welcomeActivity_account"
-            app:destination="@id/welcomeActivity_account" />
-        <action
             android:id="@+id/action_accountSettingsFragment_to_updateUsernameFragment"
             app:destination="@id/updateUsernameFragment" />
         <action
@@ -22,12 +19,10 @@
         <action
             android:id="@+id/action_accountSettingsFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_accountSettingsFragment_to_welcomeActivity_account"
+            app:destination="@id/welcomeActivity_account" />
     </fragment>
-    <activity
-        android:id="@+id/welcomeActivity_account"
-        android:name="it.unimib.adastra.ui.welcome.WelcomeActivity"
-        android:label="activity_welcome"
-        tools:layout="@layout/activity_welcome" />
     <fragment
         android:id="@+id/updateUsernameFragment"
         android:name="it.unimib.adastra.ui.account.UpdateUsernameFragment"
@@ -63,4 +58,9 @@
         android:name="it.unimib.adastra.ui.forgotPassword.ForgotPasswordActivity"
         android:label="activity_forgot_password"
         tools:layout="@layout/activity_forgot_password" />
+    <activity
+        android:id="@+id/welcomeActivity_account"
+        android:name="it.unimib.adastra.ui.welcome.WelcomeActivity"
+        android:label="activity_welcome"
+        tools:layout="@layout/activity_welcome" />
 </navigation>

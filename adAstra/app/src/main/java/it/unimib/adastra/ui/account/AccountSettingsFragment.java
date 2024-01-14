@@ -36,6 +36,7 @@ public class AccountSettingsFragment extends Fragment {
     private FragmentAccountSettingsBinding binding;
     private FirebaseFirestore database;
     private FirebaseUser currentUser;
+    private Activity activity;
 
     public AccountSettingsFragment() {
         // Required empty public constructor
@@ -68,11 +69,11 @@ public class AccountSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Activity activity = getActivity();
         database = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        activity = getActivity();
 
-        ((AccountActivity) activity).setToolBarTitle(getString(R.string.account_settings));
+        ((AccountActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
         fetchAndSetUserSettings();
 
         // Bottone di Update username
@@ -160,24 +161,20 @@ public class AccountSettingsFragment extends Fragment {
                     // Successivamente elimina i dati dell'utente da Firestore
                     database.collection("users").document(userId).delete()
                             .addOnSuccessListener(aVoid -> {
-                                // Logout dell'utente e reindirizza alla schermata di login
                                 FirebaseAuth.getInstance().signOut();
-                                // Redirect to login or intro activity
                                 Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
+                                activity.finish();
                             })
                             .addOnFailureListener(e -> {
                                 // Caso in cui l'eliminazione da Firestore fallisce
-                                Log.w(TAG, "Errore nell'eliminazione dei dati da Firestore", e);
                                 showSnackbar(v, getString(R.string.error_deleting_user_data));
                             });
                 } else {
                     // Caso in cui l'eliminazione da Firebase Authentication fallisce
-                    Log.w(TAG, "Errore nell'eliminazione dell'account da Firebase Authentication", task.getException());
                     showSnackbar(v, getString(R.string.error_deleting_account));
                 }
             });
         } catch (Exception e) {
-            Log.e(TAG, "Errore nell'eliminazione dell'account da Firebase Authentication", e);
             showSnackbar(v, getString(R.string.error_deleting_account));
         }
     }

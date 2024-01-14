@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,16 +21,20 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Locale;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.databinding.ActivityMainBinding;
+import it.unimib.adastra.databinding.ActivityWelcomeBinding;
 import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 public class WelcomeActivity extends AppCompatActivity {
+    private ActivityWelcomeBinding binding;
     SharedPreferencesUtil sharedPreferencesUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        binding = ActivityWelcomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         sharedPreferencesUtil = new SharedPreferencesUtil(this);
         fetchSettingsFromSharedPreferences();
@@ -44,6 +50,10 @@ public class WelcomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        }
+
+        if (getIntent().getBooleanExtra("SHOW_LOGIN_NEW_PASSWORD", false)) {
+            showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_new_password));
         }
     }
 
@@ -113,5 +123,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // Inizializzo il tema
         sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
+    }
+
+    // Mostra una Snackbar con un'azione integrata
+    private void showSnackbarWithAction(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 }

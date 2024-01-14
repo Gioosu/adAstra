@@ -1,19 +1,13 @@
 package it.unimib.adastra.ui.welcome;
 
-import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.LANGUAGE;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
-import android.app.Activity;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,13 +26,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
-import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +46,6 @@ public class SignupFragment extends Fragment {
     private String email;
     private String password;
     private String confirmPassword;
-    private Activity activity;
-    private SharedPreferencesUtil sharedPreferencesUtil;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -90,7 +80,6 @@ public class SignupFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
-        activity = getActivity();
 
         // Bottone di Sign up
         binding.buttonSignUpSignup.setOnClickListener(v -> {
@@ -114,40 +103,22 @@ public class SignupFragment extends Fragment {
                                 user.sendEmailVerification()
                                         .addOnCompleteListener(verificationTask -> {
                                             if (verificationTask.isSuccessful()) {
-                                                Log.d(TAG, "Invio dell'email di verifica avvenuto con successo");
+                                                showSnackbar(v, getString(R.string.email_send));
                                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_emailVerificationFragment);
                                             } else {
-                                                Log.d(TAG, "Invio dell'email di verifica fallito");
+                                                showSnackbar(v, getString(R.string.error_email_send_failed));
                                             }
                                         });
                             } else {
-                                handleSignupFailure(task.getException(), v);
+                                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                    binding.textEmailSignup.setError(getString(R.string.error_email_already_exists));
+                                } else {
+                                    showSnackbar(v, getString(R.string.error_signup_failure));
+                                }
                             }
                         });
             }
         });
-    }
-
-    // Controlla che la password sia valida
-    private boolean isPasswordValid(String password) {
-        boolean result = password != null && password.length() >= 8;
-
-        if (!result) {
-            binding.textPasswordSignup.setError(getString(R.string.error_invalid_password));
-        }
-
-        return result;
-    }
-
-    // Controlla che le password corrispondano
-    private boolean isConfirmPasswordValid(String password, String confirmPassword){
-        boolean result = password.equals(confirmPassword);
-
-        if (!result) {
-            binding.textConfirmPasswordSignup.setError(getString(R.string.error_invalid_confirm_password));
-        }
-
-        return result;
     }
 
     // Controlla che il nome utente sia valido
@@ -172,6 +143,28 @@ public class SignupFragment extends Fragment {
         return result;
     }
 
+    // Controlla che la password sia valida
+    private boolean isPasswordValid(String password) {
+        boolean result = password != null && password.length() >= 8;
+
+        if (!result) {
+            binding.textPasswordSignup.setError(getString(R.string.error_invalid_password));
+        }
+
+        return result;
+    }
+
+    // Controlla che le password corrispondano
+    private boolean isConfirmPasswordValid(String password, String confirmPassword){
+        boolean result = password.equals(confirmPassword);
+
+        if (!result) {
+            binding.textConfirmPasswordSignup.setError(getString(R.string.error_invalid_confirm_password));
+        }
+
+        return result;
+    }
+
     // Crea un utente in Firestore
     private void createUserInFirestore(String userId, String username, String email) {
         Map<String, Object> newUser = new HashMap<>();
@@ -183,15 +176,6 @@ public class SignupFragment extends Fragment {
         newUser.put(EVENTS_NOTIFICATIONS, true);
 
         database.collection("users").document(userId).set(newUser);
-    }
-
-    // Mostra gli errori in caso di mancata registrazione
-    private void handleSignupFailure(Exception exception, View view) {
-        if (exception instanceof FirebaseAuthUserCollisionException) {
-            binding.textEmailSignup.setError(getString(R.string.error_email_already_exists));
-        } else {
-            showSnackbar(view, getString(R.string.error_signup_failure));
-        }
     }
 
     // Visualizza una snackbar

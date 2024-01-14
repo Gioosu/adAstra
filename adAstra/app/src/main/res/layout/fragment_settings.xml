@@ -356,7 +356,7 @@
                         android:layout_height="32dp"
                         android:layout_gravity="center|center_horizontal|center_vertical"
                         android:layout_marginStart="4dp"
-                        android:contentDescription="@string/build_infomation"
+                        android:contentDescription="@string/build_information"
                         android:src="@drawable/build_information" />
 
                     <Button

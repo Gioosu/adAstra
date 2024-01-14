@@ -1,6 +1,5 @@
 package it.unimib.adastra.ui.welcome;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,6 @@ public class EmailVerificationFragment extends Fragment {
     String TAG = EmailVerificationFragment.class.getSimpleName();
     private FragmentEmailVerificationBinding binding;
     private FirebaseUser user;
-    private Activity activity;
 
     public EmailVerificationFragment() {
         // Required empty public constructor
@@ -61,7 +59,6 @@ public class EmailVerificationFragment extends Fragment {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        activity = getActivity();
 
         // Bottone di Resend
         binding.buttonResendEmailVerification.setOnClickListener(v -> {
@@ -76,34 +73,32 @@ public class EmailVerificationFragment extends Fragment {
                     });
         });
 
-        // Bottone di Ok
-        binding.buttonOkEmailVerification.setOnClickListener(v -> {
+        // Bottone di Back to login
+        binding.buttonBackToLoginEmailVerification.setOnClickListener(v -> {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             if (user != null) {
                 user.reload().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Ora controlla se l'email è stata verificata
-                        if (user.isEmailVerified()) {
-                            Navigation.findNavController(v).navigate(R.id.action_emailVerificationFragment_to_mainActivity);
-                            activity.finish();
-                        } else {
-                            showSnackbar(v, getString(R.string.error_email_not_verified));
-                        }
+                        showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
+                        FirebaseAuth.getInstance().signOut();
+                        Navigation.findNavController(v).navigate(R.id.action_emailVerificationFragment_to_loginFragment);
                     } else {
-                        // Gestisci eventuali errori nel processo di reload
-                        showSnackbar(v, "Errore nel caricamento dello stato dell'utente.");
+                        // Errori nel processo di reload
+                        showSnackbar(v, getString(R.string.error_email_send_failed));
                     }
                 });
             }
         });
     }
 
+    // Mostra una Snackbar con un'azione integrata
     private void showSnackbarWithAction(View view, String message) {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
+    // Mostra una Snackabar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }

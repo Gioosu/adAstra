@@ -3,6 +3,7 @@ package it.unimib.adastra.ui.forgotPassword;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentCheckInboxBinding;
+import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,22 +85,27 @@ public class CheckInboxFragment extends Fragment {
             }
         });
 
-        // Bottone di Ok
-        binding.buttonOk.setOnClickListener(v -> {
-            //Navigation.findNavController(v).navigate(R.id.action_checkInboxFragment_to_welcomeActivity_forgot_password);
+        // Bottone di Back to login
+        binding.buttonBackToLoginCheckInbox.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+            intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+            startActivity(intent);
             activity.finish();
         });
     }
 
+    // Verifica che l'email sia valida
     private boolean isValidEmail(String email) {
         return EmailValidator.getInstance().isValid(email);
     }
 
+    // Mostra una Snackbar con un'azione integrata
     private void showSnackbarWithAction(View view, String message) {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
+    // Mostra una Snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }

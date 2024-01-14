@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Signup -->
+    <string name="signup">Registrazione</string>
+    <string name="username">Nome utente</string>
+    <string name="confirm_password">Conferma la password</string>
+    <string name="email_send">Email inviata con successo</string>
+
+    <!-- Email verification -->
+    <string name="verify_email">Verifica la tua email</string>
+    <string name="sent_a_verification">Abbiamo inviato un link per la verifica dell\'account all\'email</string>
+    <string name="log_in_after_verification">Accedi dopo aver verificato la tua email</string>
+
     <!-- Login -->
     <string name="login">Accesso</string>
     <string name="Log_in">Accedi</string>
@@ -8,6 +19,7 @@
     <string name="google_login">Accedi con Google</string>
     <string name="missing_account">Non hai un account?</string>
     <string name="sign_up">Registrati</string>
+    <string name="log_in_new_password">Accedi con la tua nuova password</string>
 
     <!-- ForgotPassword -->
     <string name="reset_your_password">Reimposta la password</string>
@@ -22,15 +34,6 @@
     <string name="sending_email">Invio dell\'email in corso…</string>
     <string name="email_resend">Email inviata nuovamente con successo</string>
     <string name="back_to_login">Ritorna all\'accesso</string>
-
-    <!-- Signup -->
-    <string name="signup">Registrazione</string>
-    <string name="username">Nome utente</string>
-    <string name="confirm_password">Conferma la password</string>
-
-    <!-- Email verification -->
-    <string name="verify_email">Verifica la tua email</string>
-    <string name="sent_a_verification">Abbiamo inviato un link per la verifica dell\'account all\'email</string>
 
     <!-- Main -->
     <string name="encyclopedia">Enciclopedia</string>
@@ -55,7 +58,7 @@
     </string-array>
     <string name="notification_settings">Impostazioni notifiche</string>
     <string name="report_issue" >Segnala un problema</string>
-    <string name="build_infomation">Informazioni sulla versione</string>
+    <string name="build_information">Informazioni sulla versione</string>
 
     <!-- AccountSettngs -->
     <string name="update_username">Aggiorna nome utente</string>
@@ -83,23 +86,25 @@
     <string name="password_changed">Password modificata con successo</string>
 
     <!-- Errors -->
+    <string name="error_invalid_username">Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
+    <string name="error_invalid_email">Indirizzo email non valido</string>
+    <string name="error_invalid_password">La password deve essere lunga almeno 8 caratteri</string>
+    <string name="error_invalid_confirm_password">Le password devono corrispondere</string>
+    <string name="error_email_send_failed">Failed to send the email</string>
+    <string name="error_email_already_exists">Indirizzo email già in uso</string>
+    <string name="error_signup_failure">Registrazione fallita</string>
+    <string name="error_email_not_verified">Email non verificata</string>
+    <string name="error_login">Errore di accesso. Per favore, riprova più tardi</string>
     <string name="error_email_not_found">Email non trovata</string>
     <string name="error_user_info_retrieval">Si è verificato un errore durante il recupero delle informazioni dell\'utente</string>
     <string name="error_dialog_title">Errore</string>
     <string name="error_reading_credentials">Errore durante la lettura delle credenziali.</string>
     <string name="error_invalid_login">Email o password non validi</string>
     <string name="error_email_resend_failed">Impossibile reinviare l\'email</string>
-    <string name="error_invalid_username">"Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
-    <string name="error_invalid_email">Indirizzo email non valido</string>
-    <string name="error_email_already_exists">Indirizzo email già in uso</string>
-    <string name="error_invalid_password">La password deve essere lunga almeno 8 caratteri</string>
-    <string name="error_invalid_confirm_password">Le password devono corrispondere</string>
-    <string name="error_signup_failure">Registrazione fallita</string>
     <string name="error_deleting_account">Errore nell\'eliminazione dell\'account</string>
     <string name="error_deleting_user_data">Errore nell\'eliminazione dei dati dell\'utente</string>
     <string name="error_user_email_not_available">Email dell\'utente non disponibile</string>
     <string name="error_incorrect_password">Password errata</string>
     <string name="error_username_update">Aggiornamento del nome utente fallito</string>
     <string name="error_password_change_failed">Cambio password fallito</string>
-    <string name="error_email_not_verified">Email non verificata</string>
 </resources>

@@ -106,11 +106,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView_observatory_exploration" />
 
             <Button
-                android:id="@+id/button_ok_email_verification"
+                android:id="@+id/button_back_to_login_email_verification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="@string/ok"
+                android:text="@string/back_to_login"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_dx_email_verification"

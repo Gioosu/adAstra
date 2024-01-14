@@ -28,7 +28,6 @@ import it.unimib.adastra.databinding.FragmentLoginBinding;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
-    String TAG = LoginFragment.class.getSimpleName();
     private FragmentLoginBinding binding;
     private FirebaseAuth mAuth;
     private String email;
@@ -88,12 +87,17 @@ public class LoginFragment extends Fragment {
                                     Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
                                     activity.finish();
                                 } else {
-                                    showSnackbar(v, getString(R.string.error_invalid_login));
+                                    // Email non verificata
+                                    showSnackbar(v, getString(R.string.error_email_not_verified));
                                 }
                             } else {
-                                showSnackbar(v, getString(R.string.error_invalid_login));
+                                // Errore di accesso
+                                showSnackbar(v, getString(R.string.error_login));
                             }
                         });
+            } else {
+                // Email e/o password errati
+                showSnackbar(v, getString(R.string.error_invalid_login));
             }
         });
 

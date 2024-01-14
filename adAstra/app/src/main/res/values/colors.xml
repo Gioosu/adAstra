@@ -25,7 +25,7 @@
     <color name="md_theme_light_outline">#001372</color> <!-- Contorno di switch -->
     <color name="md_theme_light_inverseOnSurface">#EEF0FF</color> <!-- Scritte di Snackbar -->
     <color name="md_theme_light_inverseSurface">#001372</color> <!-- Snackbar -->
-    <color name="md_theme_light_inversePrimary">#E6B4FF</color>
+    <color name="md_theme_light_inversePrimary">#FEFBFF</color> <!-- Scritte dell'azione in Snackbar -->
     <color name="md_theme_light_textColorPrimary">#000000</color> <!-- Scritte di TextView e Spinner -->
     <color name="md_theme_light_shadow">#000000</color>
     <color name="md_theme_light_surfaceTint">#8836B6</color>
@@ -56,7 +56,7 @@
     <color name="md_theme_dark_outline">#FEFBFF</color> <!-- Contorno di switch -->
     <color name="md_theme_dark_inverseOnSurface">#000E5E</color> <!-- Scritte di Snackbar -->
     <color name="md_theme_dark_inverseSurface">#FBBE00</color> <!-- Snackbar -->
-    <color name="md_theme_dark_inversePrimary">#670020</color>
+    <color name="md_theme_dark_inversePrimary">#000000</color> <!-- Scritte dell'azione in Snackbar -->
     <color name="md_theme_dark_textColorPrimary">#FEFBFF</color> <!-- Scritte di TextView e Spinner -->
     <color name="md_theme_dark_shadow">#000000</color>
     <color name="md_theme_dark_surfaceTint">#E6B4FF</color>

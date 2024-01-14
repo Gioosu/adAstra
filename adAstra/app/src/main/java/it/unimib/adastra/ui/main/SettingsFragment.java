@@ -226,12 +226,13 @@ public class SettingsFragment extends Fragment {
         binding.buttonReportIssue.setOnClickListener(v ->
                 sendEmail());
 
-        // Bottone di Version code
+        // Bottone di Build information
         binding.buttonBuildInformation.setText(BuildConfig.VERSION_NAME);
         binding.buttonBuildInformation.setOnClickListener(v -> {
         });
     }
 
+    // prende le impostazioni da SharedPreferences
     private void fetchAndSetUserSettings() {
         user.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {

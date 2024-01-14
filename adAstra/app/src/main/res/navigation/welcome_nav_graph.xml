@@ -45,7 +45,7 @@
         android:label="fragment_email_verification"
         tools:layout="@layout/fragment_email_verification" >
         <action
-            android:id="@+id/action_emailVerificationFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
+            android:id="@+id/action_emailVerificationFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

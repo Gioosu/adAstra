@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name" translatable="false">adAstra</string>
 
+    <!-- Signup -->
+    <string name="signup">Signup</string>
+    <string name="username">Username</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="email_send">Email sent successfully</string>
+
+    <!-- Email verification -->
+    <string name="verify_email">Verify your email</string>
+    <string name="sent_a_verification">We sent an account verification link to the email</string>
+    <string name="log_in_after_verification">Log in after verifying your email</string>
+
     <!-- Login -->
     <string name="login">Login</string>
     <string name="email" translatable="false">Email</string>
@@ -11,6 +22,7 @@
     <string name="google_login">Log in with Google</string>
     <string name="missing_account">Don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
+    <string name="log_in_new_password">Log in with your new password</string>
 
     <!-- ForgotPassword -->
     <string name="reset_your_password">Reset your password</string>
@@ -26,15 +38,6 @@
     <string name="ok" translatable="false">OK</string>
     <string name="email_resend">Email resent successfully</string>
     <string name="back_to_login">Back to login</string>
-
-    <!-- Signup -->
-    <string name="signup">Signup</string>
-    <string name="username">Username</string>
-    <string name="confirm_password">Confirm password</string>
-
-    <!-- Email verification -->
-    <string name="verify_email">Verify your email</string>
-    <string name="sent_a_verification">We sent an account verification link to the email</string>
 
     <!-- Main -->
     <string name="encyclopedia">Encyclopedia</string>
@@ -66,7 +69,7 @@
     <string name="notification_settings">Notification settings</string>
     <string name="report_issue">Report an issue</string>
     <string name="build_code" translatable="false">0.00.1</string>
-    <string name="build_infomation">Build information</string>
+    <string name="build_information">Build information</string>
 
     <!-- AccountSettings -->
     <string name="update_username">Update username</string>
@@ -94,23 +97,25 @@
     <string name="password_changed">Password changed successfully</string>
 
     <!-- Errors -->
+    <string name="error_invalid_email">Invalid email address</string>
+    <string name="error_invalid_password">Password must be at least 8 characters</string>
+    <string name="error_invalid_confirm_password">Passwords must match</string>
+    <string name="error_invalid_username">The username must be between 3 and 10 characters</string>
+    <string name="error_email_send_failed">Failed to send the email</string>
+    <string name="error_email_already_exists">Email address already in use</string>
+    <string name="error_signup_failure">Signup  failed</string>
+    <string name="error_email_not_verified">Email not verified</string>
+    <string name="error_login">Login error. Please try again later</string>
     <string name="error_email_not_found">Email not found</string>
     <string name="error_user_info_retrieval">An error occurred while retrieving user information</string>
     <string name="error_dialog_title">Error</string>
     <string name="error_reading_credentials">Error during reading credentials</string>
     <string name="error_invalid_login">Invalid email or password</string>
     <string name="error_email_resend_failed">Failed to resend the email</string>
-    <string name="error_invalid_username">"The username must be between 3 and 10 characters</string>
-    <string name="error_invalid_email">Invalid email address</string>
-    <string name="error_email_already_exists">Email address already in use</string>
-    <string name="error_invalid_password">Password must be at least 8 characters</string>
-    <string name="error_invalid_confirm_password">Passwords must match</string>
-    <string name="error_signup_failure">Signup  failed</string>
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>
     <string name="error_user_email_not_available">User email not available</string>
     <string name="error_incorrect_password">Incorrect password</string>
     <string name="error_username_update">Username updating failed</string>
     <string name="error_password_change_failed">Password change failed</string>
-    <string name="error_email_not_verified">Email not verified</string>
 </resources>
