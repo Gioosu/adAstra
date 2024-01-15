@@ -1,5 +1,8 @@
 package it.unimib.adastra.ui.account;
 
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.PASSWORD;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,14 +15,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +34,8 @@ import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
 public class ChangePasswordFragment extends Fragment {
     String TAG = ChangePasswordFragment.class.getSimpleName();
     private FragmentChangePasswordBinding binding;
+    private DataEncryptionUtil dataEncryptionUtil;
+    private String password;
     private Activity activity;
 
     public ChangePasswordFragment() {
@@ -62,6 +69,12 @@ public class ChangePasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        try {
+            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
         activity = getActivity();
 
         ((AccountActivity) activity).setToolBarTitle(getString(R.string.change_password));
@@ -80,12 +93,17 @@ public class ChangePasswordFragment extends Fragment {
             String newPassword = Objects.requireNonNull(binding.newPasswordInputEditText.getText()).toString();
             String confirmNewPassword = Objects.requireNonNull(binding.confirmNewPasswordInputEditText.getText()).toString();
 
-            if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(currentPassword, newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)){
+            if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Objects.requireNonNull(user).updatePassword(newPassword)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "Password cambiata con successo");
+                                try {
+                                    dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, newPassword);
+                                } catch (GeneralSecurityException | IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                             } else {
                                 Log.d(TAG, "Cambio password fallito");
                             }
@@ -97,25 +115,33 @@ public class ChangePasswordFragment extends Fragment {
     }
 
     // Controlla che la password coincida con quella corrente
-    private boolean isCurrentPasswordValid(String password){
-        //TODO Implementare il controllo che la password coincida con quella corrente
-        return true;
-    }
+    private boolean isCurrentPasswordValid(String currentPassword) {
+        boolean result = currentPassword != null && currentPassword.equals(password);
 
-    // Controlla che la password sia valida
-    private boolean isNewPasswordValid(String password, String newPassword) {
-        boolean result = password != null && newPassword != null && password.length() >= 8 && !password.equals(newPassword);
-
-        if (!result) {
-            binding.newPasswordInputEditText.setError(getString(R.string.error_invalid_password));
+        if (!result){
+            binding.currentPasswordInputEditText.setError(getString(R.string.error_incorrect_password));
         }
 
         return result;
     }
 
+    // Controlla che la password sia valida
+    private boolean isNewPasswordValid(String newPassword) {
+        boolean result = newPassword != null && newPassword.length() >= 8;
+        boolean notEqualResult = newPassword != null && !(newPassword.equalsIgnoreCase(password));
+
+        if (!result) {
+            binding.newPasswordInputEditText.setError(getString(R.string.error_invalid_password));
+        } else if (!notEqualResult) {
+            binding.newPasswordInputEditText.setError(getString(R.string.error_invalid_new_password));
+        }
+
+        return result && notEqualResult;
+    }
+
     // Controlla che le password corrispondano
-    private boolean isConfirmPasswordValid(String password, String confirmPassword){
-        boolean result = password.equals(confirmPassword);
+    private boolean isConfirmPasswordValid(String newPassword, String confirmPassword){
+        boolean result = newPassword != null && newPassword.equals(confirmPassword);
 
         if (!result) {
             binding.confirmNewPasswordInputEditText.setError(getString(R.string.error_invalid_confirm_password));

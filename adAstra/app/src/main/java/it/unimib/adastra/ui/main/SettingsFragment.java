@@ -1,6 +1,7 @@
 package it.unimib.adastra.ui.main;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
@@ -32,12 +33,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
@@ -48,11 +52,12 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class SettingsFragment extends Fragment {
     String TAG = SettingsFragment.class.getSimpleName();
     private FragmentSettingsBinding binding;
+    private SharedPreferencesUtil sharedPreferencesUtil;
+    private DataEncryptionUtil dataEncryptionUtil;
     private DocumentReference user;
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
-    private SharedPreferencesUtil sharedPreferencesUtil;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -86,6 +91,7 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
+       dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -110,6 +116,11 @@ public class SettingsFragment extends Fragment {
 
         // Bottone di Log out
         binding.floatingActionButtonLogOut.setOnClickListener(v -> {
+            try {
+                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+            } catch (GeneralSecurityException | IOException e) {
+                throw new RuntimeException(e);
+            }
             FirebaseAuth.getInstance().signOut();
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
             activity.finish();
@@ -153,7 +164,7 @@ public class SettingsFragment extends Fragment {
             return false;
         });
 
-        // Spinner di cambio lingua
+        // Spinner di Language
         binding.spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -188,7 +199,7 @@ public class SettingsFragment extends Fragment {
             return false;
         });
 
-        // Spinner di cambio tema
+        // Spinner di Theme
         binding.spinnerDarkTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

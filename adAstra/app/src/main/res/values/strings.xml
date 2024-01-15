@@ -104,18 +104,21 @@
     <string name="error_email_send_failed">Failed to send the email</string>
     <string name="error_email_already_exists">Email address already in use</string>
     <string name="error_signup_failure">Signup  failed</string>
-    <string name="error_email_not_verified">Email not verified</string>
     <string name="error_login">Login error. Please try again later</string>
+    <string name="error_invalid_login">Invalid email or password</string>
+    <string name="error_email_not_verified">Email not verified</string>
     <string name="error_email_not_found">Email not found</string>
     <string name="error_user_info_retrieval">An error occurred while retrieving user information</string>
     <string name="error_dialog_title">Error</string>
     <string name="error_reading_credentials">Error during reading credentials</string>
-    <string name="error_invalid_login">Invalid email or password</string>
     <string name="error_email_resend_failed">Failed to resend the email</string>
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>
     <string name="error_user_email_not_available">User email not available</string>
-    <string name="error_incorrect_password">Incorrect password</string>
     <string name="error_username_update">Username updating failed</string>
+    <string name="error_incorrect_password">Entered password is not correct</string>
+    <string name="error_invalid_new_password">Choose a new password different from the previous one</string>
     <string name="error_password_change_failed">Password change failed</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

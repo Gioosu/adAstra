@@ -1,6 +1,8 @@
 package it.unimib.adastra.ui.account;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.PASSWORD;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,15 +17,20 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +40,8 @@ import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
 public class UpdateEmailFragment extends Fragment {
     String TAG = UpdateEmailFragment.class.getSimpleName();
     private FragmentUpdateEmailBinding binding;
+    private String email;
+    private String password;
     private Activity activity;
 
     public UpdateEmailFragment() {
@@ -66,6 +75,13 @@ public class UpdateEmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        try {
+            email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
         activity = getActivity();
 
         ((AccountActivity) activity).setToolBarTitle(getString(R.string.update_email));
@@ -81,27 +97,37 @@ public class UpdateEmailFragment extends Fragment {
                 ((AccountActivity) activity).onSupportNavigateUp());
 
         // Bottone di Save
-        // TODO non aggiorna email
         binding.buttonSaveUpdateEmail.setOnClickListener(v -> {
-            String newEmail = Objects.requireNonNull(binding.textViewEmailUpdateEmail.getText()).toString();
-            if (isEmailValid(newEmail)) {
+            String newEmail = Objects.requireNonNull(binding.emailTextInputEditTextUpdateEmail.getText()).toString();
+            String currentPassword = Objects.requireNonNull(binding.passwordInputEditTextUpdateEmail.getText()).toString();
+
+            if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                if (user != null) {
-                    user.verifyBeforeUpdateEmail(newEmail)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "Email aggiornata con successo");
-                                } else {
-                                    Log.d(TAG, "Errore nell'aggiornamento dell'email.");
-                                }
-                            });
-                } else {
-                    Log.d(TAG, "Utente non loggato");
-                }
-            }
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(email, password);
 
-            ((AccountActivity) activity).onSupportNavigateUp();
+                user.reauthenticate(credential)
+                        .addOnCompleteListener(task -> {
+                            Log.d(TAG, "User re-authenticated.");
+
+                            FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+                            user1.verifyBeforeUpdateEmail(newEmail)
+                                    .addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            try {
+                                                dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
+                                                showSnackbar(v, "Email address updated");
+                                                ((AccountActivity) activity).onSupportNavigateUp();
+                                            } catch (GeneralSecurityException | IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        } else {
+                                            showSnackbar(v, "Email address update failed");
+                                        }
+                                    });
+                        });
+            }
         });
     }
 
@@ -114,18 +140,24 @@ public class UpdateEmailFragment extends Fragment {
         boolean result = EmailValidator.getInstance().isValid(email);
 
         if (!result) {
-            showSnackbar(binding.emailTextInputEditTextUpdateEmail, getString(R.string.error_invalid_login));
+            binding.emailTextInputEditTextUpdateEmail.setError(getString(R.string.error_invalid_email));
         }
 
         return result;
     }
 
     // Controlla che la password coincida con quella corrente
-    private boolean isCurrentPasswordValid(String password){
-        //TODO Implementare il controllo che la password coincida con quella corrente
-        return true;
+    private boolean isCurrentPasswordValid(String currentPassword) {
+        boolean result = currentPassword != null && currentPassword.equals(password);
+
+        if (!result){
+            binding.passwordInputEditTextUpdateEmail.setError(getString(R.string.error_incorrect_password));
+        }
+
+        return result;
     }
 
+    // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }

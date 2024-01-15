@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Locale;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.ActivityMainBinding;
 import it.unimib.adastra.databinding.ActivityWelcomeBinding;
 import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.SharedPreferencesUtil;
@@ -50,6 +49,10 @@ public class WelcomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        }
+
+        if (getIntent().getBooleanExtra("SHOW_LOGIN_NEW_EMAIL", false)) {
+            showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_after_verification));
         }
 
         if (getIntent().getBooleanExtra("SHOW_LOGIN_NEW_PASSWORD", false)) {

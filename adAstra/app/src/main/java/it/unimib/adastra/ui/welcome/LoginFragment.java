@@ -1,5 +1,9 @@
 package it.unimib.adastra.ui.welcome;
 
+import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.PASSWORD;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,16 +15,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.apache.commons.validator.routines.EmailValidator;
-
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +38,7 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     private String email;
     private String password;
+    private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
 
     public LoginFragment() {
@@ -66,6 +73,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
 
         // Bottone di Forgot password
@@ -77,55 +85,37 @@ public class LoginFragment extends Fragment {
             email = Objects.requireNonNull(binding.textEmailLogin.getText()).toString();
             password = Objects.requireNonNull(binding.textPasswordLogin.getText()).toString();
 
-            if(isEmailValid(email) && isPasswordValid(password)) {
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(task-> {
-                            if (task.isSuccessful()) {
-                                FirebaseUser user = mAuth.getCurrentUser();
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task-> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
 
-                                if (Objects.requireNonNull(user).isEmailVerified()){
-                                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
-                                    activity.finish();
-                                } else {
-                                    // Email non verificata
-                                    showSnackbar(v, getString(R.string.error_email_not_verified));
+                            if (Objects.requireNonNull(user).isEmailVerified()){
+                                try {
+                                    dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
+                                    dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
+                                } catch (GeneralSecurityException | IOException e) {
+                                    throw new RuntimeException(e);
                                 }
+                                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                                activity.finish();
                             } else {
-                                // Errore di accesso
-                                showSnackbar(v, getString(R.string.error_login));
+                                // Email non verificata
+                                showSnackbar(v, getString(R.string.error_email_not_verified));
+                                Objects.requireNonNull(user).sendEmailVerification()
+                                        .addOnCompleteListener(Task::isSuccessful);
                             }
-                        });
-            } else {
-                // Email e/o password errati
-                showSnackbar(v, getString(R.string.error_invalid_login));
-            }
+                        } else {
+                            // Errore di accesso
+                            showSnackbar(v, getString(R.string.error_invalid_login));
+                            //TODO Si triggera sia se non sono validi i dati di accesso sia se l'utente è offline
+                        }
+                    });
         });
 
         // Bottone di Sign up
         binding.buttonSignupLogin.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment));
-    }
-
-    // Controlla che l'email sia valida
-    private boolean isEmailValid(String email) {
-        boolean result = EmailValidator.getInstance().isValid(email);
-
-        if (!result) {
-            showSnackbar(binding.textEmailLogin, getString(R.string.error_invalid_login));
-        }
-
-        return result;
-    }
-
-    // Controlla che la password sia valida
-    private boolean isPasswordValid(String password) {
-        boolean result = password != null && password.trim().length() >= 8;
-
-        if (!result) {
-            showSnackbar(binding.textPasswordLogin, getString(R.string.error_invalid_login));
-        }
-
-        return result;
     }
 
     // Visualizza una snackbar

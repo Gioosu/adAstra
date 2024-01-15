@@ -104,7 +104,8 @@
     <string name="error_deleting_account">Errore nell\'eliminazione dell\'account</string>
     <string name="error_deleting_user_data">Errore nell\'eliminazione dei dati dell\'utente</string>
     <string name="error_user_email_not_available">Email dell\'utente non disponibile</string>
-    <string name="error_incorrect_password">Password errata</string>
     <string name="error_username_update">Aggiornamento del nome utente fallito</string>
+    <string name="error_incorrect_password">La password inserita non è corretta</string>
+    <string name="error_invalid_new_password">Scegli una nuova password diversa dalla precedente</string>
     <string name="error_password_change_failed">Cambio password fallito</string>
 </resources>

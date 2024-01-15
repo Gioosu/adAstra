@@ -1,14 +1,15 @@
 package it.unimib.adastra.ui.welcome;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,19 +18,19 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentEmailVerificationBinding;
+import it.unimib.adastra.databinding.FragmentVerifyEmailBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EmailVerificationFragment#newInstance} factory method to
+ * Use the {@link VerifyEmailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmailVerificationFragment extends Fragment {
-    String TAG = EmailVerificationFragment.class.getSimpleName();
-    private FragmentEmailVerificationBinding binding;
+public class VerifyEmailFragment extends Fragment {
+    String TAG = VerifyEmailFragment.class.getSimpleName();
+    private FragmentVerifyEmailBinding binding;
     private FirebaseUser user;
 
-    public EmailVerificationFragment() {
+    public VerifyEmailFragment() {
         // Required empty public constructor
     }
 
@@ -37,19 +38,22 @@ public class EmailVerificationFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment EmailVerificationFragment.
+     * @return A new instance of fragment VerifyEmailFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static EmailVerificationFragment newInstance() {return new EmailVerificationFragment();}
+    public static VerifyEmailFragment newInstance() {
+        return new VerifyEmailFragment();
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);}
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentEmailVerificationBinding.inflate(inflater, container, false);
+        binding = FragmentVerifyEmailBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -75,20 +79,8 @@ public class EmailVerificationFragment extends Fragment {
 
         // Bottone di Back to login
         binding.buttonBackToLoginEmailVerification.setOnClickListener(v -> {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-            if (user != null) {
-                user.reload().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
-                        FirebaseAuth.getInstance().signOut();
-                        Navigation.findNavController(v).navigate(R.id.action_emailVerificationFragment_to_loginFragment);
-                    } else {
-                        // Errori nel processo di reload
-                        showSnackbar(v, getString(R.string.error_email_send_failed));
-                    }
-                });
-            }
+            showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
+            Navigation.findNavController(v).navigate(R.id.action_verifyEmailFragment_to_loginFragment);
         });
     }
 

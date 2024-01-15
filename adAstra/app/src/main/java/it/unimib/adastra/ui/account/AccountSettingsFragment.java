@@ -1,6 +1,8 @@
 package it.unimib.adastra.ui.account;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.PASSWORD;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
@@ -17,14 +19,20 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentAccountSettingsBinding;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -134,46 +142,50 @@ public class AccountSettingsFragment extends Fragment {
         }
     }
 
-    // Aggiorna le impostazioni dopo una modifica
-    private void updateSetting(String key, Object value) {
-        if (value == null) return;
-
-        if (value instanceof String) {
-            updateStringSetting(key, (String) value);
-        }
-    }
-
-    private void updateStringSetting(String key, String value) {
-        if (USERNAME.equals(key)) {
-            binding.textViewUsernameAccountSettings.setText(value);
-        }
-    }
-
     // Elimina l'account dell'utente
     private void deleteUserAccount(View v) {
         String userId = currentUser.getUid();
+        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        String email;
+        String password;
+        try {
+            email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
         // Prima elimina l'account da Firebase Authentication
         try {
-            currentUser.delete().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "Account utente eliminato da Firebase Authentication");
-                    // Successivamente elimina i dati dell'utente da Firestore
-                    database.collection("users").document(userId).delete()
-                            .addOnSuccessListener(aVoid -> {
-                                FirebaseAuth.getInstance().signOut();
-                                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
-                                activity.finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                // Caso in cui l'eliminazione da Firestore fallisce
-                                showSnackbar(v, getString(R.string.error_deleting_user_data));
-                            });
-                } else {
-                    // Caso in cui l'eliminazione da Firebase Authentication fallisce
-                    showSnackbar(v, getString(R.string.error_deleting_account));
-                }
-            });
+            AuthCredential credential = EmailAuthProvider
+                    .getCredential(email, password);
+
+            currentUser.reauthenticate(credential)
+                    .addOnCompleteListener(task -> {
+                        Log.d(TAG, "User re-authenticated.");
+
+                        currentUser.delete().addOnCompleteListener(newTask -> {
+                            if (newTask.isSuccessful()) {
+                                Log.d(TAG, "Account utente eliminato da Firebase Authentication");
+                                // Successivamente elimina i dati dell'utente da Firestore
+                                database.collection("users").document(userId).delete()
+                                        .addOnSuccessListener(aVoid -> {
+                                            FirebaseAuth.getInstance().signOut();
+                                            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
+                                            activity.finish();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            // Caso in cui l'eliminazione da Firestore fallisce
+                                            showSnackbar(v, getString(R.string.error_deleting_user_data));
+                                        });
+                            } else {
+                                // Caso in cui l'eliminazione da Firebase Authentication fallisce
+                                showSnackbar(v, getString(R.string.error_deleting_account));
+                            }
+                        });
+                    });
+
         } catch (Exception e) {
             showSnackbar(v, getString(R.string.error_deleting_account));
         }

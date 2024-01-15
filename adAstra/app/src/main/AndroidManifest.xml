@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permetti all'app di accedere a Internet per inviare email -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -16,17 +15,20 @@
         android:theme="@style/Theme.AdAstra"
         tools:targetApi="31">
         <activity
-            android:name=".ui.forgotPassword.ForgotPasswordActivity"
-            android:screenOrientation="portrait"
+            android:name=".ui.verifyEmail.VerifyEmailActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.forgotPassword.ForgotPasswordActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.account.AccountActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.welcome.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,8 +37,8 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

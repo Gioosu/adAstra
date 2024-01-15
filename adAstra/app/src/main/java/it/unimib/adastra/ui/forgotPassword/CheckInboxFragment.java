@@ -1,6 +1,7 @@
 package it.unimib.adastra.ui.forgotPassword;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,9 +19,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentCheckInboxBinding;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +35,7 @@ import it.unimib.adastra.ui.welcome.WelcomeActivity;
 public class CheckInboxFragment extends Fragment {
     private FragmentCheckInboxBinding binding;
     private FirebaseAuth mAuth;
+    private DataEncryptionUtil dataEncryptionUtil;
     private String email;
     private Activity activity;
 
@@ -65,6 +71,7 @@ public class CheckInboxFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
 
         // Bottone di Resend
@@ -88,7 +95,14 @@ public class CheckInboxFragment extends Fragment {
         // Bottone di Back to login
         binding.buttonBackToLoginCheckInbox.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+            try {
+                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+            } catch (GeneralSecurityException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            FirebaseAuth.getInstance().signOut();
             startActivity(intent);
             activity.finish();
         });

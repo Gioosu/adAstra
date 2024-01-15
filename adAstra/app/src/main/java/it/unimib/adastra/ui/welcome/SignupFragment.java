@@ -7,6 +7,7 @@ import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class SignupFragment extends Fragment {
     private String email;
     private String password;
     private String confirmPassword;
+    private Activity activity;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -80,6 +82,7 @@ public class SignupFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
+        activity = getActivity();
 
         // Bottone di Sign up
         binding.buttonSignUpSignup.setOnClickListener(v -> {
@@ -103,8 +106,8 @@ public class SignupFragment extends Fragment {
                                 user.sendEmailVerification()
                                         .addOnCompleteListener(verificationTask -> {
                                             if (verificationTask.isSuccessful()) {
-                                                showSnackbar(v, getString(R.string.email_send));
-                                                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_emailVerificationFragment);
+                                                FirebaseAuth.getInstance().signOut();
+                                                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
                                             } else {
                                                 showSnackbar(v, getString(R.string.error_email_send_failed));
                                             }
