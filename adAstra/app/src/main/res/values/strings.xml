@@ -5,7 +5,7 @@
     <string name="signup">Signup</string>
     <string name="username">Username</string>
     <string name="confirm_password">Confirm password</string>
-    <string name="email_send">Email sent successfully</string>
+    <string name="welcome">Welcome to adAstra!</string>
 
     <!-- Email verification -->
     <string name="verify_email">Verify your email</string>
@@ -28,6 +28,9 @@
     <string name="reset_your_password">Reset your password</string>
     <string name="enter_your_email">Enter your email address and we\'ll send you a link to reset your password</string>
     <string name="reset_password">Reset password</string>
+    <string name="confirm_reset">Confirm password reset</string>
+    <string name="confirm_reset_message">Are you sure you want to reset your password?</string>
+    <string name="reset">Reset password</string>
 
     <!-- CheckInbox -->
     <string name="check_your_inbox">Check your inbox</string>
@@ -46,6 +49,7 @@
     <string name="events">Events</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
+    <string name="new_authentication">Please re-authenticate to continue</string>
 
     <!-- Settings -->
     <string name="log_out">Log out</string>
@@ -84,11 +88,12 @@
     <!-- UpdateUsername -->
     <string name="new_username">New username</string>
     <string name="save">Save</string>
-    <string name="username_update">Username updated</string>
+    <string name="username_updated">Username updated successfully</string>
 
     <!-- UpdateEmail -->
     <string name="new_email_address">New email address</string>
     <string name="account_password">adAstra password</string>
+    <string name="email_updated">Verification email sent to new address</string>
 
     <!-- ChangePassword -->
     <string name="current_password">Current password</string>
@@ -115,10 +120,10 @@
     <string name="error_deleting_account">Error in deleting the account</string>
     <string name="error_deleting_user_data">Error in deleting user data</string>
     <string name="error_user_email_not_available">User email not available</string>
-    <string name="error_username_update">Username updating failed</string>
+    <string name="error_username_update_failed">Username update failed</string>
     <string name="error_incorrect_password">Entered password is not correct</string>
+    <string name="error_email_update_failed">Email address update failed</string>
     <string name="error_invalid_new_password">Choose a new password different from the previous one</string>
     <string name="error_password_change_failed">Password change failed</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_invalid_new_email">Choose a new email address different from the previous one</string>
 </resources>

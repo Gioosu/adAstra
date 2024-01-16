@@ -2,6 +2,8 @@ package it.unimib.adastra.ui.forgotPassword;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +12,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -21,6 +23,7 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
+import it.unimib.adastra.ui.account.AccountActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +33,7 @@ import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
 public class ResetPasswordFragment extends Fragment {
     private FragmentResetPasswordBinding binding;
     private FirebaseAuth mAuth;
+    private Activity activity;
     private String email;
 
     public ResetPasswordFragment() {
@@ -64,13 +68,24 @@ public class ResetPasswordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        activity = getActivity();
+
+        if (requireActivity() instanceof AccountActivity) {
+            ((AccountActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
+        }
+
 
         // Bottone di Reset Password
         binding.buttonResetPassword.setOnClickListener(v -> {
             email = Objects.requireNonNull(binding.textEmailResetPassword.getText()).toString();
 
             if (isEmailValid(email)) {
-                sendPasswordResetEmail(email, v);
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.confirm_reset)
+                        .setMessage(R.string.confirm_reset_message)
+                        .setPositiveButton(R.string.reset, (dialog, which) -> sendPasswordResetEmail(email, v))
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
             }
         });
     }
@@ -80,18 +95,22 @@ public class ResetPasswordFragment extends Fragment {
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        navigateToCheckInbox(email, view);
+                        navigateToCheckInbox(email);
                     } else {
-                        showSnackbar(view, getString(R.string.error_email_resend_failed));
+                        showSnackbar(view, getString(R.string.error_email_send_failed));
                     }
                 });
     }
 
     // Naviga a CheckInboxFragment
-    private void navigateToCheckInbox(String email, View view) {
+    private void navigateToCheckInbox(String email) {
         Bundle bundle = new Bundle();
         bundle.putString(EMAIL_ADDRESS, email);
-        Navigation.findNavController(view).navigate(R.id.action_forgotPasswordFragment_to_checkInboxFragment, bundle);
+        Intent intent = new Intent(getActivity(), CheckInboxActivity.class);
+        intent.putExtra("EMAIL_ADDRESS", email);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        activity.finish();
     }
 
     // Controlla che l'email sia valida

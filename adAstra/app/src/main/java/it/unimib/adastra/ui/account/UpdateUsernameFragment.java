@@ -4,7 +4,6 @@ import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,13 +88,12 @@ public class UpdateUsernameFragment extends Fragment {
                 db.collection("users").document(userId)
                         .update(updates)
                         .addOnSuccessListener(aVoid -> {
-                            Log.d(TAG, "Nome utente aggiornato con successo");
+                            showSnackbar(v, getString(R.string.username_updated));
+                            ((AccountActivity) activity).onSupportNavigateUp();
                         })
                         .addOnFailureListener(e -> {
-                            Log.d(TAG, "Aggiornamento del nome utente fallito");
+                            showSnackbar(v, getString(R.string.error_username_update_failed));
                         });
-
-                ((AccountActivity) activity).onSupportNavigateUp();
             }
         });
     }
@@ -116,5 +114,10 @@ public class UpdateUsernameFragment extends Fragment {
         }
 
         return result;
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

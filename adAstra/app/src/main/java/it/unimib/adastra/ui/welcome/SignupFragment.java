@@ -106,7 +106,7 @@ public class SignupFragment extends Fragment {
                                 user.sendEmailVerification()
                                         .addOnCompleteListener(verificationTask -> {
                                             if (verificationTask.isSuccessful()) {
-                                                FirebaseAuth.getInstance().signOut();
+                                                showSnackbar(v, getString(R.string.welcome));
                                                 Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
                                             } else {
                                                 showSnackbar(v, getString(R.string.error_email_send_failed));

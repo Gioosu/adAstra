@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_loginFragment_to_forgotPasswordActivity"
             app:destination="@id/forgotPasswordActivity" />
+        <action
+            android:id="@+id/action_loginFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -48,4 +51,9 @@
             android:id="@+id/action_verifyEmailFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="it.unimib.adastra.ui.forgotPassword.ResetPasswordFragment"
+        android:label="fragment_reset_password"
+        tools:layout="@layout/fragment_reset_password" />
 </navigation>

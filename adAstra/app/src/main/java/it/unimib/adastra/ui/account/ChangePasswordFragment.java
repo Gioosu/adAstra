@@ -5,7 +5,6 @@ import static it.unimib.adastra.util.Constants.PASSWORD;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -81,7 +81,7 @@ public class ChangePasswordFragment extends Fragment {
 
         // Bottone di Forgot password
         binding.buttonForgotPasswordChangePassword.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_forgotPasswordActivity));
+                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_resetPasswordFragment2));
 
         // Bottone di Cancel
         binding.buttonCancelChangePassword.setOnClickListener(v ->
@@ -98,18 +98,17 @@ public class ChangePasswordFragment extends Fragment {
                 Objects.requireNonNull(user).updatePassword(newPassword)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Log.d(TAG, "Password cambiata con successo");
                                 try {
                                     dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, newPassword);
+                                    showSnackbar(v, getString(R.string.password_changed));
+                                    ((AccountActivity) activity).onSupportNavigateUp();
                                 } catch (GeneralSecurityException | IOException e) {
                                     throw new RuntimeException(e);
                                 }
                             } else {
-                                Log.d(TAG, "Cambio password fallito");
+                                showSnackbar(v, getString(R.string.error_password_change_failed));
                             }
                         });
-
-                ((AccountActivity) activity).onSupportNavigateUp();
             }
         });
     }
@@ -148,5 +147,10 @@ public class ChangePasswordFragment extends Fragment {
         }
 
         return result;
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

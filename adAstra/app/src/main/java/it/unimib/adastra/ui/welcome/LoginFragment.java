@@ -34,6 +34,7 @@ import it.unimib.adastra.util.DataEncryptionUtil;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
+    String TAG = WelcomeActivity.class.getSimpleName();
     private FragmentLoginBinding binding;
     private FirebaseAuth mAuth;
     private String email;
@@ -78,39 +79,43 @@ public class LoginFragment extends Fragment {
 
         // Bottone di Forgot password
         binding.forgotPassword.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_forgotPasswordActivity));
+                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_resetPasswordFragment));
 
         // Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
             email = Objects.requireNonNull(binding.textEmailLogin.getText()).toString();
             password = Objects.requireNonNull(binding.textPasswordLogin.getText()).toString();
 
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task-> {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
+            if (email != null && !email.isEmpty() && password != null && !password.isEmpty()) {
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
 
-                            if (Objects.requireNonNull(user).isEmailVerified()){
-                                try {
-                                    dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
-                                    dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
-                                } catch (GeneralSecurityException | IOException e) {
-                                    throw new RuntimeException(e);
+                                if (Objects.requireNonNull(user).isEmailVerified()) {
+                                    try {
+                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
+                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
+                                    } catch (GeneralSecurityException | IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                                    activity.finish();
+                                } else {
+                                    // Email non verificata
+                                    showSnackbar(v, getString(R.string.error_email_not_verified));
+                                    Objects.requireNonNull(user).sendEmailVerification()
+                                            .addOnCompleteListener(Task::isSuccessful);
                                 }
-                                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
-                                activity.finish();
                             } else {
-                                // Email non verificata
-                                showSnackbar(v, getString(R.string.error_email_not_verified));
-                                Objects.requireNonNull(user).sendEmailVerification()
-                                        .addOnCompleteListener(Task::isSuccessful);
+                                // Errore di accesso
+                                showSnackbar(v, getString(R.string.error_invalid_login));
+                                //TODO Si triggera sia se non sono validi i dati di accesso sia se l'utente è offline
                             }
-                        } else {
-                            // Errore di accesso
-                            showSnackbar(v, getString(R.string.error_invalid_login));
-                            //TODO Si triggera sia se non sono validi i dati di accesso sia se l'utente è offline
-                        }
-                    });
+                        });
+            } else {
+                showSnackbar(v, getString(R.string.error_invalid_login));
+            }
         });
 
         // Bottone di Sign up

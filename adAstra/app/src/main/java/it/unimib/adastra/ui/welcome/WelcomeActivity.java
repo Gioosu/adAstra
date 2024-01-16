@@ -45,19 +45,15 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // Login rapido
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
+        if (currentUser != null && currentUser.isEmailVerified()) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        } else {
+            FirebaseAuth.getInstance().signOut();
         }
 
-        if (getIntent().getBooleanExtra("SHOW_LOGIN_NEW_EMAIL", false)) {
-            showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_after_verification));
-        }
-
-        if (getIntent().getBooleanExtra("SHOW_LOGIN_NEW_PASSWORD", false)) {
-            showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_new_password));
-        }
+        checkIntentAndShowSnackbar();
     }
 
     // Prende le impostazioni da SharedPreferences
@@ -126,6 +122,17 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // Inizializzo il tema
         sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
+    }
+
+    private void checkIntentAndShowSnackbar() {
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("SHOW_LOGIN_NEW_EMAIL", false)) {
+            showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_after_verification));
+        } else if (intent.getBooleanExtra("SHOW_LOGIN_NEW_PASSWORD", false)) {
+            showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_new_password));
+        } else if (intent.getBooleanExtra("SHOW_NEW_AUTHENTICATION", false)) {
+            showSnackbarWithAction(binding.getRoot(), getString(R.string.new_authentication));
+        }
     }
 
     // Mostra una Snackbar con un'azione integrata

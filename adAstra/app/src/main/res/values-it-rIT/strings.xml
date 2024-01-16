@@ -4,7 +4,7 @@
     <string name="signup">Registrazione</string>
     <string name="username">Nome utente</string>
     <string name="confirm_password">Conferma la password</string>
-    <string name="email_send">Email inviata con successo</string>
+    <string name="welcome">Benvenuti su adAstra!</string>
 
     <!-- Email verification -->
     <string name="verify_email">Verifica la tua email</string>
@@ -25,6 +25,9 @@
     <string name="reset_your_password">Reimposta la password</string>
     <string name="enter_your_email">Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password</string>
     <string name="reset_password">Reimposta password</string>
+    <string name="confirm_reset">Conferma reimpostazione password</string>
+    <string name="confirm_reset_message">Sei sicuro di voler reimpostare la tua password?</string>
+    <string name="reset">Reimposta password</string>
 
     <!-- CheckInbox -->
     <string name="check_your_inbox">Controlla la tua casella di posta</string>
@@ -40,6 +43,7 @@
     <string name="events">Eventi</string>
     <string name="profile">Profilo</string>
     <string name="settings">Opzioni</string>
+    <string name="new_authentication">Per favore, riautenticati per continuare</string>
 
     <!-- Settings -->
     <string name="log_out">Disconnettiti</string>
@@ -73,11 +77,12 @@
     <!-- UpdateUsername -->
     <string name="new_username">Nuovo nome utente</string>
     <string name="save">Salva</string>
-    <string name="username_update">Nome utente aggiornato</string>
+    <string name="username_updated">Nome utente aggiornato con successo</string>
 
     <!-- UpdateEmail -->
     <string name="new_email_address">Nuovo indirizzo email</string>
     <string name="account_password">Password adAstra</string>
+    <string name="email_updated">Email di verifica inviata al nuovo indirizzo</string>
 
     <!-- ChangePassword -->
     <string name="current_password">Password attuale</string>
@@ -104,8 +109,10 @@
     <string name="error_deleting_account">Errore nell\'eliminazione dell\'account</string>
     <string name="error_deleting_user_data">Errore nell\'eliminazione dei dati dell\'utente</string>
     <string name="error_user_email_not_available">Email dell\'utente non disponibile</string>
-    <string name="error_username_update">Aggiornamento del nome utente fallito</string>
+    <string name="error_username_update_failed">Aggiornamento del nome utente fallito</string>
     <string name="error_incorrect_password">La password inserita non è corretta</string>
+    <string name="error_email_update_failed">Aggiornamento dell\'indirizzo email fallito</string>
     <string name="error_invalid_new_password">Scegli una nuova password diversa dalla precedente</string>
     <string name="error_password_change_failed">Cambio password fallito</string>
+    <string name="error_invalid_new_email">Scegli un nuovo indirizzo email diversa dalla precedente</string>
 </resources>

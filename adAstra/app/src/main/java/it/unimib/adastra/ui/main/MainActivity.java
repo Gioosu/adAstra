@@ -39,18 +39,14 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             // L'utente non è loggato
-            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
-            startActivity(intent);
-            finish();
+            backToLogin();
         } else {
             // Aggiorna lo stato dell'utente
             currentUser.reload().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "reload() ha dato esito positivo");
                 } else {
-                    Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
-                    startActivity(intent);
-                    finish();
+                    backToLogin();
                 }
             });
         }
@@ -71,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 binding.materialToolbarMain.setTitle(destination.getLabel()));
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
+    }
+
+    // Ritorna a Login
+    private void backToLogin() {
+        Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+        intent.putExtra("SHOW_NEW_AUTHENTICATION", true);
+        startActivity(intent);
+        finish();
     }
 
     // Prende le impostazioni da SharedPreferences

@@ -46,7 +46,7 @@
                 android:id="@+id/imageView_update_password"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
-                android:contentDescription="@string/error_username_update"
+                android:contentDescription="@string/error_username_update_failed"
                 android:src="@drawable/email"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
                 app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
@@ -78,7 +78,8 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/change"
                     android:drawablePadding="16dp"
-                    android:hint="@string/new_email_address" />
+                    android:hint="@string/new_email_address"
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
