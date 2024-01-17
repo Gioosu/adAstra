@@ -6,39 +6,40 @@
     android:layout_height="wrap_content"
     tools:context=".ui.welcome.LoginFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_sx_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="16dp" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_dx_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="16dp" />
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_horizontal_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="16dp" />
+                app:layout_constraintGuide_begin="8dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_sx_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="8dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_dx_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="8dp" />
 
             <ImageView
                 android:id="@+id/imageView_icon_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/app_icon"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
@@ -48,7 +49,7 @@
             <TextView
                 android:id="@+id/login"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="43dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/login"
                 android:textColor="?android:textColorPrimary"
@@ -73,7 +74,6 @@
                     android:drawablePadding="16dp"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
-                    android:textColorHint="#546E7A"
                     tools:ignore="TextContrastCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -106,7 +106,6 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="@string/forgot_password"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
@@ -116,7 +115,7 @@
                 android:id="@+id/button_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/Log_in"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
@@ -191,8 +190,8 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/sign_up"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -202,6 +201,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/button_google" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
 </FrameLayout>

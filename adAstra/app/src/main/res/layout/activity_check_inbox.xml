@@ -6,122 +6,118 @@
     android:layout_height="match_parent"
     tools:context=".ui.forgotPassword.CheckInboxActivity">
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_horizontal_check_inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="8dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_horizontal_check_inbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="16dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_sx_check_inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_sx_check_inbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="16dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_dx_check_inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_dx_check_inbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="16dp" />
+        <ImageView
+            android:id="@+id/imageView_icon_check_inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/app_icon"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_check_inbox" />
 
-            <ImageView
-                android:id="@+id/imageView_icon_check_inbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/app_icon"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
-                app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_check_inbox" />
+        <TextView
+            android:id="@+id/textView_check_your_inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/check_your_inbox"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_icon_check_inbox" />
 
-            <TextView
-                android:id="@+id/textView_check_your_inbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/check_your_inbox"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
-                app:layout_constraintTop_toBottomOf="@+id/imageView_icon_check_inbox" />
+        <TextView
+            android:id="@+id/textView_sent_a_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/sent_a_password"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
+            app:layout_constraintTop_toBottomOf="@+id/textView_check_your_inbox" />
 
-            <TextView
-                android:id="@+id/textView_sent_a_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="@string/sent_a_password"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
-                app:layout_constraintTop_toBottomOf="@+id/textView_check_your_inbox" />
+        <ImageView
+            android:id="@+id/imageView__check_inbox"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:contentDescription="@string/check_your_inbox"
+            android:src="@drawable/astronomy_telescope"
+            app:layout_constraintBottom_toTopOf="@+id/button_resend"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
+            app:layout_constraintTop_toBottomOf="@+id/textView_sent_a_password" />
 
-            <ImageView
-                android:id="@+id/imageView__check_inbox"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_marginTop="64dp"
-                android:contentDescription="@string/check_your_inbox"
-                android:src="@drawable/astronomy_telescope"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
-                app:layout_constraintTop_toBottomOf="@+id/textView_sent_a_password" />
+        <TextView
+            android:id="@+id/textView_didnt_get_an_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/didnt_get_an_email"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/button_resend"
+            app:layout_constraintEnd_toStartOf="@+id/button_resend"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox" />
 
-            <TextView
-                android:id="@+id/textView_didnt_get_an_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/didnt_get_an_email"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/button_resend"
-                app:layout_constraintEnd_toStartOf="@+id/button_resend"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/button_resend"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/resend"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/button_back_to_login_check_inbox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView_didnt_get_an_email" />
 
-            <Button
-                android:id="@+id/button_resend"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
-                android:text="@string/resend"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textView_didnt_get_an_email"
-                app:layout_constraintTop_toBottomOf="@+id/imageView__check_inbox" />
+        <Button
+            android:id="@+id/button_back_to_login_check_inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back_to_login"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox" />
 
-            <Button
-                android:id="@+id/button_back_to_login_check_inbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/back_to_login"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_check_inbox"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_check_inbox"
-                app:layout_constraintTop_toBottomOf="@+id/button_resend" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

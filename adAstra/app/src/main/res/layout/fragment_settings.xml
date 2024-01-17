@@ -12,25 +12,25 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_horizontal_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="8dp" />
+
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_sx_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
+            app:layout_constraintGuide_begin="8dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_dx_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_horizontal_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="16dp" />
+            app:layout_constraintGuide_end="8dp" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_settings"
@@ -106,9 +106,9 @@
             android:id="@+id/divider_preferences_settings"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
@@ -118,7 +118,7 @@
             android:id="@+id/user_preferences"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/user_preferences"
             android:textColor="?android:textColorPrimary"
@@ -126,10 +126,12 @@
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
             app:layout_constraintTop_toBottomOf="@+id/divider_preferences_settings" />
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="8dp"
             android:fillViewport="true"
+            android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -144,9 +146,8 @@
                     android:id="@+id/switch_imperial_system"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:drawableStart="@drawable/ruler"
                     android:drawablePadding="21dp"
                     android:fitsSystemWindows="false"
@@ -160,9 +161,9 @@
                     android:id="@+id/switch_time_format"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:drawableStart="@drawable/clock"
                     android:drawablePadding="24dp"
                     android:fitsSystemWindows="false"
@@ -174,18 +175,18 @@
                     android:id="@+id/divider_notifications_settings"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:background="?android:attr/listDivider" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_iss_notifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginEnd="16dp"
                     android:drawableStart="@drawable/iss_outlined"
                     android:drawablePadding="21dp"
                     android:fitsSystemWindows="false"
@@ -199,9 +200,9 @@
                     android:id="@+id/switch_events_notifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginEnd="16dp"
                     android:drawableStart="@drawable/meteorite_comet_outlined"
                     android:drawablePadding="21dp"
                     android:fitsSystemWindows="false"
@@ -215,18 +216,18 @@
                     android:id="@+id/divider_general_settings"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:background="?android:attr/listDivider" />
 
                 <TextView
                     android:id="@+id/textView_language"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@string/language"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
@@ -235,9 +236,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -262,11 +262,11 @@
 
                 <TextView
                     android:id="@+id/textView_theme"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@string/theme"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
@@ -274,10 +274,9 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -304,17 +303,17 @@
                     android:id="@+id/divider_support"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:background="?android:attr/listDivider" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -343,11 +342,10 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -374,7 +372,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

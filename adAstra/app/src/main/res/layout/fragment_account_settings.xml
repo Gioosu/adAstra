@@ -6,184 +6,168 @@
     android:layout_height="match_parent"
     tools:context=".ui.account.AccountSettingsFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_horizontal_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="8dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_horizontal_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="16dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_sx_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="8dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_sx_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="16dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_dx_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="8dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_dx_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="16dp" />
+        <ImageView
+            android:id="@+id/imageView_profile"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/account_settings"
+            android:src="@drawable/alien"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_profile" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_botton_account_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_end="16dp" />
+        <TextView
+            android:id="@+id/textView_username_account_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_profile" />
+
+        <TextView
+            android:id="@+id/textView_email_account_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toBottomOf="@+id/textView_username_account_settings" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toBottomOf="@+id/textView_email_account_settings">
 
             <ImageView
-                android:id="@+id/imageView_profile"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:contentDescription="@string/account_settings"
-                android:src="@drawable/alien"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-                app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_profile" />
-
-            <TextView
-                android:id="@+id/textView_username_account_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-                app:layout_constraintTop_toBottomOf="@+id/imageView_profile" />
-
-            <TextView
-                android:id="@+id/textView_email_account_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-                app:layout_constraintTop_toBottomOf="@+id/textView_username_account_settings" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-                app:layout_constraintTop_toBottomOf="@+id/textView_email_account_settings">
-
-                <ImageView
-                    android:id="@+id/imageView_icon_update_username"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/update_username"
-                    android:src="@drawable/astronaut_outlined" />
-
-                <Button
-                    android:id="@+id/button_update_username"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/update_username"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    app:icon="@drawable/arrow_forward"
-                    app:iconGravity="end"
-                    tools:ignore="DuplicateSpeakableTextCheck" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-                <ImageView
-                    android:id="@+id/imageView_icon_update_email"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/update_email"
-                    android:src="@drawable/email" />
-
-                <Button
-                    android:id="@+id/button_update_email"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/update_email"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    app:icon="@drawable/arrow_forward"
-                    app:iconGravity="end"
-                    tools:ignore="DuplicateSpeakableTextCheck" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-                <ImageView
-                    android:id="@+id/imageView_icon_change_password"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/change_password"
-                    android:src="@drawable/password" />
-
-                <Button
-                    android:id="@+id/button_change_password"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/change_password"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    app:icon="@drawable/arrow_forward"
-                    app:iconGravity="end"
-                    tools:ignore="DuplicateSpeakableTextCheck" />
-            </LinearLayout>
+                android:id="@+id/imageView_icon_update_username"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/update_username"
+                android:src="@drawable/astronaut_outlined" />
 
             <Button
-                android:id="@+id/button_delete_account"
-                android:layout_width="wrap_content"
+                android:id="@+id/button_update_username"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/delete_account"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline_botton_account_settings"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+                android:gravity="center_vertical"
+                android:text="@string/update_username"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
+                app:icon="@drawable/arrow_forward"
+                app:iconGravity="end"
+                tools:ignore="DuplicateSpeakableTextCheck" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+            <ImageView
+                android:id="@+id/imageView_icon_update_email"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/update_email"
+                android:src="@drawable/email" />
+
+            <Button
+                android:id="@+id/button_update_email"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/update_email"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
+                app:icon="@drawable/arrow_forward"
+                app:iconGravity="end"
+                tools:ignore="DuplicateSpeakableTextCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+            <ImageView
+                android:id="@+id/imageView_icon_change_password"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/change_password"
+                android:src="@drawable/password" />
+
+            <Button
+                android:id="@+id/button_change_password"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/change_password"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
+                app:icon="@drawable/arrow_forward"
+                app:iconGravity="end"
+                tools:ignore="DuplicateSpeakableTextCheck" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_delete_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_account"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
