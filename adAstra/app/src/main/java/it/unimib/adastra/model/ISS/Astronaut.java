@@ -27,12 +27,11 @@ public class Astronaut {
         craft = newCraft;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "Astronaut{" +
-                "name ='" + name + '\'' + ", " +
-                "craft ='" + craft + '\'' +
+                "name='" + name + '\'' +
+                ", craft='" + craft + '\'' +
                 '}';
     }
 }

@@ -27,12 +27,11 @@ public class Coordinate {
         latitude = newLatitude;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "Coordinate{" +
-                "longitude ='" + longitude + '\'' + ", " +
-                "latitude ='" + latitude + '\'' +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
                 '}';
     }
 }
