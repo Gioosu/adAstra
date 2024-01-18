@@ -22,7 +22,9 @@ public class Constants {
     // Constants for encrypted files
     public static final String ENCRYPTED_DATA_FILE_NAME = "it.unimib.adastra.encrypted_file.txt";
 
-    //Constants for Assets Folder
+    // Constants for Assets Folder
     public static final String ISS_API_TEST_JSON_FILE = "ISSResponse.json";
     public static final String ASTRO_API_TEST_JSON_FILE = "AstroResponse.json";
+
+    // Constants for ISS API (http://api.open-notify.org/)
 }

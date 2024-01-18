@@ -20,6 +20,7 @@ public class JSONParserUtil {
         this.context = application.getApplicationContext();
     }
 
+    // TODO implementare i parametri con query(risultato) e nome della classe, fixare il return
     public ISSApiResponse parseJSONFileWithGSON(String fileName) throws IOException {
         InputStream inputStream = context.getAssets().open(fileName);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));

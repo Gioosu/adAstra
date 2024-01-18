@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Permetti all'app di accedere a Internet per inviare email -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,10 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AdAstra"
         tools:targetApi="31">
+        <service
+            android:name=".service.ISSApiService"
+            android:exported="false"></service>
+
         <activity
             android:name=".ui.forgotPassword.CheckInboxActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.account.AccountActivity"
             android:exported="false"
