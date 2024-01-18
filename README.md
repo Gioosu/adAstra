@@ -1,6 +1,3 @@
-# adAstra
-"An app for astronomy enthusiasts featuring ISS tracking, a celestial encyclopedia, and an astronomical events calendar."
-
 **FUNCTIONALITIES:**
 - **ISS Tracking:** The International Space Station (ISS) is visible to the naked eye during the night and is continually monitored. Hence, it's possible to predict when it will pass over one's location. User could be provided with ISS timings based on the location marked during sign-up.
 - **Reference Constellation based on Birth Month:** After sign-up, users can be shown the constellation associated with their birth month (e.g., Aquarius for January).
