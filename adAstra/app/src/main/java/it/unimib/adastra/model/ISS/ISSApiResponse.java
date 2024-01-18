@@ -1,42 +1,27 @@
 package it.unimib.adastra.model.ISS;
 
-//Class to represent the source of ISS information
+import androidx.room.Entity;
+import androidx.room.Ignore;
 
-import com.google.gson.annotations.SerializedName;
-
-public class ISSApiResponse {
-    private int timestamp;
-    @SerializedName("iss_position")
-    private Coordinate coordinate;
+// Class to represent the source of ISS information
+@Entity
+public class ISSApiResponse extends ISSResponse{
     private String message;
 
-    public ISSApiResponse(){}
+    @Ignore
+    public ISSApiResponse(){
+        super();
+    }
 
-    public ISSApiResponse(int timestamp, Coordinate coordinate, String message) {
-        this.timestamp = timestamp;
-        this.coordinate = coordinate;
+    public ISSApiResponse(String message, Coordinate coordinate, long timestamp) {
+        super(coordinate, timestamp);
         this.message = message;
-    }
-
-    public int getTimestamp() {
-        return timestamp;
-    }
-
-    public Coordinate getCoordinate() {
-        return coordinate;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setTimestamp(int timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
-    }
 
     public void setMessage(String message) {
         this.message = message;
@@ -45,9 +30,8 @@ public class ISSApiResponse {
     @Override
     public String toString() {
         return "ISSApiResponse{" +
-                "timestamp=" + timestamp +
-                ", coordinate=" + coordinate +
-                ", message='" + message + '\'' +
+                "message='" + message + '\'' +
                 '}';
     }
+
 }

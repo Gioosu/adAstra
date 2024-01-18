@@ -27,4 +27,10 @@ public class Constants {
     public static final String ASTRO_API_TEST_JSON_FILE = "AstroResponse.json";
 
     // Constants for ISS API (http://api.open-notify.org/)
+    public static final String ISS_ENDPOINT = "iss-now";
+    public static final String ASTROS_ENDPOINT = "astros";
+
+    // Room
+    public static final String DATABASE_NAME = "adAstraDatabase";
+    public static final int DATABASE_VERSION = 1;
 }

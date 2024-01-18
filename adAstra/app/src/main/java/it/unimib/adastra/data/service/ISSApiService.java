@@ -1,4 +1,4 @@
-package it.unimib.adastra.service;
+package it.unimib.adastra.data.service;
 
 import it.unimib.adastra.model.ISS.ISSApiResponse;
 import retrofit2.Call;
