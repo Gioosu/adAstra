@@ -33,4 +33,8 @@ public class Constants {
     // Room
     public static final String DATABASE_NAME = "adAstraDatabase";
     public static final int DATABASE_VERSION = 1;
+
+    // Constants for errors
+    public static final String RETROFIT_ERROR = "retrofit_error";
+    public static final String UNEXPECTED_ERROR = "unexpected_error";
 }

@@ -1,48 +1,47 @@
 package it.unimib.adastra.model.ISS;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class Astronaut {
-
     //User for Room
-    @PrimaryKey(autoGenerate = true)
-    private long id;
-    
+    @PrimaryKey
     @ColumnInfo(name = "name")
+    @NonNull
     private String name;
+    private String craft;
 
-    @Ignore
     public Astronaut() {}
 
-    public Astronaut(String name) {
+    public Astronaut(String name, String craft) {
         this.name = name;
+        this.craft = craft;
     }
 
     public String getName() {
         return name;
     }
 
-    public long getId() {
-        return id;
+    public String getCraft() {
+        return craft;
     }
 
     public void setName(String newName) {
         name = newName;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCraft(String newCraft) {
+        craft = newCraft;
     }
 
     @Override
     public String toString() {
         return "Astronaut{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
+                ", craft='" + craft + '\'' +
                 '}';
     }
 }

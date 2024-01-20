@@ -5,16 +5,16 @@ import androidx.room.Ignore;
 
 // Class to represent the source of ISS information
 @Entity
-public class ISSApiResponse extends ISSResponse{
+public class ISSPositionApiResponse extends ISSPositionResponse {
     private String message;
 
     @Ignore
-    public ISSApiResponse(){
+    public ISSPositionApiResponse(){
         super();
     }
 
-    public ISSApiResponse(String message, Coordinate coordinate, long timestamp) {
-        super(coordinate, timestamp);
+    public ISSPositionApiResponse(String message, Coordinates coordinates, long timestamp) {
+        super(coordinates, timestamp);
         this.message = message;
     }
 

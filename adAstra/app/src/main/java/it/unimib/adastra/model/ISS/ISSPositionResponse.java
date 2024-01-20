@@ -1,5 +1,6 @@
 package it.unimib.adastra.model.ISS;
 
+//Class to represent the source of ISS information
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,33 +8,32 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 @Entity
-public class ISSResponse {
+public class ISSPositionResponse {
 
     @SerializedName("iss_position")
     @Embedded
-    private Coordinate coordinate;
+    private Coordinates coordinates;
 
     @PrimaryKey
     private long timestamp;
 
-    public ISSResponse() {
+    public ISSPositionResponse() {
     }
 
-    public ISSResponse(Coordinate coordinate, long timestamp) {
-        this.coordinate = coordinate;
+    public ISSPositionResponse(Coordinates coordinates, long timestamp) {
+        this.coordinates = coordinates;
         this.timestamp = timestamp;
     }
 
-    public Coordinate getCoordinate() {
-        return coordinate;
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getTimestamp() {return timestamp;
     }
 
     public void setTimestamp(long timestamp) {
@@ -43,8 +43,8 @@ public class ISSResponse {
     @Override
     public String toString() {
         return "ISSResponse{" +
-                "coordinate=" + coordinate +
+                "coordinate=" + coordinates +
                 ", timestamp=" + timestamp +
-                '}';
+        '}';
     }
 }

@@ -2,13 +2,13 @@ package it.unimib.adastra.model.ISS;
 
 import androidx.room.Ignore;
 
-public class Coordinate {
+public class Coordinates {
     private double longitude;
     private double latitude;
 
     @Ignore
-    public Coordinate() {}
-    public Coordinate(double longitude, double latitude) {
+    public Coordinates() {}
+    public Coordinates(double longitude, double latitude) {
         this.longitude = longitude;
         this.latitude = latitude;
     }

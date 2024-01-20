@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import it.unimib.adastra.model.ISS.ISSApiResponse;
+import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 
 public class JSONParserUtil {
 
@@ -21,10 +21,10 @@ public class JSONParserUtil {
     }
 
     // TODO implementare i parametri con query(risultato) e nome della classe, fixare il return
-    public ISSApiResponse parseJSONFileWithGSON(String fileName) throws IOException {
+    public ISSPositionApiResponse parseJSONFileWithGSON(String fileName) throws IOException {
         InputStream inputStream = context.getAssets().open(fileName);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        return new Gson().fromJson(bufferedReader, ISSApiResponse.class);
+        return new Gson().fromJson(bufferedReader, ISSPositionApiResponse.class);
     }
 }
