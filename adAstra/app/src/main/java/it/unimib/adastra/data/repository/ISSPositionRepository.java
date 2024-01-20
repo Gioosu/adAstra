@@ -1,5 +1,7 @@
 package it.unimib.adastra.data.repository;
 
+import static it.unimib.adastra.util.Constants.FRESH_TIMEOUT;
+
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
@@ -14,13 +16,11 @@ import it.unimib.adastra.model.Result;
 public class ISSPositionRepository implements IISSPositionRepository, ISSPositionCallback {
 
     private final MutableLiveData<Result> allIssMutableLiveData;
-    private final MutableLiveData<Result> favoriteNewsMutableLiveData;
     private final BaseISSPositionRemoteDataSource issPositionRemoteDataSource;
     private final BaseISSPositionLocalDataSource issPositionLocalDataSource;
 
-    public ISSPositionRepository(MutableLiveData<Result> favoriteNewsMutableLiveData, BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
+    public ISSPositionRepository(BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
                                  BaseISSPositionLocalDataSource issPositionLocalDataSource) {
-        this.favoriteNewsMutableLiveData = favoriteNewsMutableLiveData;
 
         allIssMutableLiveData = new MutableLiveData<>();
         this.issPositionRemoteDataSource = issPositionRemoteDataSource;
@@ -29,7 +29,12 @@ public class ISSPositionRepository implements IISSPositionRepository, ISSPositio
 
     @Override
     public MutableLiveData<Result> fetchISSPosition(long timestamp) {
-        issPositionRemoteDataSource.getISSPosition();
+        long currentTime = System.currentTimeMillis();
+        if(currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
+            issPositionRemoteDataSource.getISSPosition();
+        } else {
+            issPositionLocalDataSource.getISSPosition();
+        }
         return allIssMutableLiveData;
     }
 
@@ -40,26 +45,32 @@ public class ISSPositionRepository implements IISSPositionRepository, ISSPositio
 
     @Override
     public void updateISSPosition(ISSPositionResponse issPositionResponse) {
-
+        issPositionLocalDataSource.updateISS(issPositionResponse);
     }
 
     @Override
     public void deleteISSPosition() {
-
+        issPositionLocalDataSource.delete();
     }
 
     @Override
     public void onSuccessFromRemote(ISSPositionApiResponse issPositionApiResponse, Long lastUpdate) {
-
+        issPositionLocalDataSource.updateISS(issPositionApiResponse);
     }
 
     @Override
     public void onFailureFromRemote(Exception exception) {
-
+        Result.Error result = new Result.Error(exception.getMessage());
+        allIssMutableLiveData.postValue(result);
     }
 
     @Override
     public void onSuccessFromLocal(ISSPositionApiResponse issPositionApiResponse) {
+        if(allIssMutableLiveData.getValue() != null && allIssMutableLiveData.getValue().isSuccess()) {
+            issPositionApiResponse.setCoordinates(issPositionApiResponse.getCoordinates());
+            Result.ISSPositionResponseSuccess result = new Result.ISSPositionResponseSuccess(issPositionApiResponse);
+            allIssMutableLiveData.postValue(result);
+        }
 
     }
 

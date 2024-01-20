@@ -7,10 +7,10 @@ import it.unimib.adastra.data.database.RoomDatabase;
 import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
-public class ISSLocalDataSource extends BaseISSPositionLocalDataSource {
+public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
     private final ISSDao issDao;
 
-    public ISSLocalDataSource(RoomDatabase roomDatabase) {
+    public ISSPositionLocalDataSource(RoomDatabase roomDatabase) {
         this.issDao = roomDatabase.issDao();
     }
 
