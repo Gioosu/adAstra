@@ -1,6 +1,4 @@
-package it.unimib.adastra.model;
-
-import it.unimib.adastra.model.ISS.ISSPositionResponse;
+package it.unimib.adastra.model.ISS;
 
 public abstract class Result {
     private Result() {}

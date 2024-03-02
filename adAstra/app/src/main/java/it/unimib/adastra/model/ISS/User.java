@@ -1,4 +1,4 @@
-package it.unimib.adastra.model;
+package it.unimib.adastra.model.ISS;
 
 import com.google.firebase.firestore.Exclude;
 

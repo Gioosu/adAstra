@@ -1,4 +1,4 @@
-package it.unimib.adastra.data.repository;
+package it.unimib.adastra.data.repository.ISSPosition;
 
 import static it.unimib.adastra.util.Constants.FRESH_TIMEOUT;
 
@@ -6,21 +6,20 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import it.unimib.adastra.data.source.BaseISSPositionLocalDataSource;
-import it.unimib.adastra.data.source.BaseISSPositionRemoteDataSource;
-import it.unimib.adastra.data.source.ISSPositionCallback;
+import it.unimib.adastra.data.source.ISS.BaseISSPositionLocalDataSource;
+import it.unimib.adastra.data.source.ISS.BaseISSPositionRemoteDataSource;
 import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
-import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.ISS.Result;
 
-public class ISSPositionRepository implements IISSPositionRepository, ISSPositionCallback {
+public class ISSPositionResponseRepository implements IISSPositionRepository, ISSPositionResponseCallback {
 
     private final MutableLiveData<Result> allIssMutableLiveData;
     private final BaseISSPositionRemoteDataSource issPositionRemoteDataSource;
     private final BaseISSPositionLocalDataSource issPositionLocalDataSource;
 
-    public ISSPositionRepository(BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
-                                 BaseISSPositionLocalDataSource issPositionLocalDataSource) {
+    public ISSPositionResponseRepository(BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
+                                         BaseISSPositionLocalDataSource issPositionLocalDataSource) {
 
         allIssMutableLiveData = new MutableLiveData<>();
         this.issPositionRemoteDataSource = issPositionRemoteDataSource;

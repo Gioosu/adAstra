@@ -1,4 +1,4 @@
-package it.unimib.adastra.data.source;
+package it.unimib.adastra.data.source.ISS;
 
 import static it.unimib.adastra.util.Constants.RETROFIT_ERROR;
 
@@ -23,15 +23,15 @@ public class ISSPositionRemoteDataSource extends BaseISSPositionRemoteDataSource
             @Override
             public void onResponse(Call<ISSPositionApiResponse> call, Response<ISSPositionApiResponse> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().getMessage().equals("success")) {
-                    issPositionCallback.onSuccessFromRemote(response.body(), System.currentTimeMillis());
+                    issPositionResponseCallback.onSuccessFromRemote(response.body(), System.currentTimeMillis());
                 } else {
-                    issPositionCallback.onFailureFromRemote(new Exception());
+                    issPositionResponseCallback.onFailureFromRemote(new Exception());
                 }
             }
 
             @Override
             public void onFailure(Call<ISSPositionApiResponse> call, Throwable t) {
-                issPositionCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
+                issPositionResponseCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }
         });
     }

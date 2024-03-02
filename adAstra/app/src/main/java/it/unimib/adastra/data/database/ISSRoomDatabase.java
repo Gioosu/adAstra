@@ -15,21 +15,21 @@ import it.unimib.adastra.model.ISS.Astronaut;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 @Database(entities = {ISSPositionResponse.class, Astronaut.class}, version = DATABASE_VERSION, exportSchema = false)
-public abstract class RoomDatabase extends androidx.room.RoomDatabase {
+public abstract class ISSRoomDatabase extends androidx.room.RoomDatabase {
 
     public abstract ISSDao issDao();
 
-    private static volatile RoomDatabase INSTANCE;
+    private static volatile ISSRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    public static RoomDatabase getDatabase(final Context context) {
+    public static ISSRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (RoomDatabase.class) {
+            synchronized (ISSRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            RoomDatabase.class, DATABASE_NAME).build();
+                            ISSRoomDatabase.class, DATABASE_NAME).build();
                 }
             }
         }
