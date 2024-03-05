@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.welcome;
+package it.unimib.adastra.ui;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

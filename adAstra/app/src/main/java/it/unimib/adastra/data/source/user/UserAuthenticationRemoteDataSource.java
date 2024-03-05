@@ -1,3 +1,4 @@
+/*
 package it.unimib.adastra.data.source.user;
 
 import static it.unimib.worldnews.util.Constants.INVALID_CREDENTIALS_ERROR;
@@ -21,9 +22,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import it.unimib.worldnews.model.User;
 
-/**
- * Class that manages the user authentication using Firebase Authentication.
- */
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
 
     private static final String TAG = UserAuthenticationRemoteDataSource.class.getSimpleName();
@@ -138,4 +136,4 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
         }
         return UNEXPECTED_ERROR;
     }
-}
+}*/

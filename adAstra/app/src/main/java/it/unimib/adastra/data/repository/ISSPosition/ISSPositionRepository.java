@@ -12,14 +12,14 @@ import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.ISS.Result;
 
-public class ISSPositionResponseRepository implements IISSPositionRepository, ISSPositionResponseCallback {
+public class ISSPositionRepository implements IISSPositionRepository, ISSPositionResponseCallback {
 
     private final MutableLiveData<Result> allIssMutableLiveData;
     private final BaseISSPositionRemoteDataSource issPositionRemoteDataSource;
     private final BaseISSPositionLocalDataSource issPositionLocalDataSource;
 
-    public ISSPositionResponseRepository(BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
-                                         BaseISSPositionLocalDataSource issPositionLocalDataSource) {
+    public ISSPositionRepository(BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
+                                 BaseISSPositionLocalDataSource issPositionLocalDataSource) {
 
         allIssMutableLiveData = new MutableLiveData<>();
         this.issPositionRemoteDataSource = issPositionRemoteDataSource;

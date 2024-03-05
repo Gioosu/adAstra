@@ -1,4 +1,4 @@
-package it.unimib.adastra.data.repository.user;
+/*package it.unimib.adastra.data.repository.user;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -15,9 +15,7 @@ import it.unimib.worldnews.data.source.user.BaseUserAuthenticationRemoteDataSour
 import it.unimib.worldnews.data.source.user.BaseUserDataRemoteDataSource;
 
 
-/**
- * Repository class to get the user information.
- */
+
 public class UserRepository implements IUserRepository, UserResponseCallback, NewsCallback {
 
     private static final String TAG = UserRepository.class.getSimpleName();
@@ -203,4 +201,4 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Ne
     public void onFailureFromCloud(Exception exception) {
 
     }
-}
+}*/

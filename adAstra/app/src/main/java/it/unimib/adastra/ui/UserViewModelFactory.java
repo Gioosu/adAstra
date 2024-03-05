@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.welcome;
+package it.unimib.adastra.ui;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
