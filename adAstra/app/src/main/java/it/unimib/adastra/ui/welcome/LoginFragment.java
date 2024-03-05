@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.welcome;
 
+import static it.unimib.adastra.util.Constants.USER_ID;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
@@ -25,14 +26,11 @@ import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LoginFragment extends Fragment {
     String TAG = WelcomeActivity.class.getSimpleName();
     private FragmentLoginBinding binding;
@@ -43,15 +41,8 @@ public class LoginFragment extends Fragment {
     private Activity activity;
 
     public LoginFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment LoginFragment.
-     */
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
@@ -59,6 +50,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
     }
 
     @Override

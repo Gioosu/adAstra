@@ -12,4 +12,5 @@ public interface UserResponseCallback {
     void onSuccessFromGettingUserPreferences();
     void onFailureFromRemoteDatabase(String message);
     void onSuccessLogout();
+    void onSuccessFromLogin(String uid);
 }

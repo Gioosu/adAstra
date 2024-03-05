@@ -1,21 +1,25 @@
 package it.unimib.adastra.data.repository.user;
 
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.Set;
-
-import it.unimib.adastra.model.ISS.Result;
-import it.unimib.adastra.model.ISS.User;
+import it.unimib.adastra.model.ISS.*;
 
 public interface IUserRepository {
-    MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered);
-    MutableLiveData<Result> getGoogleUser(String idToken);
-    MutableLiveData<Result> getUserFavoriteNews(String idToken);
-    MutableLiveData<Result> getUserPreferences(String idToken);
+
     MutableLiveData<Result> logout();
+
+    MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered, Context context);
+
     User getLoggedUser();
-    void signUp(String email, String password);
-    void signIn(String email, String password);
-    void signInWithGoogle(String token);
-    void saveUserPreferences(String favoriteCountry, Set<String> favoriteTopics, String idToken);
+    void setUsername(String username);
+    void getInfo(String idToken);
+    void getAllData(String idToken);
+
+    void signUp(String username, String email, String password, Context context);
+
+    void signIn(String email, String password, Context context);
 }
+

@@ -1,8 +1,9 @@
-/*
 package it.unimib.adastra.data.source.user;
 
-import it.unimib.worldnews.data.repository.user.UserResponseCallback;
-import it.unimib.worldnews.model.User;
+import android.content.Context;
+
+import it.unimib.adastra.data.repository.user.UserResponseCallback;
+import it.unimib.adastra.model.ISS.User;
 
 public abstract class BaseUserAuthenticationRemoteDataSource {
     protected UserResponseCallback userResponseCallback;
@@ -12,7 +13,10 @@ public abstract class BaseUserAuthenticationRemoteDataSource {
     }
     public abstract User getLoggedUser();
     public abstract void logout();
-    public abstract void signUp(String email, String password);
-    public abstract void signIn(String email, String password);
+    public abstract void signUp(String username, String email, String password, Context context);
+    public abstract void signIn(String email, String password, Context context);
     public abstract void signInWithGoogle(String idToken);
-}*/
+
+
+
+}
