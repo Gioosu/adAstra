@@ -27,19 +27,14 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered, Context context) {
-
+    public MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered) {
         if (isUserRegistered) {
-            signIn(email, password, context);
+            signIn(email, password);
         } else {
-            signUp(username, email, password, context);
+            signUp(username, email, password);
         }
-        return userMutableLiveData;
-    }
 
-    @Override
-    public User getLoggedUser() {
-        return userRemoteDataSource.getLoggedUser();
+        return userMutableLiveData;
     }
 
     @Override
@@ -64,13 +59,13 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void signUp(String username, String email, String password, Context context) {
-        userRemoteDataSource.signUp(username, email, password, context);
+    public void signUp(String username, String email, String password) {
+        userRemoteDataSource.signUp(username, email, password);
     }
 
     @Override
-    public void signIn(String email, String password, Context context) {
-        userRemoteDataSource.signIn(email, password, context);
+    public void signIn(String email, String password) {
+        userRemoteDataSource.signIn(email, password);
     }
 
     @Override
@@ -108,8 +103,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void onSuccessLogout() {
+    public User getLoggedUser() {
+        return userRemoteDataSource.getLoggedUser();
     }
 
-
+    @Override
+    public void onSuccessLogout() {
+    }
 }

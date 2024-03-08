@@ -53,6 +53,9 @@ dependencies {
     implementation("commons-validator:commons-validator:1.7")
     implementation("androidx.navigation:navigation-fragment:2.7.6")
     implementation("androidx.navigation:navigation-ui:2.7.6")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.3.1")
+
 
     // Crypto and Security
     implementation("androidx.security:security-crypto:1.1.0-alpha06")

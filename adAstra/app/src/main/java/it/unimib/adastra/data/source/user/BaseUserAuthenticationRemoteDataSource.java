@@ -13,8 +13,8 @@ public abstract class BaseUserAuthenticationRemoteDataSource {
     }
     public abstract User getLoggedUser();
     public abstract void logout();
-    public abstract void signUp(String username, String email, String password, Context context);
-    public abstract void signIn(String email, String password, Context context);
+    public abstract void signUp(String username, String email, String password);
+    public abstract void signIn(String email, String password);
     public abstract void signInWithGoogle(String idToken);
 
 

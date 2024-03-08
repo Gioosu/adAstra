@@ -126,4 +126,5 @@
     <string name="error_invalid_new_password">Choose a new password different from the previous one</string>
     <string name="error_password_change_failed">Password change failed</string>
     <string name="error_invalid_new_email">Choose a new email address different from the previous one</string>
+    <string name="error_unexpected_error">Unexpected Error</string>
 </resources>

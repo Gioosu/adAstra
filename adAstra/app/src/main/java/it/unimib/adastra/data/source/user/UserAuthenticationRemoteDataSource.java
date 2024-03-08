@@ -12,11 +12,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.Task;
+
+import java.util.Objects;
 
 import it.unimib.adastra.model.ISS.User;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
-
     private final FirebaseAuth firebaseAuth;
 
     public UserAuthenticationRemoteDataSource() {
@@ -26,7 +28,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     @Override
     public User getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser == null) {
+        if (firebaseUser == null || !firebaseUser.isEmailVerified()) {
             return null;
         } else {
             return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
@@ -55,7 +57,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     }
 
     @Override
-    public void signUp(String username, String email, String password, Context context) {
+    public void signUp(String username, String email, String password) {
 
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -66,40 +68,43 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                             new User(username, email, firebaseUser.getUid())
                     );
                 } else {
-                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException(), context));
+                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                 }
             } else {
-                userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException(), context));
+                userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
             }
         });
     }
 
     @Override
-    public void signIn(String email, String password, Context context) {
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+    public void signIn(String email, String password) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null) {
+                if (firebaseUser != null && firebaseUser.isEmailVerified()) {
                     userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
                 } else {
-                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException(), context));
+                    Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);
+                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                 }
             } else {
-                userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException(), context));
+                userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
             }
         });
     }
 
-    private String getErrorMessage(Exception exception, Context context) {
+    // TODO cambiare stringhe hardcoded
+    private String getErrorMessage(Exception exception) {
         if (exception instanceof FirebaseAuthWeakPasswordException) {
-            return context.getString(R.string.error_invalid_password);
+            return "WEAK_PASSWORD_ERROR";
         } else if (exception instanceof FirebaseAuthInvalidCredentialsException) {
-            return context.getString(R.string.error_invalid_password);
+            return "INVALID_CREDENTIALS_ERROR";
         } else if (exception instanceof FirebaseAuthInvalidUserException) {
-            return context.getString(R.string.error_invalid_password);
+            return "INVALID_USER_ERROR";
         } else if (exception instanceof FirebaseAuthUserCollisionException) {
-            return context.getString(R.string.error_invalid_password);
+            return "USER_COLLISION_ERROR";
         }
-        return context.getString(R.string.error_invalid_password);
+        return "UNEXPECTED_ERROR";
     }
 }
