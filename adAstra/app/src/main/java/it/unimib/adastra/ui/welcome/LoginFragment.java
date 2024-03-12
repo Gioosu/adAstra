@@ -1,10 +1,11 @@
 package it.unimib.adastra.ui.welcome;
 
-import static it.unimib.adastra.util.Constants.USER_COLLISION_ERROR;
-import static it.unimib.adastra.util.Constants.WEAK_PASSWORD_ERROR;
+import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
+import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,6 @@ public class LoginFragment extends Fragment {
                     userViewModel.getUserMutableLiveData("", email, password, true).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-                                    //User user = ((Result.UserResponseSuccess) result).getUser();
                                     userViewModel.setAuthenticationError(false);
                                     Navigation.findNavController(view).navigate(
                                             R.id.action_loginFragment_to_mainActivity);
@@ -133,10 +133,10 @@ public class LoginFragment extends Fragment {
 
     private String getErrorMessage(String message) {
         switch(message) {
-            case WEAK_PASSWORD_ERROR:
-                return requireActivity().getString(R.string.error_invalid_password);
-            case USER_COLLISION_ERROR:
-                return requireActivity().getString(R.string.error_email_already_exists);
+            case INVALID_CREDENTIALS_ERROR:
+                return requireActivity().getString(R.string.error_invalid_login);
+            case EMAIL_NOT_VERIFIED:
+                return requireActivity().getString(R.string.error_email_not_verified);
             default:
                 return requireActivity().getString(R.string.error_unexpected_error);
         }

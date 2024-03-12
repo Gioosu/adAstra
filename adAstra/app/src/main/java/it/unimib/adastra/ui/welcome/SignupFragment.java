@@ -107,11 +107,9 @@ public class SignupFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(username, email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-                                    User user = ((Result.UserResponseSuccess) result).getUser();
                                     userViewModel.setAuthenticationError(false);
 
-                                    Navigation.findNavController(view).navigate(
-                                            R.id.action_signupFragment_to_verifyEmailFragment);
+                                    Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     showSnackbar(v, getString(R.string.error_signup_failure));

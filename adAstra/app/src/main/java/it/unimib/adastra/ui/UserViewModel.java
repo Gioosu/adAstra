@@ -10,7 +10,6 @@ import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.model.ISS.*;
 
 public class UserViewModel extends ViewModel {
-    private static final String TAG = UserViewModel.class.getSimpleName();
 
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
@@ -40,7 +39,6 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
         if (userMutableLiveData == null) {
-            Log.d(TAG, "getUserMutableLiveData - userMutableLiveData null");
             getUserData(username, email, password, isUserRegistered);
         }
         return userMutableLiveData;

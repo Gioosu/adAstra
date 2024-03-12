@@ -11,7 +11,6 @@ public abstract class Result {
         }
     }
 
-
     public static final class ISSPositionResponseSuccess extends Result {
         private final ISSPositionResponse issPositionResponse;
         public ISSPositionResponseSuccess(ISSPositionResponse issPositionResponse) {
@@ -27,6 +26,7 @@ public abstract class Result {
         public UserResponseSuccess(User user) {
             this.user = user;
         }
+
         public User getUser() {
             return user;
         }
@@ -38,6 +38,7 @@ public abstract class Result {
         public Error(String message) {
             this.message = message;
         }
+
         public String getMessage() {
             return message;
         }

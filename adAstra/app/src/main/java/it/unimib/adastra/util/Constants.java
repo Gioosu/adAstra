@@ -38,8 +38,8 @@ public class Constants {
     // Constants for Errors
     public static final String RETROFIT_ERROR = "retrofit_error";
     public static final String UNEXPECTED_ERROR = "unexpected_error";
-    public static final String WEAK_PASSWORD_ERROR = "weak_password_error";
-    public static final String USER_COLLISION_ERROR = "user_collision_error";
+    public static final String INVALID_CREDENTIALS_ERROR = "invalid_credentials_error";
+    public static final String EMAIL_NOT_VERIFIED = "email_not_verified";
 
     // Constants for Time
     public static final int FRESH_TIMEOUT = 1000 * 60 * 60; // 1 hour in milliseconds

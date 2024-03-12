@@ -61,29 +61,25 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
     @Override
     public void getUserInfo(String idToken) {
-        db.collection("users").document(idToken).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map doc = document.getData();
-                        User user = new User(
-                                doc.get(USER_ID).toString(),
-                                doc.get(USERNAME).toString(),
-                                doc.get(EMAIL_ADDRESS).toString(),
-                                (boolean) doc.get(IMPERIAL_SYSTEM),
-                                (boolean) doc.get(TIME_FORMAT),
-                                (boolean) doc.get(ISS_NOTIFICATIONS),
-                                (boolean) doc.get(EVENTS_NOTIFICATIONS)
-                        );
-                        userResponseCallback.onSuccessFromRemoteDatabase(user);
-                    }
+        db.collection("users").document(idToken).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map doc = document.getData();
+                    User user = new User(
+                            doc.get(USER_ID).toString(),
+                            doc.get(USERNAME).toString(),
+                            doc.get(EMAIL_ADDRESS).toString(),
+                            (boolean) doc.get(IMPERIAL_SYSTEM),
+                            (boolean) doc.get(TIME_FORMAT),
+                            (boolean) doc.get(ISS_NOTIFICATIONS),
+                            (boolean) doc.get(EVENTS_NOTIFICATIONS)
+                    );
+                    userResponseCallback.onSuccessFromRemoteDatabase(user);
                 }
-                else{
-                    userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
-                }
+            }
+            else{
+                userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
             }
         });
     }
