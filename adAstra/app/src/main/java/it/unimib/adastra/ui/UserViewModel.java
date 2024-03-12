@@ -53,4 +53,8 @@ public class UserViewModel extends ViewModel {
     private void getUserData(String username, String email, String password, boolean isUserRegistered) {
         userMutableLiveData = userRepository.getUser(username, email, password, isUserRegistered);
     }
+
+    public void setUserMutableLiveDataNull(){
+        userMutableLiveData = null;
+    }
 }

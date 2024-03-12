@@ -1,11 +1,13 @@
 package it.unimib.adastra.data.source.user;
 
 import android.content.Context;
+import android.view.View;
 
 import it.unimib.adastra.R;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -59,14 +61,16 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     @Override
     public void signUp(String username, String email, String password) {
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
                 if (firebaseUser != null) {
                     userResponseCallback.onSuccessFromAuthentication(
-                            new User(username, email, firebaseUser.getUid())
-                    );
+                            new User(username, email, firebaseUser.getUid()));
+
+                    firebaseUser.sendEmailVerification();
                 } else {
                     userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                 }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -31,13 +32,14 @@ import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
+import it.unimib.adastra.model.ISS.Result;
+import it.unimib.adastra.model.ISS.User;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
+import it.unimib.adastra.util.ServiceLocator;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignupFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SignupFragment extends Fragment {
     String TAG = SignupFragment.class.getSimpleName();
     private FragmentSignupBinding binding;
@@ -47,18 +49,15 @@ public class SignupFragment extends Fragment {
     private String email;
     private String password;
     private String confirmPassword;
+
+    private IUserRepository userRepository;
+
+    private UserViewModel userViewModel;
     private Activity activity;
 
     public SignupFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SignUpFragment.
-     */
     public static SignupFragment newInstance() {
         return new SignupFragment();
     }
@@ -66,6 +65,12 @@ public class SignupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
     }
 
     @Override
@@ -91,35 +96,33 @@ public class SignupFragment extends Fragment {
             password = Objects.requireNonNull(binding.textPasswordSignup.getText()).toString();
             confirmPassword = Objects.requireNonNull(binding.textConfirmPasswordSignup.getText()).toString();
 
+            userViewModel.setAuthenticationError(false);
+
             if (isUsernameValid(username)
                     && isEmailValid(email)
                     && isPasswordValid(password)
                     && isConfirmPasswordValid(password, confirmPassword)) {
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                String userId = Objects.requireNonNull(user).getUid();
-                                createUserInFirestore(userId, username, email);
+                if (!userViewModel.isAuthenticationError()) {
+                    userViewModel.setUserMutableLiveDataNull();
+                    userViewModel.getUserMutableLiveData(username, email, password, false).observe(
+                            getViewLifecycleOwner(), result -> {
+                                if (result.isSuccess()) {
+                                    User user = ((Result.UserResponseSuccess) result).getUser();
+                                    userViewModel.setAuthenticationError(false);
 
-                                // Invia email di verifica
-                                user.sendEmailVerification()
-                                        .addOnCompleteListener(verificationTask -> {
-                                            if (verificationTask.isSuccessful()) {
-                                                showSnackbar(v, getString(R.string.welcome));
-                                                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
-                                            } else {
-                                                showSnackbar(v, getString(R.string.error_email_send_failed));
-                                            }
-                                        });
-                            } else {
-                                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                    binding.textEmailSignup.setError(getString(R.string.error_email_already_exists));
+                                    Navigation.findNavController(view).navigate(
+                                            R.id.action_signupFragment_to_verifyEmailFragment);
                                 } else {
+                                    userViewModel.setAuthenticationError(true);
                                     showSnackbar(v, getString(R.string.error_signup_failure));
                                 }
-                            }
-                        });
+                            });
+                } else {
+                    userViewModel.getUser(username, email, password, false);
+                }
+            } else {
+                userViewModel.setAuthenticationError(true);
+                showSnackbar(v, getString(R.string.error_signup_failure));
             }
         });
     }
@@ -166,19 +169,6 @@ public class SignupFragment extends Fragment {
         }
 
         return result;
-    }
-
-    // Crea un utente in Firestore
-    private void createUserInFirestore(String userId, String username, String email) {
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put(USERNAME, username);
-        newUser.put(EMAIL_ADDRESS, email);
-        newUser.put(IMPERIAL_SYSTEM, false);
-        newUser.put(TIME_FORMAT, false);
-        newUser.put(ISS_NOTIFICATIONS, true);
-        newUser.put(EVENTS_NOTIFICATIONS, true);
-
-        database.collection("users").document(userId).set(newUser);
     }
 
     // Visualizza una snackbar

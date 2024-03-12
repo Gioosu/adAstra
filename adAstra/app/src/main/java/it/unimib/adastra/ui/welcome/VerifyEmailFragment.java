@@ -20,26 +20,14 @@ import java.util.Objects;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentVerifyEmailBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link VerifyEmailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class VerifyEmailFragment extends Fragment {
     String TAG = VerifyEmailFragment.class.getSimpleName();
     private FragmentVerifyEmailBinding binding;
     private FirebaseUser user;
 
     public VerifyEmailFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment VerifyEmailFragment.
-     */
     public static VerifyEmailFragment newInstance() {
         return new VerifyEmailFragment();
     }
