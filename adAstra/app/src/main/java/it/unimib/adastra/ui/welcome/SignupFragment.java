@@ -14,21 +14,15 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
-import it.unimib.adastra.model.ISS.Result;
-import it.unimib.adastra.model.ISS.User;
 import it.unimib.adastra.ui.UserViewModel;
 import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;

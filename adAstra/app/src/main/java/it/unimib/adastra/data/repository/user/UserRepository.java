@@ -1,6 +1,5 @@
 package it.unimib.adastra.data.repository.user;
 
-
 import androidx.lifecycle.MutableLiveData;
 
 import it.unimib.adastra.data.source.user.BaseUserAuthenticationRemoteDataSource;
@@ -34,9 +33,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
 
         return userMutableLiveData;
     }
+
     @Override
     public MutableLiveData<Result> getGoogleUser(String idToken) {
         signInWithGoogle(idToken);
+
         return userMutableLiveData;
     }
 
@@ -52,12 +53,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
 
     @Override
     public void getAllData(String idToken) {
-
     }
 
     @Override
     public MutableLiveData<Result> logout() {
         userRemoteDataSource.logout();
+
         return userMutableLiveData;
     }
 
@@ -101,7 +102,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
 
     @Override
     public void onSuccessFromGettingUserPreferences() {
-
     }
 
     @Override

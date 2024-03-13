@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -40,15 +41,14 @@ import java.util.Map;
 
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SettingsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SettingsFragment extends Fragment {
     String TAG = SettingsFragment.class.getSimpleName();
     private FragmentSettingsBinding binding;
@@ -63,19 +63,21 @@ public class SettingsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ProfileFragment.
-     */
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
 
+    private UserViewModel userViewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -116,6 +118,16 @@ public class SettingsFragment extends Fragment {
 
         // Bottone di Log out
         binding.floatingActionButtonLogOut.setOnClickListener(v -> {
+            userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
+                if (result.isSuccess()) {
+                    Log.d(TAG, "Ho succeduto");
+                    Navigation.findNavController(v).navigate(
+                            R.id.action_settingsFragment_to_welcomeActivity);
+                } else {
+                    showSnackbar(v, requireActivity().getString(R.string.error_unexpected_error));
+                }
+            });
+            /*
             try {
                 dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
             } catch (GeneralSecurityException | IOException e) {
@@ -123,7 +135,7 @@ public class SettingsFragment extends Fragment {
             }
             FirebaseAuth.getInstance().signOut();
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
-            activity.finish();
+            activity.finish();*/
         });
 
         // Switch di IMPERIAL_FORMAT
@@ -241,6 +253,11 @@ public class SettingsFragment extends Fragment {
         binding.buttonBuildInformation.setText(BuildConfig.VERSION_NAME);
         binding.buttonBuildInformation.setOnClickListener(v -> {
         });
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     // prende le impostazioni da SharedPreferences

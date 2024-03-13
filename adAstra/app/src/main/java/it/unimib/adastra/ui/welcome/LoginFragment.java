@@ -3,31 +3,21 @@ package it.unimib.adastra.ui.welcome;
 import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.BeginSignInResult;
-import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.SignInCredential;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
@@ -36,10 +26,9 @@ import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
 import it.unimib.adastra.model.ISS.Result;
-import it.unimib.adastra.model.ISS.User;
-import it.unimib.adastra.util.ServiceLocator;
 import it.unimib.adastra.ui.UserViewModel;
 import it.unimib.adastra.ui.UserViewModelFactory;
+import it.unimib.adastra.util.ServiceLocator;
 
 public class LoginFragment extends Fragment {
     String TAG = WelcomeActivity.class.getSimpleName();
@@ -61,12 +50,14 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         IUserRepository userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 requireActivity(),
                 new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
+        /*
         // Setup per Google
         oneTapClient = Identity.getSignInClient(requireActivity());
         signInRequest = BeginSignInRequest.builder()
@@ -110,6 +101,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+        */
     }
 
     @Override
@@ -123,7 +115,7 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Login Rapido
+        // Login rapido
         if(userViewModel.getLoggedUser() != null) {
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_mainActivity);
         }
@@ -132,26 +124,25 @@ public class LoginFragment extends Fragment {
         binding.forgotPassword.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_resetPasswordFragment));
 
-        // Login Manuale
+        // Login manuale
         binding.buttonLogin.setOnClickListener(v -> {
             email = Objects.requireNonNull(binding.textEmailLogin.getText()).toString();
             password = Objects.requireNonNull(binding.textPasswordLogin.getText()).toString();
 
-            if (isEmailNonEmpty(email) && isPasswordNonEmpty(password)) {
+            if (isEmailNotEmpty(email) && isPasswordNotEmpty(password)) {
                 if (!userViewModel.isAuthenticationError()) {
-                    userViewModel.getUserMutableLiveData("", email, password, true).observe(
-                            getViewLifecycleOwner(), result -> {
+                    userViewModel.getUserMutableLiveData("", email, password, true)
+                            .observe(getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
                                     userViewModel.setAuthenticationError(false);
-                                    Navigation.findNavController(view).navigate(
-                                            R.id.action_loginFragment_to_mainActivity);
+                                    Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_mainActivity);
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
                                 }
                             });
                 } else {
-                    userViewModel.getUser("",email, password, true);
+                    userViewModel.getUser("", email, password, true);
                 }
             } else {
                 showSnackbar(v, getString(R.string.error_invalid_login));
@@ -161,7 +152,7 @@ public class LoginFragment extends Fragment {
         // Bottone di Sign up
         binding.buttonSignupLogin.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment));
-
+/*
         // Bottone di Login con Google
         binding.buttonGoogle.setOnClickListener(v -> oneTapClient.beginSignIn(signInRequest)
                 .addOnSuccessListener(requireActivity(), result -> {
@@ -178,28 +169,24 @@ public class LoginFragment extends Fragment {
                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
                             requireActivity().getString(R.string.error_unexpected_error),
                             Snackbar.LENGTH_SHORT).show();
-                }));
+                }));*/
     }
 
-    // Aggiornamento on Resume
+    /*
     @Override
     public void onResume() {
         super.onResume();
         userViewModel.setAuthenticationError(false);
     }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
-    }
+     */
 
     // Verifica campo Email
-    private boolean isEmailNonEmpty(String email) {
+    private boolean isEmailNotEmpty(String email) {
         return email != null && !email.isEmpty();
     }
 
     // Verifica campo Password
-    private boolean isPasswordNonEmpty(String password) {
+    private boolean isPasswordNotEmpty(String password) {
         return password != null && !password.isEmpty();
     }
 
@@ -212,5 +199,10 @@ public class LoginFragment extends Fragment {
             default:
                 return requireActivity().getString(R.string.error_unexpected_error);
         }
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

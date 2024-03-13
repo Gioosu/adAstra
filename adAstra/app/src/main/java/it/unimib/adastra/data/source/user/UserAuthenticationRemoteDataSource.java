@@ -1,8 +1,10 @@
-package it.unimib.adastra.data.source.user;
+ package it.unimib.adastra.data.source.user;
 
 import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -19,8 +21,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Objects;
 
 import it.unimib.adastra.model.ISS.User;
+import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
+    String TAG = WelcomeActivity.class.getSimpleName();
     private final FirebaseAuth firebaseAuth;
 
     public UserAuthenticationRemoteDataSource() {
@@ -30,54 +34,13 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     @Override
     public User getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
         if (firebaseUser != null && firebaseUser.isEmailVerified()) {
-            return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
+            return new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
         } else {
             firebaseAuth.signOut();
+
             return null;
-        }
-    }
-
-    @Override
-    public void logout() {
-        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null) {
-                    firebaseAuth.removeAuthStateListener(this);
-
-                    userResponseCallback.onSuccessLogout();
-                }
-            }
-        };
-        firebaseAuth.addAuthStateListener(authStateListener);
-        firebaseAuth.signOut();
-    }
-
-    @Override
-    public void signInWithGoogle(String idToken) {
-        if (idToken !=  null) {
-            // Got an ID token from Google. Use it to authenticate with Firebase.
-            AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-            firebaseAuth.signInWithCredential(firebaseCredential).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                    if (firebaseUser != null) {
-                        userResponseCallback.onSuccessFromAuthentication(
-                                new User(firebaseUser.getUid(),
-                                        firebaseUser.getDisplayName(),
-                                        firebaseUser.getEmail())
-                        );
-                    } else {
-                        userResponseCallback.onFailureFromAuthentication(
-                                getErrorMessage(task.getException()));
-                    }
-                } else {
-                    // If sign in fails, display a message to the user.
-                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
-                }
-            });
         }
     }
 
@@ -102,11 +65,12 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
     @Override
     public void signIn(String email, String password) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
+                    userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
+
                     if(firebaseUser.isEmailVerified()) {
                         userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
                     }
@@ -121,6 +85,53 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                 userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
             }
         });
+    }
+
+    @Override
+    public void signInWithGoogle(String idToken) {
+        if (idToken !=  null) {
+            // Got an ID token from Google. Use it to authenticate with Firebase.
+            AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
+            firebaseAuth.signInWithCredential(firebaseCredential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                    if (firebaseUser != null) {
+                        userResponseCallback.onSuccessFromAuthentication(
+                                new User(firebaseUser.getUid(),
+                                        firebaseUser.getDisplayName(),
+                                        firebaseUser.getEmail()));
+
+                        Log.d(TAG, "User data: " + firebaseUser.getUid() +
+                                firebaseUser.getDisplayName() +
+                                firebaseUser.getEmail());
+                    } else {
+                        userResponseCallback.onFailureFromAuthentication(
+                                getErrorMessage(task.getException()));
+                    }
+                } else {
+                    // If sign in fails, display a message to the user.
+                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
+                }
+            });
+        }
+    }
+
+    @Override
+    public void logout() {
+        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    firebaseAuth.removeAuthStateListener(this);
+
+                    userResponseCallback.onSuccessLogout();
+                }
+            }
+        };
+
+        firebaseAuth.addAuthStateListener(authStateListener);
+        firebaseAuth.signOut();
     }
 
     //TODO sistemare per signup

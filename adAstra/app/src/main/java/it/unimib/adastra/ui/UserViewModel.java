@@ -16,7 +16,6 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Result> userMutableLiveData;
     private boolean authenticationError;
 
-
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;
         authenticationError = false;
@@ -24,6 +23,16 @@ public class UserViewModel extends ViewModel {
 
     public User getLoggedUser() {
         return userRepository.getLoggedUser();
+    }
+
+    public MutableLiveData<Result> logout() {
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.logout();
+        } else {
+            userRepository.logout();
+        }
+
+        return userMutableLiveData;
     }
 
     public void setUsername(String username) {
