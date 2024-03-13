@@ -13,6 +13,8 @@ public interface IUserRepository {
 
     MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered);
 
+    void signInWithGoogle(String token);
+
     User getLoggedUser();
     void setUsername(String username);
     void getInfo(String idToken);
@@ -21,5 +23,7 @@ public interface IUserRepository {
     void signUp(String username, String email, String password);
 
     void signIn(String email, String password);
+
+    MutableLiveData<Result> getGoogleUser(String token);
 }
 

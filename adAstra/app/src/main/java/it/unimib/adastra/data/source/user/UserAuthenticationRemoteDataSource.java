@@ -6,24 +6,23 @@ import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import it.unimib.adastra.model.ISS.User;
-import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
     private final FirebaseAuth firebaseAuth;
 
-    String TAG = WelcomeActivity.class.getSimpleName();
     public UserAuthenticationRemoteDataSource() {
         firebaseAuth = FirebaseAuth.getInstance();
     }
@@ -57,7 +56,29 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
     @Override
     public void signInWithGoogle(String idToken) {
-
+        if (idToken !=  null) {
+            // Got an ID token from Google. Use it to authenticate with Firebase.
+            AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
+            firebaseAuth.signInWithCredential(firebaseCredential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                    if (firebaseUser != null) {
+                        userResponseCallback.onSuccessFromAuthentication(
+                                new User(firebaseUser.getUid(),
+                                        firebaseUser.getDisplayName(),
+                                        firebaseUser.getEmail())
+                        );
+                    } else {
+                        userResponseCallback.onFailureFromAuthentication(
+                                getErrorMessage(task.getException()));
+                    }
+                } else {
+                    // If sign in fails, display a message to the user.
+                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
+                }
+            });
+        }
     }
 
     @Override

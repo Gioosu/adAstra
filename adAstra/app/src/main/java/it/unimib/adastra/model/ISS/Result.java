@@ -30,7 +30,6 @@ public abstract class Result {
         public User getUser() {
             return user;
         }
-
     }
 
     public static final class Error extends Result {

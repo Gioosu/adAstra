@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "687022704520",
+    "firebase_url": "https://adastra-19b57-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "adastra-19b57",
     "storage_bucket": "adastra-19b57.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "it.unimib.adastra"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "687022704520-tk36hs4mjna3dlej02ijvlg5mvmv2vef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.unimib.adastra",
+            "certificate_hash": "23ea3a3269e856b6619227494557ae69862d8ea6"
+          }
+        },
+        {
+          "client_id": "687022704520-0420k4nl4ckm28i6o51lvq7btpb7p00t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD0mob-PFtcy9gv-I1x1fNjZNqBFgk-uac"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "687022704520-0420k4nl4ckm28i6o51lvq7btpb7p00t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

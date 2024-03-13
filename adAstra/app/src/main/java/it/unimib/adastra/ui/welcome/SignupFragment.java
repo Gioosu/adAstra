@@ -1,12 +1,5 @@
 package it.unimib.adastra.ui.welcome;
 
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
-import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.TIME_FORMAT;
-import static it.unimib.adastra.util.Constants.USERNAME;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;

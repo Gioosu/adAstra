@@ -41,6 +41,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.firebase:firebase-firestore:24.10.0")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 
 
     // Material (Navigation and Design)

@@ -3,6 +3,7 @@ package it.unimib.adastra.ui;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -51,8 +52,18 @@ public class UserViewModel extends ViewModel {
     private void getUserData(String username, String email, String password, boolean isUserRegistered) {
         userMutableLiveData = userRepository.getUser(username, email, password, isUserRegistered);
     }
+    private void getUserData(String token) {
+        userMutableLiveData = userRepository.getGoogleUser(token);
+    }
 
     public void setUserMutableLiveDataNull(){
         userMutableLiveData = null;
+    }
+
+    public MutableLiveData<Result> getGoogleUserMutableLiveData(String token) {
+        if (userMutableLiveData == null) {
+            getUserData(token);
+        }
+        return userMutableLiveData;
     }
 }
