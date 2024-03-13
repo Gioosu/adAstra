@@ -37,25 +37,13 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
     @Override
     public void saveUserData(User user) {
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put(USER_ID, user.getId());
-        newUser.put(USERNAME, user.getUsername());
-        newUser.put(EMAIL_ADDRESS, user.getEmail());
-        newUser.put(IMPERIAL_SYSTEM, user.isImperialSystem());
-        newUser.put(TIME_FORMAT, user.isTimeFormat());
-        newUser.put(ISS_NOTIFICATIONS, user.isISSNotification());
-        newUser.put(EVENTS_NOTIFICATIONS, user.isEventsNotifications());
-
-        db.collection("users").document(user.getId()).set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                userResponseCallback.onSuccessFromRemoteDatabase(user);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@androidx.annotation.NonNull Exception e) {
-                Log.w(TAG, "Error writing document", e);
-            }
+        db.collection("users")
+                .document(user.getId()).set(user).addOnSuccessListener(unused -> userResponseCallback.onSuccessFromRemoteDatabase(user))
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@androidx.annotation.NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
         });
     }
 
@@ -65,15 +53,14 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    Map doc = document.getData();
                     User user = new User(
-                            doc.get(USER_ID).toString(),
-                            doc.get(USERNAME).toString(),
-                            doc.get(EMAIL_ADDRESS).toString(),
-                            (boolean) doc.get(IMPERIAL_SYSTEM),
-                            (boolean) doc.get(TIME_FORMAT),
-                            (boolean) doc.get(ISS_NOTIFICATIONS),
-                            (boolean) doc.get(EVENTS_NOTIFICATIONS)
+                            document.getString(USER_ID),
+                            document.getString(USERNAME),
+                            document.getString(EMAIL_ADDRESS),
+                            document.getBoolean(IMPERIAL_SYSTEM),
+                            document.getBoolean(TIME_FORMAT),
+                            document.getBoolean(ISS_NOTIFICATIONS),
+                            document.getBoolean(EVENTS_NOTIFICATIONS)
                     );
                     userResponseCallback.onSuccessFromRemoteDatabase(user);
                 }

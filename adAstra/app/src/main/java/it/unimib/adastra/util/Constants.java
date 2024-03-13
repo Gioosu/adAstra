@@ -6,18 +6,18 @@ package it.unimib.adastra.util;
 public class Constants {
     // Constants for Settings
     public static final String SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.preferences";
+    public static final String USER_ID = "id";
     public static final String USERNAME = "username";
-    public static final String IMPERIAL_SYSTEM = "imperial_system";
-    public static final String TIME_FORMAT = "time_format";
-    public static final String ISS_NOTIFICATIONS = "iss_notifications";
-    public static final String EVENTS_NOTIFICATIONS = "events_notifications";
+    public static final String EMAIL_ADDRESS = "email";
+    public static final String IMPERIAL_SYSTEM = "imperialSystem";
+    public static final String TIME_FORMAT = "timeFormat";
+    public static final String ISS_NOTIFICATIONS = "issNotifications";
+    public static final String EVENTS_NOTIFICATIONS = "eventsNotifications";
     public static final String LANGUAGE = "language";
     public static final String DARK_THEME = "dark_theme";
 
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.encrypted_preferences";
-    public static final String USER_ID = "user_id";
-    public static final String EMAIL_ADDRESS = "email_address";
     public static final String PASSWORD = "password";
 
     // Constants for Encrypted files

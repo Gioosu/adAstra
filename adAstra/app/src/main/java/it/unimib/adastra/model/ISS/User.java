@@ -1,20 +1,13 @@
 package it.unimib.adastra.model.ISS;
 
-import com.google.firebase.firestore.Exclude;
-
 public class User {
     private String id;
     private String username;
     private String email;
     private boolean imperialSystem;
     private boolean timeFormat;
-    private boolean ISSNotification;
+    private boolean issNotifications;
     private boolean eventsNotifications;
-
-
-
-
-
 
     public User(String id, String username, String email) {
         this.id = id;
@@ -22,17 +15,17 @@ public class User {
         this.email = email;
         this.imperialSystem = false;
         this.timeFormat = false;
-        this.ISSNotification = true;
+        this.issNotifications = true;
         this.eventsNotifications = true;
     }
 
-    public User(String id,String username, String email, boolean imperialSystem, boolean timeFormat, boolean ISSNotification, boolean eventsNotifications) {
+    public User(String id,String username, String email, boolean imperialSystem, boolean timeFormat, boolean issNotifications, boolean eventsNotifications) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.imperialSystem = imperialSystem;
         this.timeFormat = timeFormat;
-        this.ISSNotification = ISSNotification;
+        this.issNotifications = issNotifications;
         this.eventsNotifications = eventsNotifications;
     }
 
@@ -76,12 +69,12 @@ public class User {
         this.timeFormat = timeFormat;
     }
 
-    public boolean isISSNotification() {
-        return ISSNotification;
+    public boolean isissNotifications() {
+        return issNotifications;
     }
 
-    public void setISSNotification(boolean ISSNotification) {
-        this.ISSNotification = ISSNotification;
+    public void setIssSNotifications(boolean issNotifications) {
+        this.issNotifications = issNotifications;
     }
 
     public boolean isEventsNotifications() {
@@ -95,11 +88,12 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", imperialSystem=" + imperialSystem +
                 ", timeFormat=" + timeFormat +
-                ", ISSNotification=" + ISSNotification +
+                ", issNotifications=" + issNotifications +
                 ", eventsNotifications=" + eventsNotifications +
                 '}';
     }
