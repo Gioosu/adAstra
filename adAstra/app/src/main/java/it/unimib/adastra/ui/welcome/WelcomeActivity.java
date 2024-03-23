@@ -49,7 +49,7 @@ public class WelcomeActivity extends AppCompatActivity {
             setThemeBasedOnSetting(themeID);
         } else {
             createSharedPreferences();
-            recreate();
+            //recreate();
         }
     }
 

@@ -8,13 +8,13 @@ import androidx.lifecycle.ViewModel;
 
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.model.ISS.*;
+import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 public class UserViewModel extends ViewModel {
-
+    String TAG = WelcomeActivity.class.getSimpleName();
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
     private boolean authenticationError;
-
 
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;
@@ -38,9 +38,7 @@ public class UserViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
-        if (userMutableLiveData == null) {
-            getUserData(username, email, password, isUserRegistered);
-        }
+        getUserData(username, email, password, isUserRegistered);
         return userMutableLiveData;
     }
 

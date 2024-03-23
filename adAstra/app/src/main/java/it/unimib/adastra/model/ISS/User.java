@@ -8,6 +8,7 @@ public class User {
     private boolean timeFormat;
     private boolean issNotifications;
     private boolean eventsNotifications;
+    private boolean verified;
 
     public User(String id, String username, String email) {
         this.id = id;
@@ -17,9 +18,10 @@ public class User {
         this.timeFormat = false;
         this.issNotifications = true;
         this.eventsNotifications = true;
+        this.verified = false;
     }
 
-    public User(String id,String username, String email, boolean imperialSystem, boolean timeFormat, boolean issNotifications, boolean eventsNotifications) {
+    public User(String id,String username, String email, boolean imperialSystem, boolean timeFormat, boolean issNotifications, boolean eventsNotifications, boolean verified) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -27,6 +29,7 @@ public class User {
         this.timeFormat = timeFormat;
         this.issNotifications = issNotifications;
         this.eventsNotifications = eventsNotifications;
+        this.verified = verified;
     }
 
     public String getId() {
@@ -81,6 +84,14 @@ public class User {
         return eventsNotifications;
     }
 
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
     public void setEventsNotifications(boolean eventsNotifications) {
         this.eventsNotifications = eventsNotifications;
     }
@@ -95,6 +106,7 @@ public class User {
                 ", timeFormat=" + timeFormat +
                 ", issNotifications=" + issNotifications +
                 ", eventsNotifications=" + eventsNotifications +
+                ", verified=" + verified +
                 '}';
     }
 }

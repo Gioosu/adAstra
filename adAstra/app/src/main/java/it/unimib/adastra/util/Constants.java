@@ -13,6 +13,7 @@ public class Constants {
     public static final String TIME_FORMAT = "timeFormat";
     public static final String ISS_NOTIFICATIONS = "issNotifications";
     public static final String EVENTS_NOTIFICATIONS = "eventsNotifications";
+    public static final String VERIFIED = "verified";
     public static final String LANGUAGE = "language";
     public static final String DARK_THEME = "dark_theme";
 
@@ -40,6 +41,11 @@ public class Constants {
     public static final String UNEXPECTED_ERROR = "unexpected_error";
     public static final String INVALID_CREDENTIALS_ERROR = "invalid_credentials_error";
     public static final String EMAIL_NOT_VERIFIED = "email_not_verified";
+    public static final String INVALID_USER_ERROR= "invalid_user_error";
+    public static final String WEAK_PASSWORD_ERROR= "weak_password_error";
+    public static final String USER_COLLISION_ERROR= "user_collision_error";
+
+
 
     // Constants for Time
     public static final int FRESH_TIMEOUT = 1000 * 60 * 60; // 1 hour in milliseconds

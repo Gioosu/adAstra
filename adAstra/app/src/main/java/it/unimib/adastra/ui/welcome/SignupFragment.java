@@ -9,6 +9,7 @@ import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
 
 public class SignupFragment extends Fragment {
-    String TAG = SignupFragment.class.getSimpleName();
+    String TAG = WelcomeActivity.class.getSimpleName();
     private FragmentSignupBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore database;
@@ -107,10 +108,12 @@ public class SignupFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(username, email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
+                                    Log.d(TAG, "Signup effettuato");
                                     userViewModel.setAuthenticationError(false);
 
-                                    Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
+                                    Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
                                 } else {
+                                    Log.d(TAG, "Signup non effettuato");
                                     userViewModel.setAuthenticationError(true);
                                     showSnackbar(v, getString(R.string.error_signup_failure));
                                 }

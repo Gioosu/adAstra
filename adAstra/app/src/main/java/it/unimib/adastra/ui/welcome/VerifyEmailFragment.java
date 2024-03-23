@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.welcome;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +69,7 @@ public class VerifyEmailFragment extends Fragment {
 
         // Bottone di Back to login
         binding.buttonBackToLoginEmailVerification.setOnClickListener(v -> {
+            Log.d(TAG, "Torna al Login");
             showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
             Navigation.findNavController(v).navigate(R.id.action_verifyEmailFragment_to_loginFragment);
         });
@@ -78,7 +81,7 @@ public class VerifyEmailFragment extends Fragment {
         snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
-    // Mostra una Snackabar
+    // Mostra una Snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }

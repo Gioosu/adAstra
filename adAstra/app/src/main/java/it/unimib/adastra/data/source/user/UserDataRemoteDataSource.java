@@ -7,6 +7,7 @@ import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 import static it.unimib.adastra.util.Constants.USER_ID;
+import static it.unimib.adastra.util.Constants.VERIFIED;
 
 import android.util.Log;
 
@@ -49,6 +50,9 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
     @Override
     public void getUserInfo(String idToken) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("verified", true);
+        db.collection("users").document(idToken).update(data);
         db.collection("users").document(idToken).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -60,7 +64,8 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                             document.getBoolean(IMPERIAL_SYSTEM),
                             document.getBoolean(TIME_FORMAT),
                             document.getBoolean(ISS_NOTIFICATIONS),
-                            document.getBoolean(EVENTS_NOTIFICATIONS)
+                            document.getBoolean(EVENTS_NOTIFICATIONS),
+                            document.getBoolean(VERIFIED)
                     );
                     userResponseCallback.onSuccessFromRemoteDatabase(user);
                 }

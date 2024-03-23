@@ -2,7 +2,12 @@ package it.unimib.adastra.data.source.user;
 
 import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
+import static it.unimib.adastra.util.Constants.INVALID_USER_ERROR;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
+import static it.unimib.adastra.util.Constants.USER_COLLISION_ERROR;
+import static it.unimib.adastra.util.Constants.WEAK_PASSWORD_ERROR;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -15,7 +20,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import it.unimib.adastra.model.ISS.User;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
@@ -34,7 +38,9 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
         if (firebaseUser != null && firebaseUser.isEmailVerified()) {
             return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
         } else {
-            firebaseAuth.signOut();
+            if(firebaseUser != null) {
+                firebaseAuth.signOut();
+            }
             return null;
         }
     }
@@ -81,37 +87,48 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
     @Override
     public void signIn(String email, String password) {
+        Log.d(TAG, "Tentativo di accesso per l'email: " + email);
+
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null) {
-                    if(firebaseUser.isEmailVerified()) {
-                        userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            if(firebaseUser.isEmailVerified()) {
+                                Log.d(TAG, "Email verificata. Procedendo con l'accesso.");
+
+                                // Notifica il callback di successo con l'ID utente
+                                userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
+                            }
+                            else {
+                                Log.d(TAG, "Email non verificata. Invio dell'email di verifica.");
+
+                                // Invia una email di verifica e notifica il callback di errore
+                                Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);
+                                userResponseCallback.onFailureFromAuthentication(getErrorMessage(EMAIL_NOT_VERIFIED));
+                            }
+                        } else {
+                            Log.d(TAG, "L'oggetto FirebaseUser è nullo.");
+                            // Notifica il callback di errore con un messaggio appropriato
+                            userResponseCallback.onFailureFromAuthentication("L'oggetto FirebaseUser è nullo.");
+                        }
+                    } else {
+                        Log.d(TAG, "Tentativo di accesso fallito.");
+                        // Notifica il callback di errore con il messaggio di errore ricevuto dal task
+                        userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                     }
-                    else {
-                        Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);
-                        userResponseCallback.onFailureFromAuthentication(getErrorMessage(EMAIL_NOT_VERIFIED));
-                    }
-                } else {
-                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
-                }
-            } else {
-                userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
-            }
-        });
+                });
     }
 
-    //TODO sistemare per signup
     private String getErrorMessage(Exception exception) {
         if (exception instanceof FirebaseAuthWeakPasswordException) {
-            return "WEAK_PASSWORD_ERROR";
+            return WEAK_PASSWORD_ERROR;
         } else if (exception instanceof FirebaseAuthInvalidCredentialsException) {
             return INVALID_CREDENTIALS_ERROR;
         } else if (exception instanceof FirebaseAuthInvalidUserException) {
-            return "INVALID_USER_ERROR";
+            return INVALID_USER_ERROR;
         } else if (exception instanceof FirebaseAuthUserCollisionException) {
-            return "USER_COLLISION_ERROR";
+            return USER_COLLISION_ERROR;
         }
         return UNEXPECTED_ERROR;
     }

@@ -95,15 +95,28 @@ public class LoginFragment extends Fragment {
                     userViewModel.getUserMutableLiveData("", email, password, true).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-                                    userViewModel.setAuthenticationError(false);
-                                    Navigation.findNavController(view).navigate(
-                                            R.id.action_loginFragment_to_mainActivity);
+                                    User user = ((Result.UserResponseSuccess) result).getUser();
+                                    if (user != null && user.isVerified()) {
+                                        // L'utente è verificato e l'operazione di login è avvenuta con successo
+                                        Log.d(TAG, "Utente verificato e login avvenuto con successo: " + user.toString());
+                                        userViewModel.setAuthenticationError(false);
+                                        Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                                    } else {
+                                        // L'utente non è verificato
+                                        Log.d(TAG, "Errore: L'utente non è verificato.");
+                                        userViewModel.setAuthenticationError(true);
+                                        showSnackbar(v, getString(R.string.error_email_not_verified));
+                                    }
                                 } else {
+                                    // L'operazione di login ha fallito
+                                    Log.d(TAG, "Errore durante il login: " + ((Result.Error) result).getMessage());
                                     userViewModel.setAuthenticationError(true);
                                     showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
                                 }
-                            });
+                            }
+                    );
                 } else {
+                    Log.d(TAG, "Non ci sono errori");
                     userViewModel.getUser("",email, password, true);
                 }
             } else {

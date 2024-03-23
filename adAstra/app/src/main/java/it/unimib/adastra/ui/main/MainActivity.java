@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
+        /*if (currentUser == null) {
             // L'utente non è loggato
             backToLogin();
         } else {
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                     backToLogin();
                 }
             });
-        }
+        }*/
 
         fetchSettingsFromSharedPreferences();
 
@@ -70,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Ritorna a Login
-    private void backToLogin() {
+    /*private void backToLogin() {
         Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
         intent.putExtra("SHOW_NEW_AUTHENTICATION", true);
         startActivity(intent);
         finish();
-    }
+    }*/
 
     // Prende le impostazioni da SharedPreferences
     private void fetchSettingsFromSharedPreferences() {
