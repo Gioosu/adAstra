@@ -34,25 +34,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
         return userMutableLiveData;
     }
 
-    @Override
-    public MutableLiveData<Result> getGoogleUser(String idToken) {
-        signInWithGoogle(idToken);
-
-        return userMutableLiveData;
-    }
 
     @Override
     public void setUsername(String username) {
 
     }
 
-    @Override
-    public void getInfo(String idToken) {
-
-    }
-
-    @Override
-    public void getAllData(String idToken) {
     public MutableLiveData<Result> getLoggedUser(String idToken) {
         userDataRemoteDataSource.getUserInfo(idToken);
         return userMutableLiveData;
@@ -81,11 +68,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void signInWithGoogle(String token) {
-        userRemoteDataSource.signInWithGoogle(token);
-    }
-
-    @Override
     public void onSuccessFromAuthentication(User user) {
         if (user != null) {
             userDataRemoteDataSource.saveUserData(user);
@@ -107,10 +89,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     public void onSuccessFromRemoteDatabase(User user) {
         Result.UserResponseSuccess result = new Result.UserResponseSuccess(user);
         userMutableLiveData.postValue(result);
-    }
-
-    @Override
-    public void onSuccessFromGettingUserPreferences() {
     }
 
     @Override

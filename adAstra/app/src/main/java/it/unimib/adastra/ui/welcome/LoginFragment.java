@@ -4,6 +4,7 @@ import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
@@ -36,8 +35,6 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private String email;
     private String password;
-    private SignInClient oneTapClient;
-    private BeginSignInRequest signInRequest;
     private ActivityResultLauncher<IntentSenderRequest> activityResultLauncher;
 
     public LoginFragment() {
@@ -115,11 +112,6 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Login rapido
-        if(userViewModel.getLoggedUser() != null) {
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
-        activity = getActivity();
-
         // Login Rapido
         if(userViewModel.isUserLogged() != null) {
             Log.d(TAG, "Accesso rapido");
@@ -158,8 +150,9 @@ public class LoginFragment extends Fragment {
         // Bottone di Sign up
         binding.buttonSignupLogin.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment));
-/*
+
         // Bottone di Login con Google
+        /*
         binding.buttonGoogle.setOnClickListener(v -> oneTapClient.beginSignIn(signInRequest)
                 .addOnSuccessListener(requireActivity(), result -> {
                     Log.d(TAG, "onSuccess from oneTapClient.beginSignIn(BeginSignInRequest)");
@@ -175,16 +168,9 @@ public class LoginFragment extends Fragment {
                     Snackbar.make(requireActivity().findViewById(android.R.id.content),
                             requireActivity().getString(R.string.error_unexpected_error),
                             Snackbar.LENGTH_SHORT).show();
-                }));*/
+                }));
+                */
     }
-
-    /*
-    @Override
-    public void onResume() {
-        super.onResume();
-        userViewModel.setAuthenticationError(false);
-    }
-     */
 
     // Verifica campo Email
     private boolean isEmailNotEmpty(String email) {

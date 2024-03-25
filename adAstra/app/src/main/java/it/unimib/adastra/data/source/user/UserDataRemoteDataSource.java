@@ -7,6 +7,7 @@ import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.USERNAME;
 import static it.unimib.adastra.util.Constants.USER_ID;
+import static it.unimib.adastra.util.Constants.VERIFIED;
 
 import android.util.Log;
 
