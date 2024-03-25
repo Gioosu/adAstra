@@ -11,13 +11,7 @@ import static it.unimib.adastra.util.Constants.VERIFIED;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -49,10 +43,23 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     }
 
     @Override
-    public void getUserInfo(String idToken) {
+    public void setUsername(User user) {
         Map<String, Object> data = new HashMap<>();
-        data.put("verified", true);
+        data.put(USERNAME, user.getUsername());
+        Log.d(TAG, user.getId());
+        db.collection("users")
+                .document(user.getId()).update(data).addOnSuccessListener(unused -> userResponseCallback.onSuccessFromRemoteDatabase(user))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+    }
+
+    @Override
+    public void setVerified(String idToken) {
+        Map<String, Object> data = new HashMap<>();
+        data.put(VERIFIED, true);
         db.collection("users").document(idToken).update(data);
+    }
+    @Override
+    public void getUserInfo(String idToken) {
         db.collection("users").document(idToken).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();

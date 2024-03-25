@@ -26,7 +26,6 @@ import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
     private final FirebaseAuth firebaseAuth;
-
     String TAG = WelcomeActivity.class.getSimpleName();
     public UserAuthenticationRemoteDataSource() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -36,7 +35,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     public User getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null && firebaseUser.isEmailVerified()) {
-            return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
+            return new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
         } else {
             if(firebaseUser != null) {
                 firebaseAuth.signOut();
