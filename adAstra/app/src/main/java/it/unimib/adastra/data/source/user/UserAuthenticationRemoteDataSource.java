@@ -32,7 +32,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     }
 
     @Override
-    public User getLoggedUser() {
+    public User isUserLogged() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if (firebaseUser != null && firebaseUser.isEmailVerified()) {
@@ -70,9 +70,36 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
-
                     if(firebaseUser.isEmailVerified()) {
                         userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            if(firebaseUser.isEmailVerified()) {
+                                Log.d(TAG, "Email verificata. Procedendo con l'accesso.");
+
+                                // Notifica il callback di successo con l'ID utente
+
+                                userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
+                            }
+                            else {
+                                Log.d(TAG, "Email non verificata. Invio dell'email di verifica.");
+
+                                // Invia una email di verifica e notifica il callback di errore
+                                Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);
+                                userResponseCallback.onFailureFromAuthentication(getErrorMessage(EMAIL_NOT_VERIFIED));
+                            }
+                        } else {
+                            Log.d(TAG, "L'oggetto FirebaseUser è nullo.");
+                            // Notifica il callback di errore con un messaggio appropriato
+                            userResponseCallback.onFailureFromAuthentication("L'oggetto FirebaseUser è nullo.");
+                        }
+                    } else {
+                        Log.d(TAG, "Tentativo di accesso fallito.");
+                        // Notifica il callback di errore con il messaggio di errore ricevuto dal task
+                        userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                     }
                     else {
                         Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);

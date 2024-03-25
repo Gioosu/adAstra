@@ -9,8 +9,11 @@ public interface UserResponseCallback {
     void onSuccessFromAuthentication(User user);
     void onFailureFromAuthentication(String message);
     void onSuccessFromRemoteDatabase(User user);
-    void onSuccessFromGettingUserPreferences();
+
     void onFailureFromRemoteDatabase(String message);
+
+    void onSuccessUpdateFromRemoteDatabase(User user, String message);
+
     void onSuccessLogout();
     void onSuccessFromLogin(String uid);
 }

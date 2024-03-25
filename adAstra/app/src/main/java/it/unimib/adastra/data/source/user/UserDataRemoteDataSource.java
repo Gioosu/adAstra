@@ -44,6 +44,27 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     }
 
     @Override
+    public void setUsername(User user, String newUsername) {
+        db.collection("users").document(user.getId()).update(USERNAME, newUsername)
+                .addOnSuccessListener(aVoid -> {
+                    // Aggiornamento completato con successo
+                    user.setUsername(newUsername);
+                    userResponseCallback.onSuccessUpdateFromRemoteDatabase(user, USERNAME);
+                })
+                .addOnFailureListener(e -> {
+                    // Gestione dell'errore
+                    Log.e(TAG, "Error updating username", e);
+                    userResponseCallback.onFailureFromRemoteDatabase(e.getLocalizedMessage()); // Notifica l'errore all'interfaccia utente
+                });
+    }
+
+    @Override
+    public void setVerified(String idToken) {
+        Map<String, Object> data = new HashMap<>();
+        data.put(VERIFIED, true);
+        db.collection("users").document(idToken).update(data);
+    }
+    @Override
     public void getUserInfo(String idToken) {
         db.collection("users").document(idToken).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

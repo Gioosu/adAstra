@@ -117,6 +117,12 @@ public class LoginFragment extends Fragment {
 
         // Login rapido
         if(userViewModel.getLoggedUser() != null) {
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        activity = getActivity();
+
+        // Login Rapido
+        if(userViewModel.isUserLogged() != null) {
+            Log.d(TAG, "Accesso rapido");
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_mainActivity);
         }
 

@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -38,11 +39,14 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.model.ISS.Result;
+import it.unimib.adastra.model.ISS.User;
 import it.unimib.adastra.ui.UserViewModel;
 import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.util.DataEncryptionUtil;
@@ -58,20 +62,18 @@ public class SettingsFragment extends Fragment {
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
+    private UserViewModel userViewModel;
 
     public SettingsFragment() {
         // Required empty public constructor
-    }
-
-    public static SettingsFragment newInstance() {
+    }    public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
-
-    private UserViewModel userViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         IUserRepository userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
@@ -111,6 +113,26 @@ public class SettingsFragment extends Fragment {
         isUserInteractedDarkTheme = false;
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.settings));
+
+        // Username TODO
+        LiveData<String> messageLiveData = userViewModel.getMessageLiveData();
+        if (messageLiveData != null) {
+            messageLiveData.observe(getViewLifecycleOwner(), message -> {
+                if (message != null && message.equals(USERNAME)) {
+                    LiveData<Result> userLiveData = userViewModel.getUserMutableLiveData();
+                    if (userLiveData != null) {
+                        userLiveData.observe(getViewLifecycleOwner(), result -> {
+                            if (result instanceof Result.UserResponseSuccess) {
+                                User user = ((Result.UserResponseSuccess) result).getUser();
+                                String username = user.getUsername();
+                                binding.username.setText(username);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
 
         // Bottone di Account settings
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->

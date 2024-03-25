@@ -13,16 +13,17 @@ import it.unimib.adastra.model.ISS.*;
 public class UserViewModel extends ViewModel {
 
     private final IUserRepository userRepository;
+
     private MutableLiveData<Result> userMutableLiveData;
+    private MutableLiveData<String> messageLiveData;
     private boolean authenticationError;
 
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;
         authenticationError = false;
     }
-
-    public User getLoggedUser() {
-        return userRepository.getLoggedUser();
+    public MutableLiveData<Result> getUserMutableLiveData() {
+        return userMutableLiveData;
     }
 
     public MutableLiveData<Result> logout() {
@@ -37,6 +38,21 @@ public class UserViewModel extends ViewModel {
 
     public void setUsername(String username) {
         userRepository.setUsername(username);
+
+    public MutableLiveData<String> getMessageLiveData() {
+        return messageLiveData;
+    }
+
+    public User isUserLogged() {
+        return userRepository.isUserLogged();
+    }
+
+    public MutableLiveData<Result> getLoggedUser(String idToken) {
+        return userRepository.getLoggedUser(idToken);
+    }
+
+    public MutableLiveData<Result> setUsername(User user, String newUsername) {
+        return userRepository.setUsername(user, newUsername);
     }
 
     public boolean isAuthenticationError() {

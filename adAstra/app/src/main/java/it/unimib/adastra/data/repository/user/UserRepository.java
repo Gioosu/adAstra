@@ -11,16 +11,16 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
-    private final MutableLiveData<Result> userPreferencesMutableLiveData;
+    private MutableLiveData<String> messageLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
                           BaseUserDataRemoteDataSource userDataRemoteDataSource) {
         this.userRemoteDataSource = userRemoteDataSource;
         this.userDataRemoteDataSource = userDataRemoteDataSource;
         this.userMutableLiveData = new MutableLiveData<>();
-        this.userPreferencesMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
+        this.messageLiveData = new MutableLiveData<>();
     }
 
     @Override
@@ -53,12 +53,20 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
 
     @Override
     public void getAllData(String idToken) {
+    public MutableLiveData<Result> getLoggedUser(String idToken) {
+        userDataRemoteDataSource.getUserInfo(idToken);
+        return userMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Result> setUsername(User user, String newUsername) {
+        userDataRemoteDataSource.setUsername(user, newUsername);
+        return userMutableLiveData;
     }
 
     @Override
     public MutableLiveData<Result> logout() {
         userRemoteDataSource.logout();
-
         return userMutableLiveData;
     }
 
@@ -85,6 +93,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     public void onSuccessFromLogin(String idToken) {
+        userDataRemoteDataSource.setVerified(idToken);
         userDataRemoteDataSource.getUserInfo(idToken);
     }
 
@@ -111,8 +120,15 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public User getLoggedUser() {
-        return userRemoteDataSource.getLoggedUser();
+    public void onSuccessUpdateFromRemoteDatabase(User user, String message) {
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(user);
+        userMutableLiveData.postValue(result);
+        messageLiveData.postValue(message);
+    }
+
+    @Override
+    public User isUserLogged() {
+        return userRemoteDataSource.isUserLogged();
     }
 
     @Override

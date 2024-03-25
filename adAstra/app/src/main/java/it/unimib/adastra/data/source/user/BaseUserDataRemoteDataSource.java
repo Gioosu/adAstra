@@ -13,8 +13,10 @@ public abstract class BaseUserDataRemoteDataSource {
     }
 
     public abstract void saveUserData(User user);
-    public abstract void getUserInfo(String idToken);
 
-    public void setUserUsername(User user, String username) {
-    }
+    public abstract void setUsername(User user, String newUsername);
+
+    public abstract void setVerified(String idToken);
+
+    public abstract void getUserInfo(String idToken);
 }

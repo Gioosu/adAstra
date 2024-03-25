@@ -69,7 +69,7 @@ public class User {
         this.timeFormat = timeFormat;
     }
 
-    public boolean isissNotifications() {
+    public boolean isIssNotifications() {
         return issNotifications;
     }
 
