@@ -24,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -40,8 +42,14 @@ import java.util.Map;
 
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.model.ISS.Result;
+import it.unimib.adastra.model.ISS.User;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
@@ -51,6 +59,7 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
  */
 public class SettingsFragment extends Fragment {
     String TAG = SettingsFragment.class.getSimpleName();
+    private UserViewModel userViewModel;
     private FragmentSettingsBinding binding;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
@@ -76,6 +85,12 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -109,6 +124,18 @@ public class SettingsFragment extends Fragment {
         isUserInteractedDarkTheme = false;
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.settings));
+
+        userViewModel.getUserInfoMutableLiveData(currentUser.getUid()).observe(
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        User user = ((Result.UserResponseSuccess) result).getUser();
+
+                        binding.username.setText(user.getUsername());
+                    } else {
+                        showSnackbar(view, getString(R.string.error_unexpected_error));
+                    }
+        });
+
 
         // Bottone di Account settings
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
@@ -286,7 +313,7 @@ public class SettingsFragment extends Fragment {
 
     private void updateStringSetting(String key, String value) {
         if (USERNAME.equals(key)) {
-            binding.username.setText(value);
+            //binding.username.setText(value);
         }
     }
 
@@ -338,5 +365,10 @@ public class SettingsFragment extends Fragment {
             Snackbar.make(binding.buttonReportIssue,
                     R.string.error_email_not_found, Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

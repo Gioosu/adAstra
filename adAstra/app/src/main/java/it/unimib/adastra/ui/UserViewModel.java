@@ -3,6 +3,7 @@ package it.unimib.adastra.ui;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -25,11 +26,6 @@ public class UserViewModel extends ViewModel {
         return userRepository.getLoggedUser();
     }
 
-    public MutableLiveData<Result> setUsername(String username) {
-        getUserData(username);
-
-        return userMutableLiveData;
-    }
 
     public boolean isAuthenticationError() {
         return authenticationError;
@@ -40,7 +36,25 @@ public class UserViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
-        getUserData(username, email, password, isUserRegistered);
+        if (userMutableLiveData == null) {
+            getUserData(username, email, password, isUserRegistered);
+        }
+
+        return userMutableLiveData;
+    }
+
+    public MutableLiveData<Result> setUsername(String username) {
+        if (userMutableLiveData == null) {
+            getUserData(username);
+        }
+
+        return userMutableLiveData;
+    }
+
+    public MutableLiveData<Result> getUserInfoMutableLiveData(String idToken) {
+        if (userMutableLiveData == null) {
+            getUserInfo(idToken);
+        }
 
         return userMutableLiveData;
     }
@@ -57,7 +71,20 @@ public class UserViewModel extends ViewModel {
         userMutableLiveData = userRepository.getUser(username);
     }
 
+    private void getUserInfo(String idToken){
+        userMutableLiveData = userRepository.getUserInfo(idToken);
+    }
+
     public void setUserMutableLiveDataNull(){
         userMutableLiveData = null;
+    }
+
+    public LiveData<String> getUsername() {
+        MutableLiveData<String> usernameLiveData = new MutableLiveData<>();
+        User loggedUser = getLoggedUser();
+        if (loggedUser != null) {
+            usernameLiveData.setValue(loggedUser.getUsername());
+        }
+        return usernameLiveData;
     }
 }
