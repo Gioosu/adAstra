@@ -97,6 +97,7 @@ public class LoginFragment extends Fragment {
                                 if (result.isSuccess()) {
                                     User user = ((Result.UserResponseSuccess) result).getUser();
                                     if (user != null && user.isVerified()) {
+                                        Log.d(TAG, "Verificato: " + user.isVerified());
                                         // L'utente è verificato e l'operazione di login è avvenuta con successo
                                         Log.d(TAG, "Utente verificato e login avvenuto con successo: " + user.toString());
                                         userViewModel.setAuthenticationError(false);

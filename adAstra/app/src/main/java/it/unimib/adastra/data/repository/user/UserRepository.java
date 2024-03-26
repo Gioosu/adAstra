@@ -1,6 +1,5 @@
 package it.unimib.adastra.data.repository.user;
 
-
 import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
@@ -38,8 +37,15 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void setUsername(String username) {
+    public MutableLiveData<Result> getUser(String username) {
+        setUsername(username);
 
+        return userMutableLiveData;
+    }
+
+    @Override
+    public void setUsername(String username) {
+        userDataRemoteDataSource.setUsername(username);
     }
 
     @Override
@@ -76,6 +82,13 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     public void onSuccessFromLogin(String idToken) {
+        userDataRemoteDataSource.setVerified(idToken);
+        userDataRemoteDataSource.getUserInfo(idToken);
+    }
+
+    @Override
+    public void onSuccessUsernameUpdate(String idToken, String username) {
+        userDataRemoteDataSource.updateUsername(idToken, username);
         userDataRemoteDataSource.getUserInfo(idToken);
     }
 

@@ -1,4 +1,5 @@
 package it.unimib.adastra.util;
+
 import android.app.Application;
 
 import it.unimib.adastra.data.repository.user.IUserRepository;

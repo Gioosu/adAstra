@@ -25,8 +25,10 @@ public class UserViewModel extends ViewModel {
         return userRepository.getLoggedUser();
     }
 
-    public void setUsername(String username) {
-        userRepository.setUsername(username);
+    public MutableLiveData<Result> setUsername(String username) {
+        getUserData(username);
+
+        return userMutableLiveData;
     }
 
     public boolean isAuthenticationError() {
@@ -39,6 +41,7 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
         getUserData(username, email, password, isUserRegistered);
+
         return userMutableLiveData;
     }
 
@@ -48,6 +51,10 @@ public class UserViewModel extends ViewModel {
 
     private void getUserData(String username, String email, String password, boolean isUserRegistered) {
         userMutableLiveData = userRepository.getUser(username, email, password, isUserRegistered);
+    }
+
+    private void getUserData(String username) {
+        userMutableLiveData = userRepository.getUser(username);
     }
 
     public void setUserMutableLiveDataNull(){

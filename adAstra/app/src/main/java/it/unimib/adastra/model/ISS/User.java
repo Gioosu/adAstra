@@ -84,16 +84,16 @@ public class User {
         return eventsNotifications;
     }
 
+    public void setEventsNotifications(boolean eventsNotifications) {
+        this.eventsNotifications = eventsNotifications;
+    }
+
     public boolean isVerified() {
         return verified;
     }
 
     public void setVerified(boolean verified) {
         this.verified = verified;
-    }
-
-    public void setEventsNotifications(boolean eventsNotifications) {
-        this.eventsNotifications = eventsNotifications;
     }
 
     @Override

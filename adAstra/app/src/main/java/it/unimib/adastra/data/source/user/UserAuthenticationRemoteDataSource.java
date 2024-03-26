@@ -56,6 +56,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                 }
             }
         };
+
         firebaseAuth.addAuthStateListener(authStateListener);
         firebaseAuth.signOut();
     }

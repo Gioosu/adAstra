@@ -13,4 +13,5 @@ public interface UserResponseCallback {
     void onFailureFromRemoteDatabase(String message);
     void onSuccessLogout();
     void onSuccessFromLogin(String uid);
+    void onSuccessUsernameUpdate(String idToken, String username);
 }

@@ -1,9 +1,13 @@
 package it.unimib.adastra.ui.account;
 
+import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
+import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
+import static it.unimib.adastra.util.Constants.INVALID_USERNAME;
 import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +28,13 @@ import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentUpdateUsernameBinding;
+import it.unimib.adastra.model.ISS.Result;
+import it.unimib.adastra.model.ISS.User;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
+import it.unimib.adastra.util.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +43,7 @@ import it.unimib.adastra.databinding.FragmentUpdateUsernameBinding;
  */
 public class UpdateUsernameFragment extends Fragment {
     String TAG = UpdateUsernameFragment.class.getSimpleName();
+    private UserViewModel userViewModel;
     private FragmentUpdateUsernameBinding binding;
     private Activity activity;
 
@@ -51,6 +64,12 @@ public class UpdateUsernameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -78,23 +97,19 @@ public class UpdateUsernameFragment extends Fragment {
         // Bottone di Save
         binding.buttonSaveUpdateUsername.setOnClickListener(v -> {
             String newUsername = Objects.requireNonNull(binding.usernameInputEditTextUpdateUsername.getText()).toString();
-            if (isUsernameValid(newUsername)) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String userId = Objects.requireNonNull(user).getUid();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                Map<String, Object> updates = new HashMap<>();
-                updates.put(USERNAME, newUsername);
-                db.collection("users").document(userId)
-                        .update(updates)
-                        .addOnSuccessListener(aVoid -> {
+            userViewModel.setUsername(newUsername).observe(
+                    getViewLifecycleOwner(), result -> {
+
+                        if (result.isSuccess()) {
+                            Log.d(TAG, "Ho successo");
                             showSnackbar(v, getString(R.string.username_updated));
                             ((AccountActivity) activity).onSupportNavigateUp();
-                        })
-                        .addOnFailureListener(e -> {
-                            showSnackbar(v, getString(R.string.error_username_update_failed));
-                        });
-            }
+                        } else {
+                            showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
+                        }
+                    }
+            );
         });
     }
 
@@ -114,6 +129,15 @@ public class UpdateUsernameFragment extends Fragment {
         }
 
         return result;
+    }
+
+    private String getErrorMessage(String message) {
+        switch(message) {
+            case INVALID_USERNAME:
+                return requireActivity().getString(R.string.error_invalid_username);
+            default:
+                return requireActivity().getString(R.string.error_unexpected_error);
+        }
     }
 
     // Visualizza una snackbar

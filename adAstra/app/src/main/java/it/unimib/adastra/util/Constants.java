@@ -41,6 +41,7 @@ public class Constants {
     public static final String UNEXPECTED_ERROR = "unexpected_error";
     public static final String INVALID_CREDENTIALS_ERROR = "invalid_credentials_error";
     public static final String EMAIL_NOT_VERIFIED = "email_not_verified";
+    public static final String INVALID_USERNAME = "invalid_username";
     public static final String INVALID_USER_ERROR= "invalid_user_error";
     public static final String WEAK_PASSWORD_ERROR= "weak_password_error";
     public static final String USER_COLLISION_ERROR= "user_collision_error";
