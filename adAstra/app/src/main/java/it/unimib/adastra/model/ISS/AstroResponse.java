@@ -5,7 +5,6 @@ import androidx.room.Ignore;
 import java.util.List;
 
 public class AstroResponse {
-
     private List<Astronaut> people;
 
     private int number;

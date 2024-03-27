@@ -14,7 +14,6 @@ import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 @Dao
 public interface ISSDao {
-
     @Query("SELECT * FROM ISSPositionResponse")
     ISSPositionResponse getISS();
 
@@ -62,5 +61,4 @@ public interface ISSDao {
 
     @Query("DELETE FROM Astronaut WHERE name = :name")
     void deleteAstronaut(String name);
-
 }

@@ -34,6 +34,7 @@ public class ISSPositionRepository implements IISSPositionRepository, ISSPositio
         } else {
             issPositionLocalDataSource.getISSPosition();
         }
+
         return allIssMutableLiveData;
     }
 
@@ -70,7 +71,6 @@ public class ISSPositionRepository implements IISSPositionRepository, ISSPositio
             Result.ISSPositionResponseSuccess result = new Result.ISSPositionResponseSuccess(issPositionApiResponse);
             allIssMutableLiveData.postValue(result);
         }
-
     }
 
     @Override

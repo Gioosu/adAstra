@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/ISSFragment"
-        android:name="it.unimib.adastra.ui.main.ISSFragment"
+        android:name="it.unimib.adastra.ui.main.ISS.ISSFragment"
         android:label="@string/iss"
         tools:layout="@layout/fragment_i_s_s" />
 

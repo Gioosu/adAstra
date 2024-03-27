@@ -33,5 +33,4 @@ public class ISSPositionApiResponse extends ISSPositionResponse {
                 "message='" + message + '\'' +
                 '}';
     }
-
 }

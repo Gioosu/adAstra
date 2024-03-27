@@ -33,6 +33,7 @@ public abstract class ISSRoomDatabase extends androidx.room.RoomDatabase {
                 }
             }
         }
+
         return INSTANCE;
     }
 }

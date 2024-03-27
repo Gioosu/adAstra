@@ -4,6 +4,7 @@ import static it.unimib.adastra.util.Constants.RETROFIT_ERROR;
 
 import it.unimib.adastra.data.service.ISSApiService;
 import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
+import it.unimib.adastra.util.ServiceLocator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -11,8 +12,8 @@ import retrofit2.Response;
 public class ISSPositionRemoteDataSource extends BaseISSPositionRemoteDataSource {
     private final ISSApiService issApiService;
 
-    public ISSPositionRemoteDataSource(ISSApiService issApiService) {
-        this.issApiService = issApiService;
+    public ISSPositionRemoteDataSource() {
+        this.issApiService = ServiceLocator.getInstance().getISSApiService();
     }
 
     @Override

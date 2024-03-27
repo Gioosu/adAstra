@@ -9,7 +9,6 @@ import com.google.gson.annotations.SerializedName;
 
 @Entity
 public class ISSPositionResponse {
-
     @SerializedName("iss_position")
     @Embedded
     private Coordinates coordinates;
