@@ -2,7 +2,6 @@ package it.unimib.adastra.model;
 
 import com.google.firebase.firestore.Exclude;
 
-// TODO Ginelli
 public class User {
     private String name;
     private String email;
