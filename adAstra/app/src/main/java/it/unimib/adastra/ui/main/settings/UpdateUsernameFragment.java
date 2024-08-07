@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.account;
+package it.unimib.adastra.ui.main.settings;
 
 import static it.unimib.adastra.util.Constants.USERNAME;
 
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +24,7 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentUpdateUsernameBinding;
+import it.unimib.adastra.ui.main.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,13 +69,13 @@ public class UpdateUsernameFragment extends Fragment {
 
         activity = getActivity();
 
-        ((AccountActivity) activity).setToolBarTitle(getString(R.string.update_username));
+        ((MainActivity) activity).setToolBarTitle(getString(R.string.update_username));
 
         initialize();
 
         // Bottone di Cancel
         binding.buttonCancelUpdateUsername.setOnClickListener(v ->
-                ((AccountActivity) activity).onSupportNavigateUp());
+                Navigation.findNavController(v).navigate(R.id.action_updateUsernameFragment_to_accountSettingsFragment));
 
         // Bottone di Save
         binding.buttonSaveUpdateUsername.setOnClickListener(v -> {
@@ -89,7 +91,7 @@ public class UpdateUsernameFragment extends Fragment {
                         .update(updates)
                         .addOnSuccessListener(aVoid -> {
                             showSnackbar(v, getString(R.string.username_updated));
-                            ((AccountActivity) activity).onSupportNavigateUp();
+                            Navigation.findNavController(v).navigate(R.id.action_updateUsernameFragment_to_accountSettingsFragment);
                         })
                         .addOnFailureListener(e -> {
                             showSnackbar(v, getString(R.string.error_username_update_failed));

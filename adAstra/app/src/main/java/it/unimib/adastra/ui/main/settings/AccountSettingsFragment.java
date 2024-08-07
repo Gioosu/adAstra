@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.account;
+package it.unimib.adastra.ui.main.settings;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
@@ -32,6 +32,7 @@ import java.security.GeneralSecurityException;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentAccountSettingsBinding;
+import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
@@ -81,7 +82,8 @@ public class AccountSettingsFragment extends Fragment {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         activity = getActivity();
 
-        ((AccountActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
+        ((MainActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
+
         fetchAndSetUserSettings();
 
         // Bottone di Update username
@@ -155,7 +157,6 @@ public class AccountSettingsFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
-
         // Prima elimina l'account da Firebase Authentication
         try {
             AuthCredential credential = EmailAuthProvider
@@ -177,7 +178,7 @@ public class AccountSettingsFragment extends Fragment {
                                                 throw new RuntimeException(e);
                                             }
                                             FirebaseAuth.getInstance().signOut();
-                                            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
+                                            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
                                             activity.finish();
                                         })
                                         .addOnFailureListener(e -> {

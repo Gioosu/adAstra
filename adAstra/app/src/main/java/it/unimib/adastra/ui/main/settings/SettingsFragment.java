@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.main;
+package it.unimib.adastra.ui.main.settings;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
@@ -41,6 +41,7 @@ import java.util.Map;
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
@@ -112,7 +113,7 @@ public class SettingsFragment extends Fragment {
 
         // Bottone di Account settings
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountActivity));
+                Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountSettingsFragment));
 
         // Bottone di Log out
         binding.floatingActionButtonLogOut.setOnClickListener(v -> {

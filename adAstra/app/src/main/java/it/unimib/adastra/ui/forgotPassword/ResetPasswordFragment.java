@@ -26,7 +26,6 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
-import it.unimib.adastra.ui.account.AccountActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
@@ -75,10 +74,6 @@ public class ResetPasswordFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
-
-        if (requireActivity() instanceof AccountActivity) {
-            ((AccountActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
-        }
 
         // Bottone di Reset Password
         binding.buttonResetPassword.setOnClickListener(v -> {

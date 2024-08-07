@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.account;
+package it.unimib.adastra.ui.main.settings;
 
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
+import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
@@ -77,15 +78,15 @@ public class ChangePasswordFragment extends Fragment {
         }
         activity = getActivity();
 
-        ((AccountActivity) activity).setToolBarTitle(getString(R.string.change_password));
+        ((MainActivity) activity).setToolBarTitle(getString(R.string.change_password));
 
         // Bottone di Forgot password
-        binding.buttonForgotPasswordChangePassword.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_resetPasswordFragment2));
+//        binding.buttonForgotPasswordChangePassword.setOnClickListener(v ->
+//                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_resetPasswordFragment2));
 
         // Bottone di Cancel
         binding.buttonCancelChangePassword.setOnClickListener(v ->
-                ((AccountActivity) activity).onSupportNavigateUp());
+                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_accountSettingsFragment));
 
         // Bottone di Save
         binding.buttonSaveChangePassword.setOnClickListener(v -> {
@@ -101,7 +102,7 @@ public class ChangePasswordFragment extends Fragment {
                                 try {
                                     dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, newPassword);
                                     showSnackbar(v, getString(R.string.password_changed));
-                                    ((AccountActivity) activity).onSupportNavigateUp();
+                                    Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_accountSettingsFragment);
                                 } catch (GeneralSecurityException | IOException e) {
                                     throw new RuntimeException(e);
                                 }

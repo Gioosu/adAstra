@@ -26,7 +26,7 @@
         android:title="@string/events" />
 
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settingsGraph"
         android:enabled="true"
         android:icon="@drawable/gear_setting_settings"
         android:title="@string/settings" />

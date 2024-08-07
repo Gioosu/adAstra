@@ -1,9 +1,8 @@
-package it.unimib.adastra.ui.account;
+package it.unimib.adastra.ui.main.settings;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
-import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -34,6 +33,7 @@ import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
+import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
@@ -89,17 +89,17 @@ public class UpdateEmailFragment extends Fragment {
         }
         activity = getActivity();
 
-        ((AccountActivity) activity).setToolBarTitle(getString(R.string.update_email));
+        ((MainActivity) activity).setToolBarTitle(getString(R.string.update_email));
 
         initialize();
 
         // Bottone di Forgot password
-        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_resetPasswordFragment2));
+//        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v ->
+//                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_resetPasswordFragment2));
 
         // Bottone di Cancel
         binding.buttonCancelUpdateEmail.setOnClickListener(v ->
-                ((AccountActivity) activity).onSupportNavigateUp());
+                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment));
 
         // Bottone di Save
         binding.buttonSaveUpdateEmail.setOnClickListener(v -> {
@@ -132,7 +132,7 @@ public class UpdateEmailFragment extends Fragment {
                                                             try {
                                                                 dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
                                                                 showSnackbarWithAction(v, getString(R.string.email_updated));
-                                                                ((AccountActivity) activity).onSupportNavigateUp();
+                                                                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
                                                             } catch (GeneralSecurityException | IOException e) {
                                                                 throw new RuntimeException(e);
                                                             }
