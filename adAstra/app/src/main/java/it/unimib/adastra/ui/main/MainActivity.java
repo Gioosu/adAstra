@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "reload() ha dato esito positivo");
                 } else {
                     backToLogin();
+                    Log.d(TAG, "reload() ha dato esito negativo");
                 }
             });
         }

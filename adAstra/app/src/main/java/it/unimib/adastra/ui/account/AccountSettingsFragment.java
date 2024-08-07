@@ -171,6 +171,11 @@ public class AccountSettingsFragment extends Fragment {
                                 // Successivamente elimina i dati dell'utente da Firestore
                                 database.collection("users").document(userId).delete()
                                         .addOnSuccessListener(aVoid -> {
+                                            try {
+                                                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+                                            } catch (GeneralSecurityException | IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
                                             FirebaseAuth.getInstance().signOut();
                                             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity_account);
                                             activity.finish();

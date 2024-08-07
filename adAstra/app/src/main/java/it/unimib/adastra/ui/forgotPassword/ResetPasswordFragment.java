@@ -1,6 +1,7 @@
 package it.unimib.adastra.ui.forgotPassword;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,11 +20,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
 import it.unimib.adastra.ui.account.AccountActivity;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,8 +37,9 @@ import it.unimib.adastra.ui.account.AccountActivity;
 public class ResetPasswordFragment extends Fragment {
     private FragmentResetPasswordBinding binding;
     private FirebaseAuth mAuth;
-    private Activity activity;
     private String email;
+    private DataEncryptionUtil dataEncryptionUtil;
+    private Activity activity;
 
     public ResetPasswordFragment() {
         // Required empty public constructor
@@ -68,12 +73,12 @@ public class ResetPasswordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
 
         if (requireActivity() instanceof AccountActivity) {
             ((AccountActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
         }
-
 
         // Bottone di Reset Password
         binding.buttonResetPassword.setOnClickListener(v -> {
@@ -95,6 +100,11 @@ public class ResetPasswordFragment extends Fragment {
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        try {
+                            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+                        } catch (GeneralSecurityException | IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         navigateToCheckInbox(email);
                     } else {
                         showSnackbar(view, getString(R.string.error_email_send_failed));

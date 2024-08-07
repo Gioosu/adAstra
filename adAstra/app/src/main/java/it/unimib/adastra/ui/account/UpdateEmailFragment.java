@@ -3,6 +3,7 @@ package it.unimib.adastra.ui.account;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
+import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -21,11 +22,14 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
@@ -113,17 +117,29 @@ public class UpdateEmailFragment extends Fragment {
                             .addOnCompleteListener(task -> {
                                 Log.d(TAG, "User re-authenticated.");
 
-                                FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
-                                user1.verifyBeforeUpdateEmail(newEmail)
+                                //FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+                                user.verifyBeforeUpdateEmail(newEmail)
                                         .addOnCompleteListener(task1 -> {
                                             if (task1.isSuccessful()) {
-                                                try {
-                                                    dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
-                                                    showSnackbarWithAction(v, getString(R.string.email_updated));
-                                                    ((AccountActivity) activity).onSupportNavigateUp();
-                                                } catch (GeneralSecurityException | IOException e) {
-                                                    throw new RuntimeException(e);
-                                                }
+                                                String userId = Objects.requireNonNull(user).getUid();
+                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                                Map<String, Object> updates = new HashMap<>();
+                                                updates.put(EMAIL_ADDRESS, newEmail);
+                                                db.collection("users").document(userId)
+                                                        .update(updates)
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            try {
+                                                                dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
+                                                                showSnackbarWithAction(v, getString(R.string.email_updated));
+                                                                ((AccountActivity) activity).onSupportNavigateUp();
+                                                            } catch (GeneralSecurityException | IOException e) {
+                                                                throw new RuntimeException(e);
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            showSnackbar(v, getString(R.string.error_username_update_failed));
+                                                        });
                                             } else {
                                                 showSnackbar(v, getString(R.string.error_email_update_failed));
                                             }
