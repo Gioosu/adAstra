@@ -1,9 +1,11 @@
 package it.unimib.adastra.ui.main.settings;
 
+import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +28,7 @@ import java.util.Objects;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
 import it.unimib.adastra.ui.main.MainActivity;
+import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
@@ -35,9 +39,11 @@ import it.unimib.adastra.util.DataEncryptionUtil;
 public class ChangePasswordFragment extends Fragment {
     String TAG = ChangePasswordFragment.class.getSimpleName();
     private FragmentChangePasswordBinding binding;
+    private FirebaseAuth mAuth;
     private DataEncryptionUtil dataEncryptionUtil;
     private String password;
     private Activity activity;
+    private String email;
 
     public ChangePasswordFragment() {
         // Required empty public constructor
@@ -70,6 +76,8 @@ public class ChangePasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         try {
             password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
@@ -81,8 +89,20 @@ public class ChangePasswordFragment extends Fragment {
         ((MainActivity) activity).setToolBarTitle(getString(R.string.change_password));
 
         // Bottone di Forgot password
-//        binding.buttonForgotPasswordChangePassword.setOnClickListener(v ->
-//                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_resetPasswordFragment2));
+        binding.buttonForgotPasswordChangePassword.setOnClickListener(v -> {
+            try {
+                email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            } catch (GeneralSecurityException | IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.confirm_reset)
+                    .setMessage(R.string.confirm_reset_message)
+                    .setPositiveButton(R.string.reset, (dialog, which) -> sendPasswordResetEmail(email, v))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        });
 
         // Bottone di Cancel
         binding.buttonCancelChangePassword.setOnClickListener(v ->
@@ -148,6 +168,37 @@ public class ChangePasswordFragment extends Fragment {
         }
 
         return result;
+    }
+
+    // Invia l'email per reimpostare la password
+    private void sendPasswordResetEmail(String email, View view) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        try {
+                            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+                        } catch (GeneralSecurityException | IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        backToLogin();
+                    } else {
+                        showSnackbar(view, getString(R.string.error_email_send_failed));
+                    }
+                });
+    }
+
+    // Torna a Login
+    private void backToLogin() {
+        Intent intent = new Intent(getContext(), WelcomeActivity.class);
+        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        FirebaseAuth.getInstance().signOut();
+        startActivity(intent);
+        activity.finish();
     }
 
     // Visualizza una snackbar

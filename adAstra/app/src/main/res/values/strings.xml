@@ -29,7 +29,7 @@
     <string name="enter_your_email">Enter your email address and we\'ll send you a link to reset your password</string>
     <string name="reset_password">Reset password</string>
     <string name="confirm_reset">Confirm password reset</string>
-    <string name="confirm_reset_message">Are you sure you want to reset your password?</string>
+    <string name="confirm_reset_message">Are you sure you want to reset your password? \nWe\'ll send you an email to reset it.</string>
     <string name="reset">Reset password</string>
 
     <!-- CheckInbox -->
@@ -126,4 +126,6 @@
     <string name="error_invalid_new_password">Choose a new password different from the previous one</string>
     <string name="error_password_change_failed">Password change failed</string>
     <string name="error_invalid_new_email">Choose a new email address different from the previous one</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

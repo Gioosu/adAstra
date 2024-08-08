@@ -168,6 +168,16 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/arrow_backward"
+            app:fabCustomSize="24dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_profile" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

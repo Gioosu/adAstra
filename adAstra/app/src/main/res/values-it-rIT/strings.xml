@@ -26,7 +26,7 @@
     <string name="enter_your_email">Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password</string>
     <string name="reset_password">Reimposta password</string>
     <string name="confirm_reset">Conferma reimpostazione password</string>
-    <string name="confirm_reset_message">Sei sicuro di voler reimpostare la tua password?</string>
+    <string name="confirm_reset_message">Sei sicuro di voler reimpostare la tua password? \nTi invieremo un email per reimpostarla.</string>
     <string name="reset">Reimposta password</string>
 
     <!-- CheckInbox -->

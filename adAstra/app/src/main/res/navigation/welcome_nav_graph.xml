@@ -45,7 +45,20 @@
     </fragment>
     <fragment
         android:id="@+id/resetPasswordFragment"
-        android:name="it.unimib.adastra.ui.forgotPassword.ResetPasswordFragment"
+        android:name="it.unimib.adastra.ui.welcome.ResetPasswordFragment"
         android:label="fragment_reset_password"
-        tools:layout="@layout/fragment_reset_password" />
+        tools:layout="@layout/fragment_reset_password" >
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_checkInboxFragment"
+            app:destination="@id/checkInboxFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkInboxFragment"
+        android:name="it.unimib.adastra.ui.welcome.CheckInboxFragment"
+        android:label="fragment_check_inbox"
+        tools:layout="@layout/fragment_check_inbox" >
+        <action
+            android:id="@+id/action_checkInboxFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

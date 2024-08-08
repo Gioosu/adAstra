@@ -86,6 +86,11 @@ public class AccountSettingsFragment extends Fragment {
 
         fetchAndSetUserSettings();
 
+        // Bottone di Back to settings
+        binding.floatingActionButtonBack.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_settingsFragment);
+        });
+
         // Bottone di Update username
         binding.buttonUpdateUsername.setOnClickListener(v -> {
             String username = binding.textViewUsernameAccountSettings.getText().toString();

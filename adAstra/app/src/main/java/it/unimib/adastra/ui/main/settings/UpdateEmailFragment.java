@@ -5,6 +5,7 @@ import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE
 import static it.unimib.adastra.util.Constants.PASSWORD;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -34,6 +36,7 @@ import java.util.Objects;
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
 import it.unimib.adastra.ui.main.MainActivity;
+import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
 
 /**
@@ -44,6 +47,7 @@ import it.unimib.adastra.util.DataEncryptionUtil;
 public class UpdateEmailFragment extends Fragment {
     String TAG = UpdateEmailFragment.class.getSimpleName();
     private FragmentUpdateEmailBinding binding;
+    private FirebaseAuth mAuth;
     private DataEncryptionUtil dataEncryptionUtil;
     private String email;
     private String password;
@@ -80,6 +84,8 @@ public class UpdateEmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         try {
             email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
@@ -94,8 +100,20 @@ public class UpdateEmailFragment extends Fragment {
         initialize();
 
         // Bottone di Forgot password
-//        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v ->
-//                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_resetPasswordFragment2));
+        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v -> {
+            try {
+                email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+            } catch (GeneralSecurityException | IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.confirm_reset)
+                    .setMessage(R.string.confirm_reset_message)
+                    .setPositiveButton(R.string.reset, (dialog, which) -> sendPasswordResetEmail(email, v))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        });
 
         // Bottone di Cancel
         binding.buttonCancelUpdateEmail.setOnClickListener(v ->
@@ -155,6 +173,37 @@ public class UpdateEmailFragment extends Fragment {
     private void initialize() {
         String email = requireArguments().getString(EMAIL_ADDRESS, "");
         binding.textViewEmailUpdateEmail.setText(email);
+    }
+
+    // Invia l'email per reimpostare la password
+    private void sendPasswordResetEmail(String email, View view) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        try {
+                            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+                        } catch (GeneralSecurityException | IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        backToLogin();
+                    } else {
+                        showSnackbar(view, getString(R.string.error_email_send_failed));
+                    }
+                });
+    }
+
+    // Torna a Login
+    private void backToLogin() {
+        Intent intent = new Intent(getContext(), WelcomeActivity.class);
+        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        FirebaseAuth.getInstance().signOut();
+        startActivity(intent);
+        activity.finish();
     }
 
     private boolean isEmailValid(String email) throws GeneralSecurityException, IOException {

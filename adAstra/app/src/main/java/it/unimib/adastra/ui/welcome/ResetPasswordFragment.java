@@ -1,6 +1,5 @@
-package it.unimib.adastra.ui.forgotPassword;
+package it.unimib.adastra.ui.welcome;
 
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 
 import android.app.Activity;
@@ -100,20 +99,23 @@ public class ResetPasswordFragment extends Fragment {
                         } catch (GeneralSecurityException | IOException e) {
                             throw new RuntimeException(e);
                         }
-                        navigateToCheckInbox(email);
+                        backToLogin();
                     } else {
                         showSnackbar(view, getString(R.string.error_email_send_failed));
                     }
                 });
     }
 
-    // Naviga a CheckInboxFragment
-    private void navigateToCheckInbox(String email) {
-        Bundle bundle = new Bundle();
-        bundle.putString(EMAIL_ADDRESS, email);
-        Intent intent = new Intent(getActivity(), CheckInboxActivity.class);
-        intent.putExtra("EMAIL_ADDRESS", email);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    // Torna a Login
+    private void backToLogin() {
+        Intent intent = new Intent(getContext(), WelcomeActivity.class);
+        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        FirebaseAuth.getInstance().signOut();
         startActivity(intent);
         activity.finish();
     }
