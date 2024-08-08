@@ -1,4 +1,6 @@
-package it.unimib.adastra.data.source;
+package it.unimib.adastra.data.source.ISS;
+
+import it.unimib.adastra.data.repository.ISSPosition.ISSPositionCallback;
 
 public abstract class BaseISSPositionRemoteDataSource {
     protected ISSPositionCallback issPositionCallback;

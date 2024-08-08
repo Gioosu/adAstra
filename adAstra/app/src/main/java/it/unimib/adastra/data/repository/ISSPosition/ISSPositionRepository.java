@@ -1,4 +1,4 @@
-package it.unimib.adastra.data.repository;
+package it.unimib.adastra.data.repository.ISSPosition;
 
 import static it.unimib.adastra.util.Constants.FRESH_TIMEOUT;
 
@@ -6,9 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import it.unimib.adastra.data.source.BaseISSPositionLocalDataSource;
-import it.unimib.adastra.data.source.BaseISSPositionRemoteDataSource;
-import it.unimib.adastra.data.source.ISSPositionCallback;
+import it.unimib.adastra.data.source.ISS.BaseISSPositionLocalDataSource;
+import it.unimib.adastra.data.source.ISS.BaseISSPositionRemoteDataSource;
 import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.Result;

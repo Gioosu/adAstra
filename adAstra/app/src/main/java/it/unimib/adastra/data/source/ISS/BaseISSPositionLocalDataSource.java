@@ -1,5 +1,6 @@
-package it.unimib.adastra.data.source;
+package it.unimib.adastra.data.source.ISS;
 
+import it.unimib.adastra.data.repository.ISSPosition.ISSPositionCallback;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 public abstract class BaseISSPositionLocalDataSource {
