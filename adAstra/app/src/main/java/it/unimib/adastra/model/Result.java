@@ -36,7 +36,7 @@ public abstract class Result {
         public UserResponseSuccess(User user) {
             this.user = user;
         }
-        public User getData() {
+        public User getUser() {
             return user;
         }
     }

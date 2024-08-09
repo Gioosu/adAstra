@@ -54,13 +54,10 @@ public class SignupFragment extends Fragment {
     private FragmentSignupBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore database;
     private String username;
     private String email;
     private String password;
     private String confirmPassword;
-    private Activity activity;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -100,10 +97,6 @@ public class SignupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseFirestore.getInstance();
-        activity = getActivity();
-
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -119,17 +112,19 @@ public class SignupFragment extends Fragment {
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
-        // Bottone di Sign up
+        // Bottone di Signup
         binding.buttonSignUpSignup.setOnClickListener(v -> {
             username = Objects.requireNonNull(binding.textUsernameSignup.getText()).toString();
             email = Objects.requireNonNull(binding.textEmailSignup.getText()).toString();
             password = Objects.requireNonNull(binding.textPasswordSignup.getText()).toString();
             confirmPassword = Objects.requireNonNull(binding.textConfirmPasswordSignup.getText()).toString();
 
+            // Controllo locale su input
             if (isUsernameValid(username)
                     && isEmailValid(email)
                     && isPasswordValid(password)
                     && isConfirmPasswordValid(password, confirmPassword)) {
+
                 if (!userViewModel.isAuthenticationError()) {
                     userViewModel.getUserMutableLiveData(username, email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
@@ -196,19 +191,6 @@ public class SignupFragment extends Fragment {
         }
 
         return result;
-    }
-
-    // Crea un utente in Firestore
-    private void createUserInFirestore(String userId, String username, String email) {
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put(USERNAME, username);
-        newUser.put(EMAIL_ADDRESS, email);
-        newUser.put(IMPERIAL_SYSTEM, false);
-        newUser.put(TIME_FORMAT, false);
-        newUser.put(ISS_NOTIFICATIONS, true);
-        newUser.put(EVENTS_NOTIFICATIONS, true);
-
-        database.collection("users").document(userId).set(newUser);
     }
 
     // Visualizza una snackbar

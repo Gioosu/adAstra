@@ -3,6 +3,7 @@ package it.unimib.adastra.data.source.user;
 import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 import static it.unimib.adastra.util.Constants.INVALID_USER_ERROR;
+import static it.unimib.adastra.util.Constants.NULL_FIREBASE_OBJECT;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 import static it.unimib.adastra.util.Constants.USER_COLLISION_ERROR;
 import static it.unimib.adastra.util.Constants.WEAK_PASSWORD_ERROR;
@@ -23,6 +24,8 @@ import java.util.Objects;
 
 import it.unimib.adastra.model.User;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
+import it.unimib.adastra.util.exception.NullException;
+import it.unimib.adastra.util.exception.UnverifiedEmailException;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
     private final FirebaseAuth firebaseAuth;
@@ -102,12 +105,14 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
                                 // Invia una email di verifica e notifica il callback di errore
                                 Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);
-                                userResponseCallback.onFailureFromAuthentication(getErrorMessage(EMAIL_NOT_VERIFIED));
+                                userResponseCallback.onFailureFromAuthentication(getErrorMessage(new UnverifiedEmailException(EMAIL_NOT_VERIFIED)));
+                                return;
                             }
                         } else {
                             Log.d(TAG, "L'oggetto FirebaseUser è nullo.");
                             // Notifica il callback di errore con un messaggio appropriato
-                            userResponseCallback.onFailureFromAuthentication("L'oggetto FirebaseUser è nullo.");
+                            userResponseCallback.onFailureFromAuthentication(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
+                            return;
                         }
                     } else {
                         Log.d(TAG, "Tentativo di accesso fallito.");
@@ -131,17 +136,12 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
             return INVALID_USER_ERROR;
         } else if (exception instanceof FirebaseAuthUserCollisionException) {
             return USER_COLLISION_ERROR;
+        } else if (exception instanceof UnverifiedEmailException) {
+            return EMAIL_NOT_VERIFIED;
+        } else if (exception instanceof NullException) {
+            return NULL_FIREBASE_OBJECT;
         }
 
         return UNEXPECTED_ERROR;
-    }
-
-    private String getErrorMessage(String exception) {
-        switch(exception) {
-            case EMAIL_NOT_VERIFIED:
-                return EMAIL_NOT_VERIFIED;
-            default:
-                return UNEXPECTED_ERROR;
-        }
     }
 }

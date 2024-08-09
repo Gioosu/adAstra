@@ -37,7 +37,8 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     @Override
     public void saveUserData(User user) {
         db.collection("users")
-                .document(user.getId()).set(user).addOnSuccessListener(unused -> userResponseCallback.onSuccessFromRemoteDatabase(user))
+                .document(user.getId()).set(user).addOnSuccessListener(unused ->
+                        userResponseCallback.onSuccessFromRemoteDatabase(user))
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@androidx.annotation.NonNull Exception e) {
