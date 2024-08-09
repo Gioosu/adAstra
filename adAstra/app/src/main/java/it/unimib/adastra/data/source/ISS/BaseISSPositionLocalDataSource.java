@@ -1,17 +1,17 @@
 package it.unimib.adastra.data.source.ISS;
 
-import it.unimib.adastra.data.repository.ISSPosition.ISSPositionCallback;
+import it.unimib.adastra.data.repository.ISSPosition.ISSPositionResponseCallback;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 public abstract class BaseISSPositionLocalDataSource {
-    protected ISSPositionCallback issPositionCallback;
+    protected ISSPositionResponseCallback issPositionResponseCallback;
 
-    public ISSPositionCallback getISSPositionCallback() {
-        return issPositionCallback;
+    public ISSPositionResponseCallback getISSPositionCallback() {
+        return issPositionResponseCallback;
     }
 
-    public void setISSPositionCallback(ISSPositionCallback issPositionCallback) {
-        this.issPositionCallback = issPositionCallback;
+    public void setISSPositionCallback(ISSPositionResponseCallback issPositionResponseCallback) {
+        this.issPositionResponseCallback = issPositionResponseCallback;
     }
 
     public abstract void getTimestamp();

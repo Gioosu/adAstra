@@ -9,13 +9,20 @@ import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -31,7 +38,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
+import it.unimib.adastra.util.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +52,8 @@ import it.unimib.adastra.databinding.FragmentSignupBinding;
 public class SignupFragment extends Fragment {
     String TAG = SignupFragment.class.getSimpleName();
     private FragmentSignupBinding binding;
+    private IUserRepository userRepository;
+    private UserViewModel userViewModel;
     private FirebaseAuth mAuth;
     private FirebaseFirestore database;
     private String username;
@@ -66,6 +79,13 @@ public class SignupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        userViewModel.setAuthenticationError(false);
     }
 
     @Override
@@ -84,6 +104,21 @@ public class SignupFragment extends Fragment {
         database = FirebaseFirestore.getInstance();
         activity = getActivity();
 
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menu.clear();
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == android.R.id.home) {
+                    Navigation.findNavController(requireView()).navigateUp();
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
         // Bottone di Sign up
         binding.buttonSignUpSignup.setOnClickListener(v -> {
             username = Objects.requireNonNull(binding.textUsernameSignup.getText()).toString();
@@ -95,30 +130,26 @@ public class SignupFragment extends Fragment {
                     && isEmailValid(email)
                     && isPasswordValid(password)
                     && isConfirmPasswordValid(password, confirmPassword)) {
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                String userId = Objects.requireNonNull(user).getUid();
-                                createUserInFirestore(userId, username, email);
+                if (!userViewModel.isAuthenticationError()) {
+                    userViewModel.getUserMutableLiveData(username, email, password, false).observe(
+                            getViewLifecycleOwner(), result -> {
+                                if (result.isSuccess()) {
+                                    Log.d(TAG, "Signup effettuato");
+                                    userViewModel.setAuthenticationError(false);
 
-                                // Invia email di verifica
-                                user.sendEmailVerification()
-                                        .addOnCompleteListener(verificationTask -> {
-                                            if (verificationTask.isSuccessful()) {
-                                                Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
-                                            } else {
-                                                showSnackbar(v, getString(R.string.error_email_send_failed));
-                                            }
-                                        });
-                            } else {
-                                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                    binding.textEmailSignup.setError(getString(R.string.error_email_already_exists));
+                                    Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
                                 } else {
+                                    Log.d(TAG, "Signup non effettuato");
+                                    userViewModel.setAuthenticationError(true);
                                     showSnackbar(v, getString(R.string.error_signup_failure));
                                 }
-                            }
-                        });
+                            });
+                } else {
+                    userViewModel.getUser(username, email, password, false);
+                }
+            } else {
+                userViewModel.setAuthenticationError(true);
+                showSnackbar(v, getString(R.string.error_signup_failure));
             }
         });
     }
