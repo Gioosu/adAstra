@@ -20,6 +20,8 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
@@ -105,6 +107,14 @@ public class LoginFragment extends Fragment {
                                     // L'utente è verificato e l'operazione di login è avvenuta con successo
                                     Log.d(TAG, "Utente verificato e login avvenuto con successo: " + user);
                                     userViewModel.setAuthenticationError(false);
+
+                                    try {
+                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
+                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
+                                    } catch (GeneralSecurityException | IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
                                     Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
                                 }
                             } else {

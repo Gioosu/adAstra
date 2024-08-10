@@ -1,5 +1,7 @@
 package it.unimib.adastra.ui;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,7 +12,7 @@ import it.unimib.adastra.model.User;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 public class UserViewModel extends ViewModel {
-    String TAG = WelcomeActivity.class.getSimpleName();
+    String TAG = UserViewModel.class.getSimpleName();
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
     private boolean authenticationError;
@@ -34,9 +36,11 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
         if (userMutableLiveData == null) {
+            Log.d(TAG, "userMutableLiveData == null");
             getUserData(username, email, password, isUserRegistered);
         }
 
+        Log.d(TAG, "Ciao mamma, sono fuori l'if");
         return userMutableLiveData;
     }
 
@@ -82,6 +86,7 @@ public class UserViewModel extends ViewModel {
         if (loggedUser != null) {
             usernameLiveData.setValue(loggedUser.getUsername());
         }
+
         return usernameLiveData;
     }
 }

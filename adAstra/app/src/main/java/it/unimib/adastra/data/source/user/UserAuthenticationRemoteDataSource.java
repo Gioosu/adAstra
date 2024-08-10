@@ -29,7 +29,7 @@ import it.unimib.adastra.util.exception.UnverifiedEmailException;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
     private final FirebaseAuth firebaseAuth;
-    String TAG = WelcomeActivity.class.getSimpleName();
+    String TAG = UserAuthenticationRemoteDataSource.class.getSimpleName();
     public UserAuthenticationRemoteDataSource() {
         firebaseAuth = FirebaseAuth.getInstance();
     }

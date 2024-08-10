@@ -1,5 +1,7 @@
 package it.unimib.adastra.data.repository.user;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import it.unimib.adastra.data.source.user.BaseUserAuthenticationRemoteDataSource;
@@ -9,6 +11,7 @@ import it.unimib.adastra.model.User;
 
 public class UserRepository implements IUserRepository, UserResponseCallback {
 
+    String TAG = UserRepository.class.getSimpleName();
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
@@ -27,9 +30,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     @Override
     public MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered) {
         if (isUserRegistered) {
+            Log.d(TAG, "Non registrazione momento");
             signIn(email, password);
         } else {
             signUp(username, email, password);
+            Log.d(TAG, "Registrazione momento");
         }
 
         return userMutableLiveData;
@@ -93,7 +98,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     public void onSuccessFromLogin(String idToken) {
-        userDataRemoteDataSource.setVerified(idToken);
         userDataRemoteDataSource.getUserInfo(idToken);
     }
 

@@ -38,13 +38,8 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     public void saveUserData(User user) {
         db.collection("users")
                 .document(user.getId()).set(user).addOnSuccessListener(unused ->
-                        userResponseCallback.onSuccessFromRemoteDatabase(user))
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@androidx.annotation.NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
+                        userResponseCallback.onSuccessFromRemoteDatabase(user)).addOnFailureListener(e ->
+                            Log.w(TAG, "Error writing document", e));
     }
 
     @Override
@@ -62,13 +57,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     public void updateUsername(String idToken, String username) {
         Map<String, Object> data = new HashMap<>();
         data.put(USERNAME, username);
-        db.collection("users").document(idToken).update(data);
-    }
-
-    @Override
-    public void setVerified(String idToken) {
-        Map<String, Object> data = new HashMap<>();
-        data.put(VERIFIED, true);
         db.collection("users").document(idToken).update(data);
     }
 
