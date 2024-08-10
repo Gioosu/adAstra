@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -40,9 +41,13 @@ import java.util.Map;
 
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
@@ -53,6 +58,7 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class SettingsFragment extends Fragment {
     String TAG = SettingsFragment.class.getSimpleName();
     private FragmentSettingsBinding binding;
+    private UserViewModel userViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
     private DocumentReference user;
@@ -77,6 +83,12 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -244,7 +256,7 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    // prende le impostazioni da SharedPreferences
+    // Prende le impostazioni da SharedPreferences e Firestore
     private void fetchAndSetUserSettings() {
         user.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
