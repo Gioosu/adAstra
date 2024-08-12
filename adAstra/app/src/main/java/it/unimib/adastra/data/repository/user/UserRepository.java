@@ -1,6 +1,7 @@
 package it.unimib.adastra.data.repository.user;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -15,14 +16,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
-    private final MutableLiveData<Result> userPreferencesMutableLiveData;
 
     public UserRepository(BaseUserAuthenticationRemoteDataSource userRemoteDataSource,
                           BaseUserDataRemoteDataSource userDataRemoteDataSource) {
         this.userRemoteDataSource = userRemoteDataSource;
         this.userDataRemoteDataSource = userDataRemoteDataSource;
         this.userMutableLiveData = new MutableLiveData<>();
-        this.userPreferencesMutableLiveData = new MutableLiveData<>();
         this.userRemoteDataSource.setUserResponseCallback(this);
         this.userDataRemoteDataSource.setUserResponseCallback(this);
     }
@@ -151,5 +150,10 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
 
     @Override
     public void onSuccessLogout() {
+    }
+
+    @Override
+    public void deleteAccount() {
+        userDataRemoteDataSource.deleteAccount();
     }
 }

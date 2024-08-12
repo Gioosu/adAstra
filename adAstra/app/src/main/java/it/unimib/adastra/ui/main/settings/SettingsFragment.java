@@ -57,7 +57,6 @@ public class SettingsFragment extends Fragment {
     private UserViewModel userViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
-    private DocumentReference user;
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;

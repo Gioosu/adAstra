@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -31,9 +32,15 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentAccountSettingsBinding;
+import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.User;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +53,7 @@ public class AccountSettingsFragment extends Fragment {
     private FirebaseFirestore database;
     private FirebaseUser currentUser;
     private Activity activity;
+    private UserViewModel userViewModel;
 
     public AccountSettingsFragment() {
         // Required empty public constructor
@@ -64,6 +72,11 @@ public class AccountSettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -78,13 +91,23 @@ public class AccountSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        database = FirebaseFirestore.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String idToken = userViewModel.getLoggedUser();
         activity = getActivity();
 
         ((MainActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
 
-        fetchAndSetUserSettings();
+        // Aggiornamento dinamico
+        userViewModel.getUserInfoMutableLiveData(idToken).observe(
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        User user = ((Result.UserResponseSuccess) result).getUser();
+                        updateUI(user);
+                        Log.d(TAG, "User: " + user.toString());
+
+                    } else {
+                        Log.d(TAG, "Errore nel recupero dei dati dell'utente");
+                    }
+                });
 
         // Bottone di Back to settings
         binding.floatingActionButtonBack.setOnClickListener(v -> {
@@ -120,24 +143,10 @@ public class AccountSettingsFragment extends Fragment {
                 .show());
     }
 
-    private void fetchAndSetUserSettings() {
-        if (currentUser != null) {
-            DocumentReference userDoc = database.collection("users").document(currentUser.getUid());
-            userDoc.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    DocumentSnapshot document = task.getResult();
-                    updateUI(document);
-                } else {
-                    Log.e(TAG, "Errore nel recupero delle informazioni: ", task.getException());
-                }
-            });
-        }
-    }
-
-    private void updateUI(DocumentSnapshot document) {
-        if (document.exists()) {
-            String username = document.getString(USERNAME);
-            String email = document.getString(EMAIL_ADDRESS);
+    private void updateUI(User user) {
+        if (user != null) {
+            String username = user.getUsername();
+            String email = user.getEmail();
             if (username != null) {
                 binding.textViewUsernameAccountSettings.setText(username);
             }

@@ -1,28 +1,36 @@
 package it.unimib.adastra.data.source.user;
 
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.INVALID_USERNAME;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
+import static it.unimib.adastra.util.Constants.PASSWORD;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 import static it.unimib.adastra.util.Constants.USERNAME;
 import static it.unimib.adastra.util.Constants.USER_ID;
-import static it.unimib.adastra.util.Constants.VERIFIED;
 
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnFailureListener;
+import androidx.navigation.Navigation;
+
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.unimib.adastra.R;
 import it.unimib.adastra.model.User;
+import it.unimib.adastra.util.DataEncryptionUtil;
 
 public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     private FirebaseAuth firebaseAuth;
@@ -82,6 +90,11 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
             }
         });
+    }
+
+    @Override
+    public void deleteAccount() {
+
     }
 
     private String getErrorMessage(String exception) {

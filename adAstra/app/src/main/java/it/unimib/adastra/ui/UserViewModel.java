@@ -1,6 +1,7 @@
 package it.unimib.adastra.ui;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -35,20 +36,12 @@ public class UserViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
-        if (userMutableLiveData == null) {
-            Log.d(TAG, "userMutableLiveData == null");
-            getUserData(username, email, password, isUserRegistered);
-        }
-
-        Log.d(TAG, "Ciao mamma, sono fuori l'if");
+        getUserData(username, email, password, isUserRegistered);
         return userMutableLiveData;
     }
 
     public MutableLiveData<Result> setUsername(String username) {
-        if (userMutableLiveData == null) {
-            getUserData(username);
-        }
-
+        getUserData(username);
         return userMutableLiveData;
     }
 
@@ -92,5 +85,9 @@ public class UserViewModel extends ViewModel {
         }
 
         return userMutableLiveData;
+    }
+
+    public void deleteAccount() {
+        userRepository.deleteAccount();
     }
 }

@@ -1,5 +1,7 @@
 package it.unimib.adastra.data.repository.user;
 
+import android.view.View;
+
 import androidx.lifecycle.MutableLiveData;
 
 import it.unimib.adastra.model.Result;
@@ -17,4 +19,5 @@ public interface IUserRepository {
     void signUp(String username, String email, String password);
     void signIn(String email, String password);
     void setUsername(String username);
+    void deleteAccount();
 }

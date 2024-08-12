@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.welcome;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -90,7 +91,7 @@ public class VerifyEmailFragment extends Fragment {
         snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
-    // Mostra una Snackabar
+    // Mostra una Snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
