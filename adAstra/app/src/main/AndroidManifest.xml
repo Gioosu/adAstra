@@ -20,17 +20,8 @@
             android:exported="false"></service>
 
         <activity
-            android:name=".ui.forgotPassword.CheckInboxActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.account.AccountActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.welcome.WelcomeActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,8 +30,7 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
     </application>
 
 </manifest>

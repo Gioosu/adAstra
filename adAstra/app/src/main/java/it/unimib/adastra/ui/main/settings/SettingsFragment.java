@@ -28,16 +28,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.Map;
 
 import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
@@ -287,7 +281,8 @@ public class SettingsFragment extends Fragment {
 
     // Aggiorna le impostazioni dopo una modifica
     private void updateSetting(String key, Object value) {
-        if (value == null) return;
+        if (value == null)
+            return;
 
         if (value instanceof String) {
             updateStringSetting(key, (String) value);

@@ -6,6 +6,7 @@ import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 import static it.unimib.adastra.util.Constants.PASSWORD;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
+    private Activity activity;
     private String email;
     private String password;
     private DataEncryptionUtil dataEncryptionUtil;
@@ -85,6 +87,7 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        activity = getActivity();
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
         // Bottone di Forgot password
@@ -116,6 +119,7 @@ public class LoginFragment extends Fragment {
                                     }
 
                                     Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                                    activity.finish();
                                 }
                             } else {
                                 // L'operazione di login ha fallito
