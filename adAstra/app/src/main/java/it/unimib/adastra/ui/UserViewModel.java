@@ -22,7 +22,7 @@ public class UserViewModel extends ViewModel {
         authenticationError = false;
     }
 
-    public User getLoggedUser() {
+    public String getLoggedUser() {
         return userRepository.getLoggedUser();
     }
 
@@ -72,21 +72,25 @@ public class UserViewModel extends ViewModel {
         userMutableLiveData = userRepository.getUser(username);
     }
 
-    private void getUserInfo(String idToken){
+    private void getUserInfo(String idToken) {
         userMutableLiveData = userRepository.getUserInfo(idToken);
     }
 
-    public void setUserMutableLiveDataNull(){
+    public void setUserMutableLiveDataNull() {
         userMutableLiveData = null;
     }
 
     public LiveData<String> getUsername() {
-        MutableLiveData<String> usernameLiveData = new MutableLiveData<>();
-        User loggedUser = getLoggedUser();
-        if (loggedUser != null) {
-            usernameLiveData.setValue(loggedUser.getUsername());
+        return null;
+    }
+
+    public MutableLiveData<Result> logout() {
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.logout();
+        } else {
+            userRepository.logout();
         }
 
-        return usernameLiveData;
+        return userMutableLiveData;
     }
 }

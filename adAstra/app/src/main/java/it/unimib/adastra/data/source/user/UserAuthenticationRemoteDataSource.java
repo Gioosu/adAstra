@@ -1,11 +1,18 @@
 package it.unimib.adastra.data.source.user;
 
+import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
+import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
+import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 import static it.unimib.adastra.util.Constants.INVALID_USER_ERROR;
+import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.NULL_FIREBASE_OBJECT;
+import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
+import static it.unimib.adastra.util.Constants.USERNAME;
 import static it.unimib.adastra.util.Constants.USER_COLLISION_ERROR;
+import static it.unimib.adastra.util.Constants.USER_ID;
 import static it.unimib.adastra.util.Constants.WEAK_PASSWORD_ERROR;
 
 import android.util.Log;
@@ -19,9 +26,12 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
+import it.unimib.adastra.data.repository.user.UserResponseCallback;
 import it.unimib.adastra.model.User;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.exception.NullException;
@@ -30,22 +40,18 @@ import it.unimib.adastra.util.exception.UnverifiedEmailException;
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
     private final FirebaseAuth firebaseAuth;
     String TAG = UserAuthenticationRemoteDataSource.class.getSimpleName();
+    private FirebaseFirestore db;
+
     public UserAuthenticationRemoteDataSource() {
         firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
-    public User getLoggedUser() {
+    public String getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser != null && firebaseUser.isEmailVerified()) {
-            return new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
-        } else {
-            if(firebaseUser != null) {
-                firebaseAuth.signOut();
-            }
-
-            return null;
-        }
+        String idToken = firebaseUser.getUid();
+        return idToken;
     }
 
     @Override

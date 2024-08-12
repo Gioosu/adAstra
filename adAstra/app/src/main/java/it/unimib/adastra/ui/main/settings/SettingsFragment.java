@@ -43,6 +43,8 @@ import it.unimib.adastra.BuildConfig;
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSettingsBinding;
+import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.User;
 import it.unimib.adastra.ui.UserViewModel;
 import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.ui.main.MainActivity;
@@ -103,25 +105,29 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
-       dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) {
-            throw new IllegalStateException("ID dell'utente non disponibile");
-        }
-        String userId = currentUser.getUid();
-        user = database.collection("users").document(userId);
-
-        fetchAndSetUserSettings();
+        String idToken = userViewModel.getLoggedUser();
+        Log.d(TAG, "idToken: " + idToken);
 
         activity = getActivity();
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.settings));
+
+        userViewModel.getUserInfoMutableLiveData(idToken).observe(
+                getViewLifecycleOwner(), result -> {
+            if (result.isSuccess()) {
+                User user = ((Result.UserResponseSuccess) result).getUser();
+                updateUI(user);
+                Log.d(TAG, "User: " + user.toString());
+
+            } else {
+                Log.d(TAG, "Errore nel recupero dei dati dell'utente");
+            }
+        });
 
         // Bottone di Account settings
         binding.floatingActionButtonAccountSettings.setOnClickListener(v ->
@@ -134,7 +140,14 @@ public class SettingsFragment extends Fragment {
             } catch (GeneralSecurityException | IOException e) {
                 throw new RuntimeException(e);
             }
-            FirebaseAuth.getInstance().signOut();
+            userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
+                if (result.isSuccess()) {
+                    Navigation.findNavController(v).navigate(
+                            R.id.action_settingsFragment_to_welcomeActivity);
+                } else {
+                    showSnackbar(v, getString(R.string.error_unexpected));
+                }
+            });
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
             activity.finish();
         });
@@ -142,28 +155,28 @@ public class SettingsFragment extends Fragment {
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchImperialSystem.isPressed()) {
-                update(IMPERIAL_SYSTEM, isChecked);
+                //update(IMPERIAL_SYSTEM, isChecked);
             }
         });
 
         // Switch di TIME_FORMAT
         binding.switchTimeFormat.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchTimeFormat.isPressed()) {
-                update(TIME_FORMAT, isChecked);
+                //update(TIME_FORMAT, isChecked);
             }
         });
 
         // Switch di ISS_NOTIFICATIONS
         binding.switchIssNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchIssNotifications.isPressed()) {
-                update(ISS_NOTIFICATIONS, isChecked);
+                //update(ISS_NOTIFICATIONS, isChecked);
             }
         });
 
         // Switch di EVENTS_NOTIFICATIONS
         binding.switchEventsNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchEventsNotifications.isPressed()) {
-                update(EVENTS_NOTIFICATIONS, isChecked);
+                //update(EVENTS_NOTIFICATIONS, isChecked);
             }
         });
 
@@ -256,28 +269,16 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    // Prende le impostazioni da SharedPreferences e Firestore
-    private void fetchAndSetUserSettings() {
-        user.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot document = task.getResult();
-                updateUI(document);
-            } else {
-                Log.e(TAG, "Errore nel recupero delle impostazioni: ", task.getException());
-            }
-        });
-    }
-
-    private void updateUI(DocumentSnapshot document) {
-        if (document.exists()) {
-            updateSetting(USERNAME, document.getString(USERNAME));
-            updateSetting(IMPERIAL_SYSTEM, document.getBoolean(IMPERIAL_SYSTEM));
-            updateSetting(TIME_FORMAT, document.getBoolean(TIME_FORMAT));
-            updateSetting(ISS_NOTIFICATIONS, document.getBoolean(ISS_NOTIFICATIONS));
-            updateSetting(EVENTS_NOTIFICATIONS, document.getBoolean(EVENTS_NOTIFICATIONS));
-            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+    private void updateUI(User user) {
+        if (user != null) {
+            updateSetting(USERNAME, user.getUsername());
+            updateSetting(IMPERIAL_SYSTEM, user.isImperialSystem());
+            updateSetting(TIME_FORMAT, user.isTimeFormat());
+            updateSetting(ISS_NOTIFICATIONS, user.isissNotifications());
+            updateSetting(EVENTS_NOTIFICATIONS, user.isEventsNotifications());
+            Log.d(TAG, "user: " + user);
         } else {
-            Log.d(TAG, "Nessun documento trovato");
+            Log.d(TAG, "Nessuno User trovato");
         }
 
         updateSetting(LANGUAGE, sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
@@ -328,16 +329,6 @@ public class SettingsFragment extends Fragment {
         }
     }
 
-    // Aggiorna il database Firebase con il nuovo valore per la chiave specificata
-    private void update(String key, Object value) {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put(key, value);
-
-        user.update(updates)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated with " + key + ": " + value))
-                .addOnFailureListener(e -> Log.w(TAG, "Error updating document for " + key + " with value " + value, e));
-    }
-
     private void sendEmail() {
         // the report will be sent to adAstra developers email.
         String[] TO = {"Adiutoriumadastra@gmail.com"};
@@ -351,5 +342,10 @@ public class SettingsFragment extends Fragment {
             Snackbar.make(binding.buttonReportIssue,
                     R.string.error_email_not_found, Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

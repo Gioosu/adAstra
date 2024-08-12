@@ -27,7 +27,6 @@ import it.unimib.adastra.model.User;
 public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     private FirebaseAuth firebaseAuth;
     private static final String TAG = UserDataRemoteDataSource.class.getSimpleName();
-
     private FirebaseFirestore db;
 
     public UserDataRemoteDataSource (){
