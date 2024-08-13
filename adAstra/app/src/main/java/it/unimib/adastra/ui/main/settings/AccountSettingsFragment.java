@@ -52,6 +52,7 @@ public class AccountSettingsFragment extends Fragment {
     private FragmentAccountSettingsBinding binding;
     private Activity activity;
     private UserViewModel userViewModel;
+    private DataEncryptionUtil dataEncryptionUtil;
 
     public AccountSettingsFragment() {
         // Required empty public constructor
@@ -100,7 +101,7 @@ public class AccountSettingsFragment extends Fragment {
                     if (result.isSuccess() && ((Result.UserResponseSuccess) result).getUser() != null) {
                         User user = ((Result.UserResponseSuccess) result).getUser();
                         updateUI(user);
-                        Log.d(TAG, "User: " + user.toString());
+                        Log.d(TAG, "User: " + user);
 
                     } else {
                         Log.d(TAG, "Errore nel recupero dei dati dell'utente");
@@ -158,7 +159,6 @@ public class AccountSettingsFragment extends Fragment {
 
     // Elimina l'account dell'utente
     private void deleteUserAccount(View v) {
-        DataEncryptionUtil dataEncryptionUtil;
         String email;
         String password;
         String idToken = userViewModel.getLoggedUser();
@@ -171,12 +171,16 @@ public class AccountSettingsFragment extends Fragment {
             throw new RuntimeException(e);
         };
 
-        //TODO fiX if
         userViewModel.deleteAccount(idToken, email, password).observe(
                 getViewLifecycleOwner(), result -> {
                     if(result.isSuccess()) {
                         if(((Result.UserResponseSuccess) result).getUser() == null){
                             Log.d(TAG, "Account eliminato con successo");
+                            try {
+                                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+                            } catch (GeneralSecurityException | IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
                             activity.finish();
                         }

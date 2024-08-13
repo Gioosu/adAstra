@@ -106,7 +106,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                             document.getBoolean(EVENTS_NOTIFICATIONS),
                             document.getBoolean(VERIFIED)
                     );
-
                     userResponseCallback.onSuccessFromRemoteDatabase(user);
                 }
             }
