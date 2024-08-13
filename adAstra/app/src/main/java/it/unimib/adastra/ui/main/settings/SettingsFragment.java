@@ -60,6 +60,7 @@ public class SettingsFragment extends Fragment {
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
+    private String idToken;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -101,7 +102,7 @@ public class SettingsFragment extends Fragment {
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
 
-        String idToken = userViewModel.getLoggedUser();
+        idToken = userViewModel.getLoggedUser();
         Log.d(TAG, "idToken: " + idToken);
 
         activity = getActivity();
@@ -148,7 +149,7 @@ public class SettingsFragment extends Fragment {
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchImperialSystem.isPressed()) {
-                //update(IMPERIAL_SYSTEM, isChecked);
+                userViewModel.updateSwitch(idToken, IMPERIAL_SYSTEM, isChecked);
             }
         });
 

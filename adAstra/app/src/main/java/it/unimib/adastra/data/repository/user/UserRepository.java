@@ -28,19 +28,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     @Override
     public MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered) {
         if (isUserRegistered) {
-            Log.d(TAG, "Non registrazione momento");
             signIn(email, password);
+            Log.d(TAG, "Fase di Login");
         } else {
             signUp(username, email, password);
-            Log.d(TAG, "Registrazione momento");
+            Log.d(TAG, "Fase di Signup");
         }
-
-        return userMutableLiveData;
-    }
-
-    @Override
-    public MutableLiveData<Result> getUser(String username) {
-        setUsername(username);
 
         return userMutableLiveData;
     }
@@ -54,11 +47,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     public MutableLiveData<Result> getUserInfo(String idToken) {
         getInfo(idToken);
         return userMutableLiveData;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        userDataRemoteDataSource.setUsername(username);
     }
 
     @Override
@@ -94,15 +82,16 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
         }
     }
 
+    @Override
     public void onSuccessFromLogin(String idToken) {
         userDataRemoteDataSource.setVerified(idToken);
         userDataRemoteDataSource.getUserInfo(idToken);
     }
 
     @Override
-    public void onSuccessUsernameUpdate(String idToken, String username) {
-        userDataRemoteDataSource.updateUsername(idToken, username);
-        userDataRemoteDataSource.getUserInfo(idToken);
+    public void onSuccessUsernameUpdate(User user) {
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(user);
+        userMutableLiveData.postValue(result);
     }
 
     @Override
@@ -167,5 +156,15 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     public void onFailureDeleteAccount(String message) {
         Result.Error result = new Result.Error(message);
         userMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void updateSwitch(String idToken, String key, boolean value) {
+        userDataRemoteDataSource.updateSwitch(idToken, key, value);
+    }
+
+    @Override
+    public void setUsername(User user, String username) {
+        userDataRemoteDataSource.setUsername(user, username);
     }
 }

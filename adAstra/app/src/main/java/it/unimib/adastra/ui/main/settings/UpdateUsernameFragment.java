@@ -44,6 +44,8 @@ public class UpdateUsernameFragment extends Fragment {
     private FragmentUpdateUsernameBinding binding;
     private Activity activity;
     private UserViewModel userViewModel;
+    private User user;
+    private String idToken;
 
     public UpdateUsernameFragment() {
         // Required empty public constructor
@@ -95,7 +97,10 @@ public class UpdateUsernameFragment extends Fragment {
         binding.buttonSaveUpdateUsername.setOnClickListener(v -> {
             String newUsername = Objects.requireNonNull(binding.usernameInputEditTextUpdateUsername.getText()).toString();
             if (isUsernameValid(newUsername)) {
-                userViewModel.setUsername(newUsername).observe(
+                idToken = userViewModel.getLoggedUser();
+                user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+                Log.d(TAG, "user" + user);
+                userViewModel.setUsername(user, newUsername).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
                                 showSnackbar(v, getString(R.string.username_updated));

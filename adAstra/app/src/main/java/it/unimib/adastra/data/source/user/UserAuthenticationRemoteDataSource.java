@@ -113,13 +113,11 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                                 // Invia una email di verifica e notifica il callback di errore
                                 Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);
                                 userResponseCallback.onFailureFromAuthentication(getErrorMessage(new UnverifiedEmailException(EMAIL_NOT_VERIFIED)));
-                                return;
                             }
                         } else {
                             Log.d(TAG, "L'oggetto FirebaseUser è nullo.");
                             // Notifica il callback di errore con un messaggio appropriato
                             userResponseCallback.onFailureFromAuthentication(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
-                            return;
                         }
                     } else {
                         Log.d(TAG, "Tentativo di accesso fallito.");

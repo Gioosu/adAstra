@@ -2,51 +2,31 @@ package it.unimib.adastra.data.source.user;
 
 import static it.unimib.adastra.util.Constants.ACCOUNT_DELETION_FAILED;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
-import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
-import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 import static it.unimib.adastra.util.Constants.INVALID_USERNAME;
-import static it.unimib.adastra.util.Constants.INVALID_USER_ERROR;
 import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.NULL_FIREBASE_OBJECT;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 import static it.unimib.adastra.util.Constants.USERNAME;
-import static it.unimib.adastra.util.Constants.USER_COLLISION_ERROR;
 import static it.unimib.adastra.util.Constants.USER_ID;
 import static it.unimib.adastra.util.Constants.VERIFIED;
-import static it.unimib.adastra.util.Constants.WEAK_PASSWORD_ERROR;
 
 import android.util.Log;
-
-import androidx.lifecycle.MutableLiveData;
-import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.unimib.adastra.R;
-import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.User;
 import it.unimib.adastra.util.exception.DeleteAccountException;
 import it.unimib.adastra.util.exception.InvalidUsernameException;
-import it.unimib.adastra.util.exception.NullException;
-import it.unimib.adastra.util.exception.UnverifiedEmailException;
 
 public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     private FirebaseAuth firebaseAuth;
@@ -66,21 +46,20 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     }
 
     @Override
-    public void setUsername(String username) {
-        if (username != null && username.length() >= 3 && username.length() <= 15) {
-            firebaseAuth = FirebaseAuth.getInstance();
-            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-            userResponseCallback.onSuccessUsernameUpdate(firebaseUser.getUid(), username);
-        } else {
-            userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new InvalidUsernameException(INVALID_USERNAME)));
-        }
-    }
-
-    @Override
-    public void updateUsername(String idToken, String username) {
+    public void setUsername(User user, String username) {
+        // Aggiorna il nome utente nel database
         Map<String, Object> data = new HashMap<>();
         data.put(USERNAME, username);
-        db.collection("users").document(idToken).update(data);
+        db.collection("users").document(user.getId()).update(data).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                user.setUsername(username);
+                userResponseCallback.onSuccessUsernameUpdate(user);
+                Log.d(TAG, "Nome utente aggiornato con successo");
+            } else {
+                //TODO Callback
+                Log.w(TAG, "Errore durante l'aggiornamento del nome utente", task.getException());
+            }
+        });
     }
 
     @Override
@@ -152,6 +131,13 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         } catch (Exception e) {
             userResponseCallback.onFailureDeleteAccount(getErrorMessage(e));
         }
+    }
+
+    @Override
+    public void updateSwitch(String idToken, String key, boolean value) {
+        Map<String, Object> data = new HashMap<>();
+        data.put(key, value);
+        db.collection("users").document(idToken).update(data);
     }
 
     private String getErrorMessage(Exception exception) {

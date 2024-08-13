@@ -40,8 +40,8 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> setUsername(String username) {
-        getUserData(username);
+    public MutableLiveData<Result> setUsername(User user, String username) {
+        userRepository.setUsername(user, username);
         return userMutableLiveData;
     }
 
@@ -61,20 +61,8 @@ public class UserViewModel extends ViewModel {
         userMutableLiveData = userRepository.getUser(username, email, password, isUserRegistered);
     }
 
-    private void getUserData(String username) {
-        userMutableLiveData = userRepository.getUser(username);
-    }
-
     private void getUserInfo(String idToken) {
         userMutableLiveData = userRepository.getUserInfo(idToken);
-    }
-
-    public void setUserMutableLiveDataNull() {
-        userMutableLiveData = null;
-    }
-
-    public LiveData<String> getUsername() {
-        return null;
     }
 
     public MutableLiveData<Result> logout() {
@@ -90,5 +78,9 @@ public class UserViewModel extends ViewModel {
     public MutableLiveData<Result> deleteAccount(String idToken, String email, String password) {
         userRepository.deleteAccount(idToken, email, password);
         return userMutableLiveData;
+    }
+
+    public void updateSwitch(String idToken, String imperialSystem, boolean isChecked) {
+        userRepository.updateSwitch(idToken, imperialSystem, isChecked);
     }
 }

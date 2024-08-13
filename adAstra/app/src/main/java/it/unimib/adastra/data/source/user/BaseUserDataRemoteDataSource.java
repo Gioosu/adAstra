@@ -11,12 +11,15 @@ public abstract class BaseUserDataRemoteDataSource {
         this.userResponseCallback = userResponseCallback;
     }
     public abstract void saveUserData(User user);
-    public abstract void setUsername(String username);
-    public abstract void updateUsername(String idToken, String username);
+
+    public abstract void setUsername(User user, String username);
 
     public abstract void setVerified(String idToken);
 
     public abstract void getUserInfo(String idToken);
 
     public abstract void deleteAccount(String idToken, String email, String password);
+
+    public void updateSwitch(String idToken, String key, boolean value) {
+    }
 }

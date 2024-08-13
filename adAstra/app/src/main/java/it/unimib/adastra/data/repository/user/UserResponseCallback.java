@@ -11,7 +11,7 @@ public interface UserResponseCallback {
     void onFailureFromRemoteDatabase(String message);
     void onSuccessFromUserPreferences();
     void onSuccessFromEncryptedPreferences();
-    void onSuccessUsernameUpdate(String idToken, String username);
+    void onSuccessUsernameUpdate(User user);
     void onSuccessEmailUpdate(String idToken, String email);
     void onSuccessPasswordUpdate(String idToken, String password);
 
