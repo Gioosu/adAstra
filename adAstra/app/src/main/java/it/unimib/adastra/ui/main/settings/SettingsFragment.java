@@ -267,7 +267,7 @@ public class SettingsFragment extends Fragment {
             updateSetting(USERNAME, user.getUsername());
             updateSetting(IMPERIAL_SYSTEM, user.isImperialSystem());
             updateSetting(TIME_FORMAT, user.isTimeFormat());
-            updateSetting(ISS_NOTIFICATIONS, user.isissNotifications());
+            updateSetting(ISS_NOTIFICATIONS, user.isIssNotifications());
             updateSetting(EVENTS_NOTIFICATIONS, user.isEventsNotifications());
             Log.d(TAG, "user: " + user);
         } else {

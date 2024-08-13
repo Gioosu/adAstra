@@ -14,4 +14,8 @@ public interface UserResponseCallback {
     void onSuccessUsernameUpdate(String idToken, String username);
     void onSuccessEmailUpdate(String idToken, String email);
     void onSuccessPasswordUpdate(String idToken, String password);
+
+    void onSuccessDeleteAccount();
+
+    void onFailureDeleteAccount(String message);
 }

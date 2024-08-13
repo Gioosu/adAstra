@@ -19,5 +19,5 @@ public interface IUserRepository {
     void signUp(String username, String email, String password);
     void signIn(String email, String password);
     void setUsername(String username);
-    void deleteAccount();
+    void deleteAccount(String idToken, String email, String password);
 }

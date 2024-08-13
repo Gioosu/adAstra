@@ -46,6 +46,7 @@ public class Constants {
     public static final String WEAK_PASSWORD_ERROR = "weak_password_error";
     public static final String USER_COLLISION_ERROR = "user_collision_error";
     public static final String NULL_FIREBASE_OBJECT = "null_firebase_object";
+    public static final String ACCOUNT_DELETION_FAILED = "account_deletion_failed";
 
     // Constants for Time
     public static final int FRESH_TIMEOUT = 1000 * 60 * 60; // 1 hour in milliseconds

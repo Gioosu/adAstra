@@ -1,7 +1,6 @@
 package it.unimib.adastra.data.repository.user;
 
 import android.util.Log;
-import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -96,6 +95,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     public void onSuccessFromLogin(String idToken) {
+        userDataRemoteDataSource.setVerified(idToken);
         userDataRemoteDataSource.getUserInfo(idToken);
     }
 
@@ -153,7 +153,19 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void deleteAccount() {
-        userDataRemoteDataSource.deleteAccount();
+    public void deleteAccount(String idToken, String email, String password) {
+        userDataRemoteDataSource.deleteAccount(idToken, email, password);
+    }
+
+    @Override
+    public void onSuccessDeleteAccount() {
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
+        userMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onFailureDeleteAccount(String message) {
+        Result.Error result = new Result.Error(message);
+        userMutableLiveData.postValue(result);
     }
 }

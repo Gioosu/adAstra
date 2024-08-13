@@ -50,8 +50,6 @@ import it.unimib.adastra.util.ServiceLocator;
 public class AccountSettingsFragment extends Fragment {
     String TAG = AccountSettingsFragment.class.getSimpleName();
     private FragmentAccountSettingsBinding binding;
-    private FirebaseFirestore database;
-    private FirebaseUser currentUser;
     private Activity activity;
     private UserViewModel userViewModel;
 
@@ -99,7 +97,7 @@ public class AccountSettingsFragment extends Fragment {
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
-                    if (result.isSuccess()) {
+                    if (result.isSuccess() && ((Result.UserResponseSuccess) result).getUser() != null) {
                         User user = ((Result.UserResponseSuccess) result).getUser();
                         updateUI(user);
                         Log.d(TAG, "User: " + user.toString());
@@ -160,55 +158,34 @@ public class AccountSettingsFragment extends Fragment {
 
     // Elimina l'account dell'utente
     private void deleteUserAccount(View v) {
-        String userId = currentUser.getUid();
-        DataEncryptionUtil dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        DataEncryptionUtil dataEncryptionUtil;
         String email;
         String password;
+        String idToken = userViewModel.getLoggedUser();
+
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         try {
             email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
             password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
-        }
+        };
 
-        // Prima elimina l'account da Firebase Authentication
-        try {
-            AuthCredential credential = EmailAuthProvider
-                    .getCredential(email, password);
-
-            currentUser.reauthenticate(credential)
-                    .addOnCompleteListener(task -> {
-                        Log.d(TAG, "User re-authenticated.");
-
-                        currentUser.delete().addOnCompleteListener(newTask -> {
-                            if (newTask.isSuccessful()) {
-                                Log.d(TAG, "Account utente eliminato da Firebase Authentication");
-                                // Successivamente elimina i dati dell'utente da Firestore
-                                database.collection("users").document(userId).delete()
-                                        .addOnSuccessListener(aVoid -> {
-                                            try {
-                                                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                                            } catch (GeneralSecurityException | IOException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                            FirebaseAuth.getInstance().signOut();
-                                            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
-                                            activity.finish();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            // Caso in cui l'eliminazione da Firestore fallisce
-                                            showSnackbar(v, getString(R.string.error_deleting_user_data));
-                                        });
-                            } else {
-                                // Caso in cui l'eliminazione da Firebase Authentication fallisce
-                                showSnackbar(v, getString(R.string.error_deleting_account));
-                            }
-                        });
-                    });
-
-        } catch (Exception e) {
-            showSnackbar(v, getString(R.string.error_deleting_account));
-        }
+        //TODO fiX if
+        userViewModel.deleteAccount(idToken, email, password).observe(
+                getViewLifecycleOwner(), result -> {
+                    if(result.isSuccess()) {
+                        if(((Result.UserResponseSuccess) result).getUser() == null){
+                            Log.d(TAG, "Account eliminato con successo");
+                            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
+                            activity.finish();
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "Errore durante l'eliminazione dell'account");
+                        showSnackbar(v, ((Result.Error) result).getMessage());
+                    }
+                });
     }
 
     // Mostra una snackbar

@@ -87,7 +87,8 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public void deleteAccount() {
-        userRepository.deleteAccount();
+    public MutableLiveData<Result> deleteAccount(String idToken, String email, String password) {
+        userRepository.deleteAccount(idToken, email, password);
+        return userMutableLiveData;
     }
 }

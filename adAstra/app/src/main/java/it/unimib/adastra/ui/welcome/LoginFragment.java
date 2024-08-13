@@ -105,7 +105,7 @@ public class LoginFragment extends Fragment {
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
                                 User user = ((Result.UserResponseSuccess) result).getUser();
-                                if (user != null) {
+                                if (user != null && user.isVerified()) {
                                     Log.d(TAG, "Verificato: true");
                                     // L'utente è verificato e l'operazione di login è avvenuta con successo
                                     Log.d(TAG, "Utente verificato e login avvenuto con successo: " + user);

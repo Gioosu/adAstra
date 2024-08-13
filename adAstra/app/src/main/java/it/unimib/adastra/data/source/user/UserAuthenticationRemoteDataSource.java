@@ -101,6 +101,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
                         if (firebaseUser != null) {
                             if(firebaseUser.isEmailVerified()) {
+
                                 Log.d(TAG, "Email verificata. Procedendo con l'accesso.");
 
                                 // Notifica il callback di successo con l'ID utente
