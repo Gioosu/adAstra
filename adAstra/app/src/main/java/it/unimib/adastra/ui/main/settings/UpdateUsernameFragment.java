@@ -1,10 +1,7 @@
 package it.unimib.adastra.ui.main.settings;
 
-import static it.unimib.adastra.util.Constants.USERNAME;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
@@ -40,10 +32,11 @@ import it.unimib.adastra.util.ServiceLocator;
  * create an instance of this fragment.
  */
 public class UpdateUsernameFragment extends Fragment {
-    String TAG = UpdateUsernameFragment.class.getSimpleName();
+    private static final String TAG = UpdateUsernameFragment.class.getSimpleName();
     private FragmentUpdateUsernameBinding binding;
-    private Activity activity;
+    private IUserRepository userRepository;
     private UserViewModel userViewModel;
+    private Activity activity;
     private User user;
     private String idToken;
 
@@ -64,7 +57,8 @@ public class UpdateUsernameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IUserRepository userRepository = ServiceLocator.getInstance().
+
+        userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 requireActivity(),
@@ -96,10 +90,11 @@ public class UpdateUsernameFragment extends Fragment {
         // Bottone di Save
         binding.buttonSaveUpdateUsername.setOnClickListener(v -> {
             String newUsername = Objects.requireNonNull(binding.usernameInputEditTextUpdateUsername.getText()).toString();
+
             if (isUsernameValid(newUsername)) {
                 idToken = userViewModel.getLoggedUser();
                 user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-                Log.d(TAG, "user" + user);
+
                 userViewModel.setUsername(user, newUsername).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
@@ -111,6 +106,11 @@ public class UpdateUsernameFragment extends Fragment {
                 });
             }
         });
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     // Inizializza la TextView
@@ -129,10 +129,5 @@ public class UpdateUsernameFragment extends Fragment {
         }
 
         return result;
-    }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

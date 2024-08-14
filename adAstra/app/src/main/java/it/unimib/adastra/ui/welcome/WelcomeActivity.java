@@ -38,6 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         sharedPreferencesUtil = new SharedPreferencesUtil(this);
+
         fetchSettingsFromSharedPreferences();
 
         // Verifica se Firebase è già stato inizializzato
@@ -56,6 +57,12 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         checkIntentAndShowSnackbar();
+    }
+
+    // Visualiiza una Snackbar con un'azione integrata
+    private void showSnackbarWithAction(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
     // Prende le impostazioni da SharedPreferences
@@ -135,11 +142,5 @@ public class WelcomeActivity extends AppCompatActivity {
         } else if (intent.getBooleanExtra("SHOW_NEW_AUTHENTICATION", false)) {
             showSnackbarWithAction(binding.getRoot(), getString(R.string.new_authentication));
         }
-    }
-
-    // Mostra una Snackbar con un'azione integrata
-    private void showSnackbarWithAction(View view, String message) {
-        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 }

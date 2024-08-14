@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (currentUser == null) {
             // L'utente non è loggato
             backToLogin();

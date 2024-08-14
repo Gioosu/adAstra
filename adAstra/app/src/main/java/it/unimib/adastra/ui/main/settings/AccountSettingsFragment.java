@@ -48,11 +48,12 @@ import it.unimib.adastra.util.ServiceLocator;
  * create an instance of this fragment.
  */
 public class AccountSettingsFragment extends Fragment {
-    String TAG = AccountSettingsFragment.class.getSimpleName();
+    private static final String TAG = AccountSettingsFragment.class.getSimpleName();
     private FragmentAccountSettingsBinding binding;
-    private Activity activity;
+    private IUserRepository userRepository;
     private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
+    private Activity activity;
 
     public AccountSettingsFragment() {
         // Required empty public constructor
@@ -71,7 +72,8 @@ public class AccountSettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IUserRepository userRepository = ServiceLocator.getInstance().
+
+        userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 requireActivity(),
@@ -90,8 +92,9 @@ public class AccountSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String idToken = userViewModel.getLoggedUser();
         activity = getActivity();
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        String idToken = userViewModel.getLoggedUser();
 
         ((MainActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
 
@@ -101,10 +104,8 @@ public class AccountSettingsFragment extends Fragment {
                     if (result.isSuccess() && ((Result.UserResponseSuccess) result).getUser() != null) {
                         User user = ((Result.UserResponseSuccess) result).getUser();
                         updateUI(user);
-                        Log.d(TAG, "User: " + user);
-
                     } else {
-                        Log.d(TAG, "Errore nel recupero dei dati dell'utente");
+                        Log.d(TAG, "Errore: Rrecupero dei dati dell'utente fallito.");
                     }
                 });
 
@@ -118,6 +119,7 @@ public class AccountSettingsFragment extends Fragment {
             String username = binding.textViewUsernameAccountSettings.getText().toString();
             Bundle bundle = new Bundle();
             bundle.putString(USERNAME, username);
+
             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateUsernameFragment, bundle);
         });
 
@@ -126,6 +128,7 @@ public class AccountSettingsFragment extends Fragment {
             String email = binding.textViewEmailAccountSettings.getText().toString();
             Bundle bundle = new Bundle();
             bundle.putString(EMAIL_ADDRESS, email);
+
             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateEmailFragment, bundle);
         });
 
@@ -142,10 +145,16 @@ public class AccountSettingsFragment extends Fragment {
                 .show());
     }
 
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
     private void updateUI(User user) {
         if (user != null) {
             String username = user.getUsername();
             String email = user.getEmail();
+
             if (username != null) {
                 binding.textViewUsernameAccountSettings.setText(username);
             }
@@ -153,7 +162,7 @@ public class AccountSettingsFragment extends Fragment {
                 binding.textViewEmailAccountSettings.setText(email);
             }
         } else {
-            Log.d(TAG, "Nessun documento trovato");
+            Log.d(TAG, "Errore: Nessun documento trovato.");
         }
     }
 
@@ -161,9 +170,9 @@ public class AccountSettingsFragment extends Fragment {
     private void deleteUserAccount(View v) {
         String email;
         String password;
-        String idToken = userViewModel.getLoggedUser();
+        String idToken;
+        User user;
 
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         try {
             email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
             password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
@@ -171,29 +180,30 @@ public class AccountSettingsFragment extends Fragment {
             throw new RuntimeException(e);
         };
 
-        userViewModel.deleteAccount(idToken, email, password).observe(
+        idToken = userViewModel.getLoggedUser();
+        user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+
+        userViewModel.deleteAccount(user, email, password).observe(
                 getViewLifecycleOwner(), result -> {
                     if(result.isSuccess()) {
                         if(((Result.UserResponseSuccess) result).getUser() == null){
-                            Log.d(TAG, "Account eliminato con successo");
+                            Log.d(TAG, "Eliminazione dell'account avvenuta con successo.");
+
                             try {
                                 dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
                             } catch (GeneralSecurityException | IOException e) {
                                 throw new RuntimeException(e);
                             }
+
                             Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
                             activity.finish();
                         }
                     }
                     else {
-                        Log.d(TAG, "Errore durante l'eliminazione dell'account");
+                        Log.d(TAG, "Errore: Eliminazione dell'account fallita.");
+
                         showSnackbar(v, ((Result.Error) result).getMessage());
                     }
                 });
-    }
-
-    // Mostra una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

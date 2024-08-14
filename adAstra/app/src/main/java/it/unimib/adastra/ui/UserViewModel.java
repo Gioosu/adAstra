@@ -1,19 +1,14 @@
 package it.unimib.adastra.ui;
 
-import android.util.Log;
-import android.view.View;
-
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.User;
-import it.unimib.adastra.ui.welcome.WelcomeActivity;
 
 public class UserViewModel extends ViewModel {
-    String TAG = UserViewModel.class.getSimpleName();
+    private static final String TAG = UserViewModel.class.getSimpleName();
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
     private boolean authenticationError;
@@ -37,11 +32,13 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
         getUserData(username, email, password, isUserRegistered);
+
         return userMutableLiveData;
     }
 
     public MutableLiveData<Result> setUsername(User user, String username) {
         userRepository.setUsername(user, username);
+
         return userMutableLiveData;
     }
 
@@ -80,8 +77,9 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> deleteAccount(String idToken, String email, String password) {
-        userRepository.deleteAccount(idToken, email, password);
+    public MutableLiveData<Result> deleteAccount(User user, String email, String password) {
+        userRepository.deleteAccount(user, email, password);
+
         return userMutableLiveData;
     }
 

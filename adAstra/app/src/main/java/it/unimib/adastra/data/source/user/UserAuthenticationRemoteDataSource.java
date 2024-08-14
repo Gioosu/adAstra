@@ -1,18 +1,11 @@
 package it.unimib.adastra.data.source.user;
 
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.EMAIL_NOT_VERIFIED;
-import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.INVALID_CREDENTIALS_ERROR;
 import static it.unimib.adastra.util.Constants.INVALID_USER_ERROR;
-import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.NULL_FIREBASE_OBJECT;
-import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
-import static it.unimib.adastra.util.Constants.USERNAME;
 import static it.unimib.adastra.util.Constants.USER_COLLISION_ERROR;
-import static it.unimib.adastra.util.Constants.USER_ID;
 import static it.unimib.adastra.util.Constants.WEAK_PASSWORD_ERROR;
 
 import android.util.Log;
@@ -25,50 +18,17 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Objects;
-
-import it.unimib.adastra.data.repository.user.UserResponseCallback;
 import it.unimib.adastra.model.User;
-import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.exception.NullException;
 import it.unimib.adastra.util.exception.UnverifiedEmailException;
 
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
+    private static final String TAG = UserAuthenticationRemoteDataSource.class.getSimpleName();
     private final FirebaseAuth firebaseAuth;
-    String TAG = UserAuthenticationRemoteDataSource.class.getSimpleName();
-    private FirebaseFirestore db;
 
     public UserAuthenticationRemoteDataSource() {
         firebaseAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-    }
-
-    @Override
-    public String getLoggedUser() {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        String idToken = firebaseUser.getUid();
-        return idToken;
-    }
-
-    @Override
-    public void logout() {
-        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null) {
-                    firebaseAuth.removeAuthStateListener(this);
-
-                    userResponseCallback.onSuccessLogout();
-                }
-            }
-        };
-
-        firebaseAuth.addAuthStateListener(authStateListener);
-        firebaseAuth.signOut();
     }
 
     @Override
@@ -79,12 +39,18 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
                         if (firebaseUser != null) {
-                            userResponseCallback.onSuccessFromAuthentication(new User(firebaseUser.getUid(), username, email));
+                            Log.d(TAG, "Registrazioen avvenuta con successo.");
+
                             firebaseUser.sendEmailVerification();
+                            userResponseCallback.onSuccessFromAuthentication(new User(firebaseUser.getUid(), username, email));
                         } else {
+                            Log.d(TAG, "Errore: L'oggetto FirebaseUser è nullo. [SignUp]");
+
                             userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                         }
                     } else {
+                        Log.d(TAG, "Errore: Registrazione fallita.");
+
                         userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                     }
                 });
@@ -92,7 +58,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
     @Override
     public void signIn(String email, String password) {
-        Log.d(TAG, "Tentativo di accesso per l'email: " + email);
+        Log.d(TAG, "Tentativo di accesso: " + email);
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -101,27 +67,25 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
                         if (firebaseUser != null) {
                             if(firebaseUser.isEmailVerified()) {
+                                Log.d(TAG, "Email verificata. Si procede con l'accesso.");
 
-                                Log.d(TAG, "Email verificata. Procedendo con l'accesso.");
-
-                                // Notifica il callback di successo con l'ID utente
                                 userResponseCallback.onSuccessFromLogin(firebaseUser.getUid());
                             }
                             else {
                                 Log.d(TAG, "Email non verificata. Invio dell'email di verifica.");
 
-                                // Invia una email di verifica e notifica il callback di errore
-                                Objects.requireNonNull(firebaseUser).sendEmailVerification().addOnCompleteListener(Task::isSuccessful);
+                                firebaseUser.sendEmailVerification();
+
                                 userResponseCallback.onFailureFromAuthentication(getErrorMessage(new UnverifiedEmailException(EMAIL_NOT_VERIFIED)));
                             }
                         } else {
-                            Log.d(TAG, "L'oggetto FirebaseUser è nullo.");
-                            // Notifica il callback di errore con un messaggio appropriato
+                            Log.d(TAG, "Errore: L'oggetto FirebaseUser è nullo. [SignIn]");
+
                             userResponseCallback.onFailureFromAuthentication(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
                         }
                     } else {
-                        Log.d(TAG, "Tentativo di accesso fallito.");
-                        // Notifica il callback di errore con il messaggio di errore ricevuto dal task
+                        Log.d(TAG, "Errore: Accesso fallito.");
+
                         userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                     }
                 });
@@ -130,6 +94,46 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
     @Override
     public void signInWithGoogle(String idToken) {
 
+    }
+
+    @Override
+    public String getLoggedUser() {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser == null) {
+            Log.d(TAG, "Errore: Nessun utente loggato trovato.");
+
+            return null;
+        } else {
+            Log.d(TAG, "Utente loggato trovato.");
+
+            return firebaseUser.getUid();
+        }
+    }
+
+    @Override
+    public void logout() {
+        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Log.d(TAG, "Logout avvenuto con successo.");
+
+                    firebaseAuth.removeAuthStateListener(this);
+
+                    userResponseCallback.onSuccessFromLogout();
+                } else {
+                    Log.d(TAG, "Errore: Logout fallito.");
+
+                    firebaseAuth.removeAuthStateListener(this);
+
+                    userResponseCallback.onFailureFromLogout(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
+                }
+            }
+        };
+
+        firebaseAuth.addAuthStateListener(authStateListener);
+        firebaseAuth.signOut();
     }
 
     private String getErrorMessage(Exception exception) {

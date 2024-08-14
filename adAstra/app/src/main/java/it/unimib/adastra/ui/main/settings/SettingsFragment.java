@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentReference;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -54,6 +53,7 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
 public class SettingsFragment extends Fragment {
     String TAG = SettingsFragment.class.getSimpleName();
     private FragmentSettingsBinding binding;
+    private IUserRepository userRepository;
     private UserViewModel userViewModel;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private DataEncryptionUtil dataEncryptionUtil;
@@ -80,7 +80,7 @@ public class SettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        IUserRepository userRepository = ServiceLocator.getInstance().
+        userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 requireActivity(),
@@ -101,13 +101,10 @@ public class SettingsFragment extends Fragment {
 
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
-
-        idToken = userViewModel.getLoggedUser();
-        Log.d(TAG, "idToken: " + idToken);
-
         activity = getActivity();
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
+        idToken = userViewModel.getLoggedUser();
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.settings));
 
@@ -116,10 +113,8 @@ public class SettingsFragment extends Fragment {
             if (result.isSuccess()) {
                 User user = ((Result.UserResponseSuccess) result).getUser();
                 updateUI(user);
-                Log.d(TAG, "User: " + user.toString());
-
             } else {
-                Log.d(TAG, "Errore nel recupero dei dati dell'utente");
+                Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
             }
         });
 
@@ -134,16 +129,15 @@ public class SettingsFragment extends Fragment {
             } catch (GeneralSecurityException | IOException e) {
                 throw new RuntimeException(e);
             }
+
             userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
                 if (result.isSuccess()) {
-                    Navigation.findNavController(v).navigate(
-                            R.id.action_settingsFragment_to_welcomeActivity);
+                    Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
+                    activity.finish();
                 } else {
                     showSnackbar(v, getString(R.string.error_unexpected));
                 }
             });
-            Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
-            activity.finish();
         });
 
         // Switch di IMPERIAL_FORMAT
@@ -271,6 +265,11 @@ public class SettingsFragment extends Fragment {
         });
     }
 
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
     private void updateUI(User user) {
         if (user != null) {
             updateSetting(USERNAME, user.getUsername());
@@ -278,9 +277,8 @@ public class SettingsFragment extends Fragment {
             updateSetting(TIME_FORMAT, user.isTimeFormat());
             updateSetting(ISS_NOTIFICATIONS, user.isIssNotifications());
             updateSetting(EVENTS_NOTIFICATIONS, user.isEventsNotifications());
-            Log.d(TAG, "user: " + user);
         } else {
-            Log.d(TAG, "Nessuno User trovato");
+            Log.d(TAG, "Errore: Nessuno User trovato.");
         }
 
         updateSetting(LANGUAGE, sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
@@ -345,10 +343,5 @@ public class SettingsFragment extends Fragment {
             Snackbar.make(binding.buttonReportIssue,
                     R.string.error_email_not_found, Snackbar.LENGTH_LONG).show();
         }
-    }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

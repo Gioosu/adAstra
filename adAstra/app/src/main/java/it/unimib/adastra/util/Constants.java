@@ -50,4 +50,7 @@ public class Constants {
 
     // Constants for Time
     public static final int FRESH_TIMEOUT = 1000 * 60 * 60; // 1 hour in milliseconds
+
+    // Constants for Firestore
+    public static final String USERS_COLLECTION = "users";
 }

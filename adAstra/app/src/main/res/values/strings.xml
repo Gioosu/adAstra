@@ -81,7 +81,7 @@
     <string name="change_password">Change password</string>
     <string name="delete_account">Delete account</string>
     <string name="confirm_deletion">Confirm deletion</string>
-    <string name="confirm_deletion_message">Are you sure you want to delete your account? This action cannot be undone</string>
+    <string name="confirm_deletion_message">Are you sure you want to delete your account? \nThis action cannot be undone.</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 

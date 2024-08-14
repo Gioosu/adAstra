@@ -28,11 +28,13 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     @Override
     public MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered) {
         if (isUserRegistered) {
+            Log.d(TAG, "Fase di Login.");
+
             signIn(email, password);
-            Log.d(TAG, "Fase di Login");
         } else {
+            Log.d(TAG, "Fase di Signup.");
+
             signUp(username, email, password);
-            Log.d(TAG, "Fase di Signup");
         }
 
         return userMutableLiveData;
@@ -44,24 +46,21 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
+    public String getLoggedUser() {
+        return userRemoteDataSource.getLoggedUser();
+    }
+
+    @Override
     public MutableLiveData<Result> getUserInfo(String idToken) {
         getInfo(idToken);
+
         return userMutableLiveData;
-    }
-
-    @Override
-    public void getInfo(String idToken) {
-        userDataRemoteDataSource.getUserInfo(idToken);
-    }
-
-    @Override
-    public void getAllData(String idToken) {
-
     }
 
     @Override
     public MutableLiveData<Result> logout() {
         userRemoteDataSource.logout();
+
         return userMutableLiveData;
     }
 
@@ -76,6 +75,36 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
+    public void getInfo(String idToken) {
+        userDataRemoteDataSource.getUserInfo(idToken);
+    }
+
+    @Override
+    public void getAllData(String idToken) {
+
+    }
+
+    @Override
+    public void updateSwitch(User user, String key, boolean value) {
+        userDataRemoteDataSource.updateSwitch(user, key, value);
+    }
+
+    @Override
+    public void setUsername(User user, String username) {
+        userDataRemoteDataSource.setUsername(user, username);
+    }
+
+    @Override
+    public void setEmail(User user, String email, String password) {
+        userDataRemoteDataSource.setEmail(user, email, password);
+    }
+
+    @Override
+    public void deleteAccount(User user, String email, String password) {
+        userDataRemoteDataSource.deleteAccount(user, email, password);
+    }
+
+    @Override
     public void onSuccessFromAuthentication(User user) {
         if (user != null) {
             userDataRemoteDataSource.saveUserData(user);
@@ -83,16 +112,14 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void onSuccessFromLogin(String idToken) {
-        userDataRemoteDataSource.setVerified(idToken);
-        userDataRemoteDataSource.getUserInfo(idToken);
-    }
-
-
-    @Override
     public void onFailureFromAuthentication(String message) {
         Result.Error result = new Result.Error(message);
         userMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessFromLogin(String idToken) {
+        userDataRemoteDataSource.setVerified(idToken);
     }
 
     @Override
@@ -108,32 +135,14 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public String getLoggedUser() {
-        return userRemoteDataSource.getLoggedUser();
+    public void onSuccessFromLogout() {
+        Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
+        userMutableLiveData.postValue(result);
     }
 
     @Override
-    public void onSuccessLogout() {
-    }
-
-    @Override
-    public void deleteAccount(String idToken, String email, String password) {
-        userDataRemoteDataSource.deleteAccount(idToken, email, password);
-    }
-
-
-    @Override
-    public void updateSwitch(User user, String key, boolean value) {
-        userDataRemoteDataSource.updateSwitch(user, key, value);
-    }
-
-    @Override
-    public void setUsername(User user, String username) {
-        userDataRemoteDataSource.setUsername(user, username);
-    }
-
-    @Override
-    public void setEmail(User user, String email, String password) {
-        userDataRemoteDataSource.setEmail(user, email, password);
+    public void onFailureFromLogout(String message) {
+        Result.Error result = new Result.Error(message);
+        userMutableLiveData.postValue(result);
     }
 }

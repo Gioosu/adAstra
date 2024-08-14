@@ -7,7 +7,6 @@ import static it.unimib.adastra.util.Constants.PASSWORD;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +19,12 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
@@ -52,16 +45,17 @@ import it.unimib.adastra.util.ServiceLocator;
  * create an instance of this fragment.
  */
 public class UpdateEmailFragment extends Fragment {
-    String TAG = UpdateEmailFragment.class.getSimpleName();
+    private static final String TAG = UpdateEmailFragment.class.getSimpleName();
     private FragmentUpdateEmailBinding binding;
     private FirebaseAuth mAuth;
+    private IUserRepository userRepository;
+    private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
+    private Activity activity;
+    private User user;
+    private String idToken;
     private String email;
     private String password;
-    private Activity activity;
-    private UserViewModel userViewModel;
-    private String idToken;
-    private User user;
 
     public UpdateEmailFragment() {
         // Required empty public constructor
@@ -80,7 +74,8 @@ public class UpdateEmailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IUserRepository userRepository = ServiceLocator.getInstance().
+
+        userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 requireActivity(),
@@ -99,7 +94,9 @@ public class UpdateEmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        activity = getActivity();
 
         try {
             email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
@@ -107,7 +104,6 @@ public class UpdateEmailFragment extends Fragment {
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
-        activity = getActivity();
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.update_email));
 
@@ -142,18 +138,19 @@ public class UpdateEmailFragment extends Fragment {
                 if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
                     idToken = userViewModel.getLoggedUser();
                     user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-                    Log.d(TAG, "user" + user);
+
                     userViewModel.setEmail(user, newEmail, currentPassword).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
                                     try {
                                         dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
-                                        showSnackbarWithAction(v, getString(R.string.email_updated));
-                                        Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
                                     } catch (GeneralSecurityException |
                                              IOException e) {
                                         throw new RuntimeException(e);
                                     }
+
+                                    showSnackbarWithAction(v, getString(R.string.email_updated));
+                                    Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
                                 } else {
                                     showSnackbar(v, getString(R.string.error_email_update_failed));
                                 }
@@ -163,6 +160,17 @@ public class UpdateEmailFragment extends Fragment {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    // Mostra una Snackbar con un'azione integrata
+    private void showSnackbarWithAction(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
     private void initialize() {
@@ -180,6 +188,7 @@ public class UpdateEmailFragment extends Fragment {
                         } catch (GeneralSecurityException | IOException e) {
                             throw new RuntimeException(e);
                         }
+
                         backToLogin();
                     } else {
                         showSnackbar(view, getString(R.string.error_email_send_failed));
@@ -191,11 +200,13 @@ public class UpdateEmailFragment extends Fragment {
     private void backToLogin() {
         Intent intent = new Intent(getContext(), WelcomeActivity.class);
         intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+
         try {
             dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
+
         FirebaseAuth.getInstance().signOut();
         startActivity(intent);
         activity.finish();
@@ -224,16 +235,5 @@ public class UpdateEmailFragment extends Fragment {
         }
 
         return result;
-    }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
-    }
-
-    // Mostra una Snackbar con un'azione integrata
-    private void showSnackbarWithAction(View view, String message) {
-        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 }

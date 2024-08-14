@@ -1,40 +1,21 @@
 package it.unimib.adastra.ui.welcome;
 
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
-import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
-import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.TIME_FORMAT;
-import static it.unimib.adastra.util.Constants.USERNAME;
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
@@ -50,7 +31,7 @@ import it.unimib.adastra.util.ServiceLocator;
  * create an instance of this fragment.
  */
 public class SignupFragment extends Fragment {
-    String TAG = SignupFragment.class.getSimpleName();
+    private static final String TAG = SignupFragment.class.getSimpleName();
     private FragmentSignupBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
@@ -114,17 +95,22 @@ public class SignupFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(username, email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-                                    Log.d(TAG, "Signup effettuato");
+                                    Log.d(TAG, "Registrazione avvenuta con successo.");
+
                                     userViewModel.setAuthenticationError(false);
 
                                     Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
                                 } else {
-                                    Log.d(TAG, "Signup non effettuato");
+                                    Log.d(TAG, "Errore: Registrazione fallita.");
+
                                     userViewModel.setAuthenticationError(true);
+
                                     showSnackbar(v, getString(R.string.error_signup_failure));
                                 }
                             });
                 } else {
+                    Log.d(TAG, "Non ci sono errori.");
+
                     userViewModel.getUser(username, email, password, false);
                 }
             } else {
@@ -132,6 +118,11 @@ public class SignupFragment extends Fragment {
                 showSnackbar(v, getString(R.string.error_signup_failure));
             }
         });
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     // Controlla che il nome utente sia valido
@@ -176,10 +167,5 @@ public class SignupFragment extends Fragment {
         }
 
         return result;
-    }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

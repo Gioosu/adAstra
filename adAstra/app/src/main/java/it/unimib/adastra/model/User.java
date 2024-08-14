@@ -1,5 +1,10 @@
 package it.unimib.adastra.model;
 
+import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
+import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
+import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
+import static it.unimib.adastra.util.Constants.TIME_FORMAT;
+
 public class User {
     private String id;
     private String username;
@@ -94,6 +99,26 @@ public class User {
 
     public void setEventsNotifications(boolean eventsNotifications) {
         this.eventsNotifications = eventsNotifications;
+    }
+
+    public void setSwitch (String key, Boolean value) {
+        if (value == null)
+            return;
+
+        switch (key) {
+            case IMPERIAL_SYSTEM:
+                setImperialSystem(value);
+                break;
+            case TIME_FORMAT:
+                setTimeFormat(value);
+                break;
+            case ISS_NOTIFICATIONS:
+                setIssNotifications(value);
+                break;
+            case EVENTS_NOTIFICATIONS:
+                setEventsNotifications(value);
+                break;
+        }
     }
 
     @Override

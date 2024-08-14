@@ -1,7 +1,5 @@
 package it.unimib.adastra.data.repository.user;
 
-import android.view.View;
-
 import androidx.lifecycle.MutableLiveData;
 
 import it.unimib.adastra.model.Result;
@@ -12,11 +10,11 @@ public interface IUserRepository {
 
     MutableLiveData<Result> getGoogleUser(String idToken);
 
+    String getLoggedUser();
+
     MutableLiveData<Result> getUserInfo(String idToken);
 
     MutableLiveData<Result> logout();
-
-    String getLoggedUser();
 
     void getInfo(String idToken);
 
@@ -26,11 +24,11 @@ public interface IUserRepository {
 
     void signIn(String email, String password);
 
-    void deleteAccount(String idToken, String email, String password);
-
     void updateSwitch(User user, String imperialSystem, boolean isChecked);
 
     void setUsername(User user, String username);
 
     void setEmail(User user, String email, String password);
+
+    void deleteAccount(User user, String email, String password);
 }

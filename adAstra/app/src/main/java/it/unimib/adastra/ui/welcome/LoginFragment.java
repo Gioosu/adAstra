@@ -41,14 +41,14 @@ import it.unimib.adastra.util.ServiceLocator;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
-    String TAG = WelcomeActivity.class.getSimpleName();
+    private static final String TAG = LoginFragment.class.getSimpleName();
     private FragmentLoginBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
+    private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
     private String email;
     private String password;
-    private DataEncryptionUtil dataEncryptionUtil;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -106,9 +106,8 @@ public class LoginFragment extends Fragment {
                             if (result.isSuccess()) {
                                 User user = ((Result.UserResponseSuccess) result).getUser();
                                 if (user != null && user.isVerified()) {
-                                    Log.d(TAG, "Verificato: true");
-                                    // L'utente è verificato e l'operazione di login è avvenuta con successo
-                                    Log.d(TAG, "Utente verificato e login avvenuto con successo: " + user);
+                                    Log.d(TAG, "L'utente è verificato e l'operazione di login è avvenuta con successo: " + user);
+
                                     userViewModel.setAuthenticationError(false);
 
                                     try {
@@ -122,18 +121,21 @@ public class LoginFragment extends Fragment {
                                     activity.finish();
                                 }
                             } else {
-                                // L'operazione di login ha fallito
-                                Log.d(TAG, "Errore durante il login: " + ((Result.Error) result).getMessage());
+                                Log.d(TAG, "Errore: Accesso fallito.");
+
                                 userViewModel.setAuthenticationError(true);
+
                                 showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
                             }
                         }
                     );
                 } else {
-                    Log.d(TAG, "Non ci sono errori");
+                    Log.d(TAG, "Non ci sono errori.");
+
                     userViewModel.getUser("",email, password, true);
                 }
             } else {
+                userViewModel.setAuthenticationError(true);
                 showSnackbar(v, getString(R.string.error_invalid_login));
             }
         });
