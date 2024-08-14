@@ -14,12 +14,14 @@ public abstract class BaseUserDataRemoteDataSource {
 
     public abstract void setUsername(User user, String username);
 
+    public abstract void setEmail(User user, String email, String password);
+
     public abstract void setVerified(String idToken);
 
     public abstract void getUserInfo(String idToken);
 
     public abstract void deleteAccount(String idToken, String email, String password);
 
-    public void updateSwitch(String idToken, String key, boolean value) {
+    public void updateSwitch(User user, String key, boolean value) {
     }
 }

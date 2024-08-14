@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -34,10 +35,16 @@ import java.util.Map;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
+import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.User;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +59,9 @@ public class UpdateEmailFragment extends Fragment {
     private String email;
     private String password;
     private Activity activity;
+    private UserViewModel userViewModel;
+    private String idToken;
+    private User user;
 
     public UpdateEmailFragment() {
         // Required empty public constructor
@@ -70,6 +80,11 @@ public class UpdateEmailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -84,9 +99,8 @@ public class UpdateEmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
-
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+
         try {
             email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
             password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
@@ -126,42 +140,23 @@ public class UpdateEmailFragment extends Fragment {
 
             try {
                 if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                    AuthCredential credential = EmailAuthProvider
-                            .getCredential(email, password);
-
-                    user.reauthenticate(credential)
-                            .addOnCompleteListener(task -> {
-                                Log.d(TAG, "User re-authenticated.");
-
-                                //FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
-                                user.verifyBeforeUpdateEmail(newEmail)
-                                        .addOnCompleteListener(task1 -> {
-                                            if (task1.isSuccessful()) {
-                                                String userId = Objects.requireNonNull(user).getUid();
-                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                                                Map<String, Object> updates = new HashMap<>();
-                                                updates.put(EMAIL_ADDRESS, newEmail);
-                                                db.collection("users").document(userId)
-                                                        .update(updates)
-                                                        .addOnSuccessListener(aVoid -> {
-                                                            try {
-                                                                dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
-                                                                showSnackbarWithAction(v, getString(R.string.email_updated));
-                                                                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
-                                                            } catch (GeneralSecurityException | IOException e) {
-                                                                throw new RuntimeException(e);
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(e -> {
-                                                            showSnackbar(v, getString(R.string.error_username_update_failed));
-                                                        });
-                                            } else {
-                                                showSnackbar(v, getString(R.string.error_email_update_failed));
-                                            }
-                                        });
+                    idToken = userViewModel.getLoggedUser();
+                    user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+                    Log.d(TAG, "user" + user);
+                    userViewModel.setEmail(user, newEmail, currentPassword).observe(
+                            getViewLifecycleOwner(), result -> {
+                                if (result.isSuccess()) {
+                                    try {
+                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
+                                        showSnackbarWithAction(v, getString(R.string.email_updated));
+                                        Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
+                                    } catch (GeneralSecurityException |
+                                             IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                } else {
+                                    showSnackbar(v, getString(R.string.error_email_update_failed));
+                                }
                             });
                 }
             } catch (GeneralSecurityException | IOException e) {

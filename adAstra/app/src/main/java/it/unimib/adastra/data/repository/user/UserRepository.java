@@ -88,21 +88,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
         userDataRemoteDataSource.getUserInfo(idToken);
     }
 
-    @Override
-    public void onSuccessUsernameUpdate(User user) {
-        Result.UserResponseSuccess result = new Result.UserResponseSuccess(user);
-        userMutableLiveData.postValue(result);
-    }
-
-    @Override
-    public void onSuccessEmailUpdate(String idToken, String email) {
-
-    }
-
-    @Override
-    public void onSuccessPasswordUpdate(String idToken, String password) {
-
-    }
 
     @Override
     public void onFailureFromAuthentication(String message) {
@@ -123,16 +108,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void onSuccessFromUserPreferences() {
-
-    }
-
-    @Override
-    public void onSuccessFromEncryptedPreferences() {
-
-    }
-
-    @Override
     public String getLoggedUser() {
         return userRemoteDataSource.getLoggedUser();
     }
@@ -146,25 +121,19 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
         userDataRemoteDataSource.deleteAccount(idToken, email, password);
     }
 
-    @Override
-    public void onSuccessDeleteAccount() {
-        Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
-        userMutableLiveData.postValue(result);
-    }
 
     @Override
-    public void onFailureDeleteAccount(String message) {
-        Result.Error result = new Result.Error(message);
-        userMutableLiveData.postValue(result);
-    }
-
-    @Override
-    public void updateSwitch(String idToken, String key, boolean value) {
-        userDataRemoteDataSource.updateSwitch(idToken, key, value);
+    public void updateSwitch(User user, String key, boolean value) {
+        userDataRemoteDataSource.updateSwitch(user, key, value);
     }
 
     @Override
     public void setUsername(User user, String username) {
         userDataRemoteDataSource.setUsername(user, username);
+    }
+
+    @Override
+    public void setEmail(User user, String email, String password) {
+        userDataRemoteDataSource.setEmail(user, email, password);
     }
 }

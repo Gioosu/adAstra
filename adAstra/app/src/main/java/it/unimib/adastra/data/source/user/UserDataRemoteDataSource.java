@@ -2,6 +2,7 @@ package it.unimib.adastra.data.source.user;
 
 import static it.unimib.adastra.util.Constants.ACCOUNT_DELETION_FAILED;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.INVALID_USERNAME;
@@ -14,6 +15,8 @@ import static it.unimib.adastra.util.Constants.VERIFIED;
 
 import android.util.Log;
 
+import androidx.navigation.Navigation;
+
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,9 +24,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+import it.unimib.adastra.R;
 import it.unimib.adastra.model.User;
 import it.unimib.adastra.util.exception.DeleteAccountException;
 import it.unimib.adastra.util.exception.InvalidUsernameException;
@@ -53,13 +60,49 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         db.collection("users").document(user.getId()).update(data).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 user.setUsername(username);
-                userResponseCallback.onSuccessUsernameUpdate(user);
+                userResponseCallback.onSuccessFromRemoteDatabase(user);
                 Log.d(TAG, "Nome utente aggiornato con successo");
             } else {
-                //TODO Callback
+                userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
                 Log.w(TAG, "Errore durante l'aggiornamento del nome utente", task.getException());
             }
         });
+    }
+
+    @Override
+    public void setEmail(User user, String newEmail, String oldPassword) {
+        String oldEmail = user.getEmail();
+        String idToken = user.getId();
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(oldEmail, oldPassword);
+
+        currentUser.reauthenticate(credential)
+                .addOnCompleteListener(task -> {
+                    Log.d(TAG, "User re-authenticated.");
+
+                    currentUser.verifyBeforeUpdateEmail(newEmail)
+                            .addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    db = FirebaseFirestore.getInstance();
+
+                                    Map<String, Object> updates = new HashMap<>();
+                                    updates.put(EMAIL_ADDRESS, newEmail);
+                                    db.collection("users").document(idToken)
+                                            .update(updates)
+                                            .addOnSuccessListener(aVoid -> {
+                                                user.setEmail(newEmail);
+                                                userResponseCallback.onSuccessFromRemoteDatabase(user);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(e));
+                                            });
+                                } else {
+                                    userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
+                                }
+                            });
+                });
     }
 
     @Override
@@ -115,29 +158,37 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                                 db.collection("users").document(idToken).delete()
                                         .addOnSuccessListener(aVoid -> {
                                             Log.d(TAG, "Account utente eliminato da Firestore Authentication");
-                                            userResponseCallback.onSuccessDeleteAccount();
+                                            userResponseCallback.onSuccessFromRemoteDatabase(null);
                                             FirebaseAuth.getInstance().signOut();
                                         })
                                         .addOnFailureListener(e -> {
                                             // Caso in cui l'eliminazione da Firestore fallisce
-                                            userResponseCallback.onFailureDeleteAccount(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
+                                            userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
                                         });
                             } else {
                                 // Caso in cui l'eliminazione da Firebase Authentication fallisce
-                                userResponseCallback.onFailureDeleteAccount(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
+                                userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
                             }
                         });
                     });
         } catch (Exception e) {
-            userResponseCallback.onFailureDeleteAccount(getErrorMessage(e));
+            userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(e));
         }
     }
 
     @Override
-    public void updateSwitch(String idToken, String key, boolean value) {
+    public void updateSwitch(User user, String key, boolean value) {
+        String idToken = user.getId();
         Map<String, Object> data = new HashMap<>();
         data.put(key, value);
-        db.collection("users").document(idToken).update(data);
+        db.collection("users").document(idToken).update(data).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                userResponseCallback.onSuccessFromRemoteDatabase(user);
+            }
+            else {
+                userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
+            }
+        });
     }
 
     private String getErrorMessage(Exception exception) {

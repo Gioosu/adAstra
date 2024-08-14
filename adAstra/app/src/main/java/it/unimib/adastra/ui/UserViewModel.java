@@ -45,6 +45,11 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
+    public MutableLiveData<Result> setEmail(User user, String email, String password) {
+        userRepository.setEmail(user, email, password);
+        return userMutableLiveData;
+    }
+
     public MutableLiveData<Result> getUserInfoMutableLiveData(String idToken) {
         if (userMutableLiveData == null) {
             getUserInfo(idToken);
@@ -80,7 +85,7 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public void updateSwitch(String idToken, String imperialSystem, boolean isChecked) {
-        userRepository.updateSwitch(idToken, imperialSystem, isChecked);
+    public void updateSwitch(User user, String imperialSystem, boolean isChecked) {
+        userRepository.updateSwitch(user, imperialSystem, isChecked);
     }
 }

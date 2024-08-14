@@ -149,28 +149,36 @@ public class SettingsFragment extends Fragment {
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchImperialSystem.isPressed()) {
-                userViewModel.updateSwitch(idToken, IMPERIAL_SYSTEM, isChecked);
+                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+                user.setImperialSystem(isChecked);
+                userViewModel.updateSwitch(user, IMPERIAL_SYSTEM, isChecked);
             }
         });
 
         // Switch di TIME_FORMAT
         binding.switchTimeFormat.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchTimeFormat.isPressed()) {
-                //update(TIME_FORMAT, isChecked);
+                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+                user.setTimeFormat(isChecked);
+                userViewModel.updateSwitch(user, TIME_FORMAT, isChecked);
             }
         });
 
         // Switch di ISS_NOTIFICATIONS
         binding.switchIssNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchIssNotifications.isPressed()) {
-                //update(ISS_NOTIFICATIONS, isChecked);
+                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+                user.setIssNotifications(isChecked);
+                userViewModel.updateSwitch(user, ISS_NOTIFICATIONS, isChecked);
             }
         });
 
         // Switch di EVENTS_NOTIFICATIONS
         binding.switchEventsNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchEventsNotifications.isPressed()) {
-                //update(EVENTS_NOTIFICATIONS, isChecked);
+                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+                user.setEventsNotifications(isChecked);
+                userViewModel.updateSwitch(user, EVENTS_NOTIFICATIONS, isChecked);
             }
         });
 
