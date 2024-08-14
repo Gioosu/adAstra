@@ -52,8 +52,10 @@
     <string name="new_authentication">Please re-authenticate to continue</string>
 
     <!-- Settings -->
-    <string name="log_out">Log out</string>
     <string name="account_settings">Account settings</string>
+    <string name="log_out">Log out</string>
+    <string name="confirm_logout">Confirm logout</string>
+    <string name="confirm_logout_message">Are you sure you want to log out?</string>
     <string name="user_preferences">Preferences</string>
     <string name="time_format">12-hour format</string>
     <string name="imperial_system">Imperial system</string>

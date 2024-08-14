@@ -18,10 +18,6 @@ public class UserViewModel extends ViewModel {
         authenticationError = false;
     }
 
-    public String getLoggedUser() {
-        return userRepository.getLoggedUser();
-    }
-
     public boolean isAuthenticationError() {
         return authenticationError;
     }
@@ -44,6 +40,7 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<Result> setEmail(User user, String email, String password) {
         userRepository.setEmail(user, email, password);
+
         return userMutableLiveData;
     }
 
@@ -54,6 +51,11 @@ public class UserViewModel extends ViewModel {
 
         return userMutableLiveData;
     }
+
+    public String getLoggedUser() {
+        return userRepository.getLoggedUser();
+    }
+
 
     public void getUser(String username, String email, String password, boolean isUserRegistered) {
         userRepository.getUser(username, email, password, isUserRegistered);

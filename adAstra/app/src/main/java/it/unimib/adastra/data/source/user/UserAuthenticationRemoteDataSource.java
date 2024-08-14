@@ -120,14 +120,12 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                     Log.d(TAG, "Logout avvenuto con successo.");
 
                     firebaseAuth.removeAuthStateListener(this);
-
                     userResponseCallback.onSuccessFromLogout();
                 } else {
                     Log.d(TAG, "Errore: Logout fallito.");
 
                     firebaseAuth.removeAuthStateListener(this);
-
-                    userResponseCallback.onFailureFromLogout(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
+                    userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
                 }
             }
         };

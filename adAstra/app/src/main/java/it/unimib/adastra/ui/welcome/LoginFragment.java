@@ -105,6 +105,7 @@ public class LoginFragment extends Fragment {
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
                                 User user = ((Result.UserResponseSuccess) result).getUser();
+
                                 if (user != null && user.isVerified()) {
                                     Log.d(TAG, "L'utente è verificato e l'operazione di login è avvenuta con successo: " + user);
 
@@ -124,7 +125,6 @@ public class LoginFragment extends Fragment {
                                 Log.d(TAG, "Errore: Accesso fallito.");
 
                                 userViewModel.setAuthenticationError(true);
-
                                 showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
                             }
                         }

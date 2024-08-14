@@ -114,7 +114,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 Log.d(TAG, "Aggiornamento dello switch avvenuto con successo.");
 
                 user.setSwitch(key, value);
-
                 userResponseCallback.onSuccessFromRemoteDatabase(user);
             }
             else {
@@ -135,7 +134,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 Log.d(TAG, "Aggiornamento del nome utente avvenuto con successo.");
 
                 user.setUsername(username);
-
                 userResponseCallback.onSuccessFromRemoteDatabase(user);
             } else {
                 Log.w(TAG, "Errore: Aggiornamento del nome utente fallito.");
@@ -165,7 +163,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                                                 Log.d(TAG, "Aggiornamento dell'email avvenuto con successo.");
 
                                                 user.setEmail(newEmail);
-
                                                 userResponseCallback.onSuccessFromRemoteDatabase(user);
                                             })
                                             .addOnFailureListener(e -> {
@@ -201,8 +198,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                                             Log.d(TAG, "Eliminazione da Firestore avvenuta con successo.");
 
                                             FirebaseAuth.getInstance().signOut();
-
-                                            userResponseCallback.onSuccessFromRemoteDatabase(null);
+                                            userResponseCallback.onSuccessFromLogout();
                                         })
                                         .addOnFailureListener(e -> {
                                             Log.d(TAG, "Errore: Eliminazione da Firestore fallita.");

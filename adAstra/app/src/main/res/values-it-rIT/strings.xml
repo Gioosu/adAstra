@@ -46,8 +46,10 @@
     <string name="new_authentication">Per favore, riautenticati per continuare</string>
 
     <!-- Settings -->
-    <string name="log_out">Disconnettiti</string>
     <string name="account_settings">Impostazioni account</string>
+    <string name="log_out">Disconnettiti</string>
+    <string name="confirm_logout">Conferma disconessione</string>
+    <string name="confirm_logout_message">Sei sicuro di volerti disconnettere?</string>
     <string name="user_preferences">Preferenze</string>
     <string name="time_format">Formato 12 ore</string>
     <string name="imperial_system">Sistema imperiale</string>

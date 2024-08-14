@@ -20,13 +20,6 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -101,18 +94,19 @@ public class AccountSettingsFragment extends Fragment {
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
-                    if (result.isSuccess() && ((Result.UserResponseSuccess) result).getUser() != null) {
+                    if (result.isSuccess()) {
                         User user = ((Result.UserResponseSuccess) result).getUser();
-                        updateUI(user);
+
+                        if (user != null)
+                            updateUI(user);
                     } else {
-                        Log.d(TAG, "Errore: Rrecupero dei dati dell'utente fallito.");
+                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
                     }
                 });
 
         // Bottone di Back to settings
-        binding.floatingActionButtonBack.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_settingsFragment);
-        });
+        binding.floatingActionButtonBack.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_settingsFragment));
 
         // Bottone di Update username
         binding.buttonUpdateUsername.setOnClickListener(v -> {
@@ -167,26 +161,25 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     // Elimina l'account dell'utente
-    private void deleteUserAccount(View v) {
+    private void deleteUserAccount(View view) {
+        String idToken = userViewModel.getLoggedUser();
+        User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
         String email;
         String password;
-        String idToken;
-        User user;
 
         try {
             email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
             password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
-        };
-
-        idToken = userViewModel.getLoggedUser();
-        user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+        }
 
         userViewModel.deleteAccount(user, email, password).observe(
                 getViewLifecycleOwner(), result -> {
                     if(result.isSuccess()) {
-                        if(((Result.UserResponseSuccess) result).getUser() == null){
+                        User resultUser = ((Result.UserResponseSuccess) result).getUser();
+
+                        if(resultUser == null){
                             Log.d(TAG, "Eliminazione dell'account avvenuta con successo.");
 
                             try {
@@ -195,14 +188,14 @@ public class AccountSettingsFragment extends Fragment {
                                 throw new RuntimeException(e);
                             }
 
-                            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
+                            Navigation.findNavController(view).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
                             activity.finish();
                         }
                     }
                     else {
                         Log.d(TAG, "Errore: Eliminazione dell'account fallita.");
 
-                        showSnackbar(v, ((Result.Error) result).getMessage());
+                        showSnackbar(view, ((Result.Error) result).getMessage());
                     }
                 });
     }

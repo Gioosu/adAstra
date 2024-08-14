@@ -10,7 +10,6 @@ import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.User;
 
 public class UserRepository implements IUserRepository, UserResponseCallback {
-
     String TAG = UserRepository.class.getSimpleName();
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
@@ -136,13 +135,8 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
 
     @Override
     public void onSuccessFromLogout() {
+        //TODO Ripulire DAO
         Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
-        userMutableLiveData.postValue(result);
-    }
-
-    @Override
-    public void onFailureFromLogout(String message) {
-        Result.Error result = new Result.Error(message);
         userMutableLiveData.postValue(result);
     }
 }

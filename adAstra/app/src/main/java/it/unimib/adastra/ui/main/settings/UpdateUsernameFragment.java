@@ -2,6 +2,7 @@ package it.unimib.adastra.ui.main.settings;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,18 @@ public class UpdateUsernameFragment extends Fragment {
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.update_username));
 
-        initialize();
+        // Aggiornamento dinamico
+        userViewModel.getUserInfoMutableLiveData(idToken).observe(
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        User user = ((Result.UserResponseSuccess) result).getUser();
+
+                        if (user != null)
+                            updateUI(user);
+                    } else {
+                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                    }
+                });
 
         // Bottone di Cancel
         binding.buttonCancelUpdateUsername.setOnClickListener(v ->
@@ -113,11 +125,16 @@ public class UpdateUsernameFragment extends Fragment {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
-    // Inizializza la TextView
-    private void initialize() {
-        assert getArguments() != null;
-        String username = getArguments().getString("username", "");
-        binding.textViewUsernameUpdateUsername.setText(username);
+    private void updateUI(User user) {
+        if (user != null) {
+            String username = user.getUsername();
+
+            if (username != null) {
+                binding.textViewUsernameUpdateUsername.setText(username);
+            }
+        } else {
+            Log.d(TAG, "Errore: Nessun documento trovato.");
+        }
     }
 
     // Controllo che il nome utente sia valido

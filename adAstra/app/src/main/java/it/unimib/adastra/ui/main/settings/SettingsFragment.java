@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
-    String TAG = SettingsFragment.class.getSimpleName();
+    private static final String TAG = SettingsFragment.class.getSimpleName();
     private FragmentSettingsBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
@@ -112,7 +113,9 @@ public class SettingsFragment extends Fragment {
                 getViewLifecycleOwner(), result -> {
             if (result.isSuccess()) {
                 User user = ((Result.UserResponseSuccess) result).getUser();
-                updateUI(user);
+
+                if (user != null)
+                    updateUI(user);
             } else {
                 Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
             }
@@ -123,28 +126,19 @@ public class SettingsFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountSettingsFragment));
 
         // Bottone di Log out
-        binding.floatingActionButtonLogOut.setOnClickListener(v -> {
-            try {
-                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException(e);
-            }
+        binding.floatingActionButtonLogOut.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.log_out)
+                .setMessage(R.string.confirm_logout_message)
+                .setPositiveButton(R.string.log_out, (dialog, which) -> logout(v))
+                .setNegativeButton(R.string.cancel, null)
+                .show());
 
-            userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
-                if (result.isSuccess()) {
-                    Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_welcomeActivity);
-                    activity.finish();
-                } else {
-                    showSnackbar(v, getString(R.string.error_unexpected));
-                }
-            });
-        });
 
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchImperialSystem.isPressed()) {
                 User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-                user.setImperialSystem(isChecked);
+
                 userViewModel.updateSwitch(user, IMPERIAL_SYSTEM, isChecked);
             }
         });
@@ -153,7 +147,7 @@ public class SettingsFragment extends Fragment {
         binding.switchTimeFormat.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchTimeFormat.isPressed()) {
                 User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-                user.setTimeFormat(isChecked);
+
                 userViewModel.updateSwitch(user, TIME_FORMAT, isChecked);
             }
         });
@@ -162,7 +156,7 @@ public class SettingsFragment extends Fragment {
         binding.switchIssNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchIssNotifications.isPressed()) {
                 User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-                user.setIssNotifications(isChecked);
+
                 userViewModel.updateSwitch(user, ISS_NOTIFICATIONS, isChecked);
             }
         });
@@ -171,7 +165,7 @@ public class SettingsFragment extends Fragment {
         binding.switchEventsNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.switchEventsNotifications.isPressed()) {
                 User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-                user.setEventsNotifications(isChecked);
+
                 userViewModel.updateSwitch(user, EVENTS_NOTIFICATIONS, isChecked);
             }
         });
@@ -183,6 +177,7 @@ public class SettingsFragment extends Fragment {
                 isUserInteractedLanguage = true;
                 v.performClick();
             }
+
             return false;
         });
 
@@ -218,6 +213,7 @@ public class SettingsFragment extends Fragment {
                 isUserInteractedDarkTheme = true;
                 v.performClick();
             }
+
             return false;
         });
 
@@ -328,6 +324,28 @@ public class SettingsFragment extends Fragment {
                 binding.switchEventsNotifications.setChecked(value);
                 break;
         }
+    }
+
+    // Effettua il logout
+    public void logout(View view) {
+        userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
+            if (result.isSuccess()) {
+                User user = ((Result.UserResponseSuccess) result).getUser();
+
+                if (user == null) {
+                    try {
+                        dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+                    } catch (GeneralSecurityException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    Navigation.findNavController(view).navigate(R.id.action_settingsFragment_to_welcomeActivity);
+                    activity.finish();
+                }
+            } else {
+                showSnackbar(view, getString(R.string.error_unexpected));
+            }
+        });
     }
 
     private void sendEmail() {
