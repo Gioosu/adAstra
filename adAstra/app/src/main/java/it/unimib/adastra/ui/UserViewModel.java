@@ -12,10 +12,12 @@ public class UserViewModel extends ViewModel {
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
     private boolean authenticationError;
+    private boolean flag;
 
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;
         authenticationError = false;
+        flag = true;
     }
 
     public boolean isAuthenticationError() {
@@ -26,8 +28,28 @@ public class UserViewModel extends ViewModel {
         this.authenticationError = authenticationError;
     }
 
+    public boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    public String getLoggedUser() {
+        return userRepository.getLoggedUser();
+    }
+
     public MutableLiveData<Result> getUserMutableLiveData(String username, String email, String password, boolean isUserRegistered) {
         getUserData(username, email, password, isUserRegistered);
+
+        return userMutableLiveData;
+    }
+
+    public MutableLiveData<Result> getUserInfoMutableLiveData(String idToken) {
+        if (userMutableLiveData == null) {
+            getUserInfo(idToken);
+        }
 
         return userMutableLiveData;
     }
@@ -44,29 +66,20 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> getUserInfoMutableLiveData(String idToken) {
-        if (userMutableLiveData == null) {
-            getUserInfo(idToken);
-        }
-
-        return userMutableLiveData;
-    }
-
-    public String getLoggedUser() {
-        return userRepository.getLoggedUser();
-    }
-
-
-    public void getUser(String username, String email, String password, boolean isUserRegistered) {
-        userRepository.getUser(username, email, password, isUserRegistered);
-    }
-
     private void getUserData(String username, String email, String password, boolean isUserRegistered) {
         userMutableLiveData = userRepository.getUser(username, email, password, isUserRegistered);
     }
 
     private void getUserInfo(String idToken) {
         userMutableLiveData = userRepository.getUserInfo(idToken);
+    }
+
+    public void getUser(String username, String email, String password, boolean isUserRegistered) {
+        userRepository.getUser(username, email, password, isUserRegistered);
+    }
+
+    public void updateSwitch(User user, String imperialSystem, boolean isChecked) {
+        userRepository.updateSwitch(user, imperialSystem, isChecked);
     }
 
     public MutableLiveData<Result> logout() {
@@ -83,9 +96,5 @@ public class UserViewModel extends ViewModel {
         userRepository.deleteAccount(user, email, password);
 
         return userMutableLiveData;
-    }
-
-    public void updateSwitch(User user, String imperialSystem, boolean isChecked) {
-        userRepository.updateSwitch(user, imperialSystem, isChecked);
     }
 }

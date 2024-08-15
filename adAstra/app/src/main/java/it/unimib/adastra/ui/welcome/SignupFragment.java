@@ -95,25 +95,36 @@ public class SignupFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(username, email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-                                    Log.d(TAG, "Registrazione avvenuta con successo.");
+                                    if (userViewModel.getFlag()) {
 
-                                    userViewModel.setAuthenticationError(false);
-                                    showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
-                                    Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_loginFragment);
+                                        Log.d(TAG, "Registrazione avvenuta con successo.");
+
+                                        userViewModel.setAuthenticationError(false);
+                                        userViewModel.setFlag(false);
+                                        showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
+                                        Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_loginFragment);
+                                    } else {
+                                        userViewModel.setFlag(true);
+                                    }
                                 } else {
-                                    Log.d(TAG, "Errore: Registrazione fallita.");
+                                    if (userViewModel.getFlag()) {
+                                        Log.d(TAG, "Errore: Registrazione fallita.");
 
-                                    userViewModel.setAuthenticationError(true);
-                                    showSnackbar(v, getString(R.string.error_signup_failure));
+                                        userViewModel.setAuthenticationError(true);
+                                        userViewModel.setFlag(false);
+                                        showSnackbar(v, getString(R.string.error_signup_failure));
+                                    } else {
+                                        userViewModel.setFlag(true);
+                                    }
                                 }
                             });
                 } else {
-                    Log.d(TAG, "Non ci sono errori.");
+                    Log.d(TAG, "Ci sono errori.");
 
+                    userViewModel.setFlag(true);
                     userViewModel.getUser(username, email, password, false);
                 }
             } else {
-                userViewModel.setAuthenticationError(true);
                 showSnackbar(v, getString(R.string.error_signup_failure));
             }
         });

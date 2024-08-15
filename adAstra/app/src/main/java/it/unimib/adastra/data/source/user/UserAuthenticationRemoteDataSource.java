@@ -75,7 +75,6 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                                 Log.d(TAG, "Email non verificata. Invio dell'email di verifica.");
 
                                 firebaseUser.sendEmailVerification();
-
                                 userResponseCallback.onFailureFromAuthentication(getErrorMessage(new UnverifiedEmailException(EMAIL_NOT_VERIFIED)));
                             }
                         } else {

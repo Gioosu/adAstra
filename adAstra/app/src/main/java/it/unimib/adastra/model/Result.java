@@ -19,9 +19,11 @@ public abstract class Result {
      */
     public static final class ISSPositionResponseSuccess extends Result {
         private final ISSPositionResponse issPositionResponse;
+
         public ISSPositionResponseSuccess(ISSPositionResponse issPositionResponse) {
             this.issPositionResponse = issPositionResponse;
         }
+
         public ISSPositionResponse getData() {
             return issPositionResponse;
         }

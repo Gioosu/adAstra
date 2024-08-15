@@ -105,31 +105,41 @@ public class LoginFragment extends Fragment {
                     userViewModel.getUserMutableLiveData("", email, password, true).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
-                                user = ((Result.UserResponseSuccess) result).getUser();
+                                if (userViewModel.getFlag()) {
+                                    userViewModel.setFlag(false);
+                                    user = ((Result.UserResponseSuccess) result).getUser();
 
-                                if (user != null && user.isVerified()) {
-                                    Log.d(TAG, "L'utente è verificato e l'operazione di login è avvenuta con successo: " + user);
+                                    if (user != null && user.isVerified()) {
+                                        Log.d(TAG, "L'utente è verificato e l'operazione di login è avvenuta con successo: " + user);
 
-                                    userViewModel.setAuthenticationError(false);
-                                    saveLoginData(email, password);
-                                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
-                                    activity.finish();
+                                        userViewModel.setAuthenticationError(false);
+                                        saveLoginData(email, password);
+                                        Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
+                                        activity.finish();
+                                    }
+                                } else {
+                                    userViewModel.setFlag(true);
                                 }
                             } else {
-                                Log.d(TAG, "Errore: Accesso fallito.");
+                                if (userViewModel.getFlag()) {
+                                    Log.d(TAG, "Errore: Accesso fallito.");
 
-                                userViewModel.setAuthenticationError(true);
-                                showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
+                                    userViewModel.setAuthenticationError(true);
+                                    userViewModel.setFlag(false);
+                                    showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
+                                } else {
+                                    userViewModel.setFlag(true);
+                                }
                             }
                         }
                     );
                 } else {
-                    Log.d(TAG, "Non ci sono errori.");
+                    Log.d(TAG, "Errore: Trovati errori.");
 
+                    userViewModel.setFlag(true);
                     userViewModel.getUser("",email, password, true);
                 }
             } else {
-                userViewModel.setAuthenticationError(true);
                 showSnackbar(v, getString(R.string.error_invalid_login));
             }
         });
@@ -142,6 +152,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         userViewModel.setAuthenticationError(false);
     }
 
