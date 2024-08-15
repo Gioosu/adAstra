@@ -61,6 +61,7 @@ public class SettingsFragment extends Fragment {
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
+    private User user;
     private String idToken;
 
     public SettingsFragment() {
@@ -105,6 +106,7 @@ public class SettingsFragment extends Fragment {
         activity = getActivity();
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
+        user = null;
         idToken = userViewModel.getLoggedUser();
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.settings));
@@ -112,7 +114,7 @@ public class SettingsFragment extends Fragment {
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
             if (result.isSuccess()) {
-                User user = ((Result.UserResponseSuccess) result).getUser();
+                user = ((Result.UserResponseSuccess) result).getUser();
 
                 if (user != null)
                     updateUI(user);
@@ -258,6 +260,7 @@ public class SettingsFragment extends Fragment {
         // Bottone di Build information
         binding.buttonBuildInformation.setText(BuildConfig.VERSION_NAME);
         binding.buttonBuildInformation.setOnClickListener(v -> {
+            //TODO implement build information easter egg
         });
     }
 
@@ -330,15 +333,10 @@ public class SettingsFragment extends Fragment {
     public void logout(View view) {
         userViewModel.logout().observe(getViewLifecycleOwner(), result -> {
             if (result.isSuccess()) {
-                User user = ((Result.UserResponseSuccess) result).getUser();
+                User resultUser = ((Result.UserResponseSuccess) result).getUser();
 
-                if (user == null) {
-                    try {
-                        dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                    } catch (GeneralSecurityException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
+                if (resultUser == null) {
+                    clearEncryptedData();
                     Navigation.findNavController(view).navigate(R.id.action_settingsFragment_to_welcomeActivity);
                     activity.finish();
                 }
@@ -346,6 +344,14 @@ public class SettingsFragment extends Fragment {
                 showSnackbar(view, getString(R.string.error_unexpected));
             }
         });
+    }
+
+    private void clearEncryptedData() {
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void sendEmail() {

@@ -7,6 +7,7 @@ import static it.unimib.adastra.util.Constants.PASSWORD;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,33 +98,33 @@ public class UpdateEmailFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
-
-        try {
-            email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        user = null;
+        idToken = userViewModel.getLoggedUser();
+        email = getEmail();
+        password = getPassword();
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.update_email));
 
-        initialize();
+        // Aggiornamento dinamico
+        userViewModel.getUserInfoMutableLiveData(idToken).observe(
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        user = ((Result.UserResponseSuccess) result).getUser();
+
+                        if (user != null)
+                            updateUI(user);
+                    } else {
+                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                    }
+                });
 
         // Bottone di Forgot password
-        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v -> {
-            try {
-                email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.confirm_reset)
-                    .setMessage(R.string.confirm_reset_message)
-                    .setPositiveButton(R.string.reset, (dialog, which) -> sendPasswordResetEmail(email, v))
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
-        });
+        binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.confirm_reset)
+                .setMessage(R.string.confirm_reset_message)
+                .setPositiveButton(R.string.reset, (dialog, which) -> sendPasswordResetEmail(email, v))
+                .setNegativeButton(R.string.cancel, null)
+                .show());
 
         // Bottone di Cancel
         binding.buttonCancelUpdateEmail.setOnClickListener(v ->
@@ -134,30 +135,18 @@ public class UpdateEmailFragment extends Fragment {
             String newEmail = Objects.requireNonNull(binding.emailTextInputEditTextUpdateEmail.getText()).toString();
             String currentPassword = Objects.requireNonNull(binding.passwordInputEditTextUpdateEmail.getText()).toString();
 
-            try {
-                if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
-                    idToken = userViewModel.getLoggedUser();
-                    user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+            if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
+                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
 
-                    userViewModel.setEmail(user, newEmail, currentPassword).observe(
-                            getViewLifecycleOwner(), result -> {
-                                if (result.isSuccess()) {
-                                    try {
-                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, newEmail);
-                                    } catch (GeneralSecurityException |
-                                             IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-
-                                    showSnackbarWithAction(v, getString(R.string.email_updated));
-                                    Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
-                                } else {
-                                    showSnackbar(v, getString(R.string.error_email_update_failed));
-                                }
-                            });
-                }
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException(e);
+                userViewModel.setEmail(user, newEmail, email, currentPassword).observe(
+                        getViewLifecycleOwner(), result -> {
+                            if (result.isSuccess()) {
+                                showSnackbarWithAction(v, getString(R.string.email_updated));
+                                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
+                            } else {
+                                showSnackbar(v, getString(R.string.error_email_update_failed));
+                            }
+                        });
             }
         });
     }
@@ -173,49 +162,43 @@ public class UpdateEmailFragment extends Fragment {
         snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
-    private void initialize() {
-        String email = requireArguments().getString(EMAIL_ADDRESS, "");
-        binding.textViewEmailUpdateEmail.setText(email);
+    private void updateUI(User user) {
+        if (user != null) {
+            if (email != null) {
+                binding.textViewEmailUpdateEmail.setText(email);
+            }
+        } else {
+            Log.d(TAG, "Errore: Nessun documento trovato.");
+        }
     }
 
-    // Invia l'email per reimpostare la password
-    private void sendPasswordResetEmail(String email, View view) {
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        try {
-                            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                        } catch (GeneralSecurityException | IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        backToLogin();
-                    } else {
-                        showSnackbar(view, getString(R.string.error_email_send_failed));
-                    }
-                });
-    }
-
-    // Torna a Login
-    private void backToLogin() {
-        Intent intent = new Intent(getContext(), WelcomeActivity.class);
-        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+    private String getEmail() {
+        String email;
 
         try {
-            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+            email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
 
-        FirebaseAuth.getInstance().signOut();
-        startActivity(intent);
-        activity.finish();
+        return email;
     }
 
-    private boolean isEmailValid(String email) throws GeneralSecurityException, IOException {
-        String currentEmail = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-        boolean result = EmailValidator.getInstance().isValid(email);
-        boolean notEqualResult = !email.equalsIgnoreCase(currentEmail);
+    private String getPassword() {
+        String password;
+
+        try {
+            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return password;
+    }
+
+    private boolean isEmailValid(String newEmail) {
+        boolean result = EmailValidator.getInstance().isValid(newEmail);
+        boolean notEqualResult = !newEmail.equalsIgnoreCase(email);
 
         if (!result) {
             binding.emailTextInputEditTextUpdateEmail.setError(getString(R.string.error_invalid_email));
@@ -235,5 +218,36 @@ public class UpdateEmailFragment extends Fragment {
         }
 
         return result;
+    }
+
+    // Invia l'email per reimpostare la password
+    private void sendPasswordResetEmail(String email, View view) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        backToLogin();
+                    } else {
+                        showSnackbar(view, getString(R.string.error_email_send_failed));
+                    }
+                });
+    }
+
+    // Torna a Login
+    private void backToLogin() {
+        Intent intent = new Intent(getContext(), WelcomeActivity.class);
+        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+
+        clearEncryptedData();
+        FirebaseAuth.getInstance().signOut();
+        startActivity(intent);
+        activity.finish();
+    }
+
+    private void clearEncryptedData() {
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

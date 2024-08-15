@@ -3,7 +3,6 @@ package it.unimib.adastra.ui.main.settings;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
-import static it.unimib.adastra.util.Constants.USERNAME;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -47,6 +46,10 @@ public class AccountSettingsFragment extends Fragment {
     private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
+    private User user;
+    private String idToken;
+    private String email;
+    private String password;
 
     public AccountSettingsFragment() {
         // Required empty public constructor
@@ -85,9 +88,12 @@ public class AccountSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        activity = getActivity();
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
-        String idToken = userViewModel.getLoggedUser();
+        activity = getActivity();
+        user = null;
+        idToken = userViewModel.getLoggedUser();
+        email = getEmail();
+        password = getPassword();
 
         ((MainActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
 
@@ -95,7 +101,7 @@ public class AccountSettingsFragment extends Fragment {
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
-                        User user = ((Result.UserResponseSuccess) result).getUser();
+                        user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null)
                             updateUI(user);
@@ -109,22 +115,12 @@ public class AccountSettingsFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_settingsFragment));
 
         // Bottone di Update username
-        binding.buttonUpdateUsername.setOnClickListener(v -> {
-            String username = binding.textViewUsernameAccountSettings.getText().toString();
-            Bundle bundle = new Bundle();
-            bundle.putString(USERNAME, username);
-
-            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateUsernameFragment, bundle);
-        });
+        binding.buttonUpdateUsername.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateUsernameFragment));
 
         // Bottone di Update email
-        binding.buttonUpdateEmail.setOnClickListener(v -> {
-            String email = binding.textViewEmailAccountSettings.getText().toString();
-            Bundle bundle = new Bundle();
-            bundle.putString(EMAIL_ADDRESS, email);
-
-            Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateEmailFragment, bundle);
-        });
+        binding.buttonUpdateEmail.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_accountSettingsFragment_to_updateEmailFragment));
 
         // Bottone di Change password
         binding.buttonChangePassword.setOnClickListener(v ->
@@ -147,7 +143,6 @@ public class AccountSettingsFragment extends Fragment {
     private void updateUI(User user) {
         if (user != null) {
             String username = user.getUsername();
-            String email = user.getEmail();
 
             if (username != null) {
                 binding.textViewUsernameAccountSettings.setText(username);
@@ -160,20 +155,40 @@ public class AccountSettingsFragment extends Fragment {
         }
     }
 
-    // Elimina l'account dell'utente
-    private void deleteUserAccount(View view) {
-        String idToken = userViewModel.getLoggedUser();
-        User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
+    private String getEmail() {
         String email;
-        String password;
 
         try {
             email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return email;
+    }
+
+    private String getPassword() {
+        String password;
+
+        try {
             password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
 
+        return password;
+    }
+
+    private void clearEncryptedData() {
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Elimina l'account dell'utente
+    private void deleteUserAccount(View view) {
         userViewModel.deleteAccount(user, email, password).observe(
                 getViewLifecycleOwner(), result -> {
                     if(result.isSuccess()) {
@@ -182,12 +197,7 @@ public class AccountSettingsFragment extends Fragment {
                         if(resultUser == null){
                             Log.d(TAG, "Eliminazione dell'account avvenuta con successo.");
 
-                            try {
-                                dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                            } catch (GeneralSecurityException | IOException e) {
-                                throw new RuntimeException(e);
-                            }
-
+                            clearEncryptedData();
                             Navigation.findNavController(view).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
                             activity.finish();
                         }

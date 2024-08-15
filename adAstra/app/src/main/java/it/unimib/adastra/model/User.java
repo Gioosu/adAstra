@@ -8,17 +8,15 @@ import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 public class User {
     private String id;
     private String username;
-    private String email;
     private boolean imperialSystem;
     private boolean timeFormat;
     private boolean issNotifications;
     private boolean eventsNotifications;
     private boolean verified;
 
-    public User(String id, String username, String email) {
+    public User(String id, String username) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.imperialSystem = false;
         this.timeFormat = false;
         this.issNotifications = true;
@@ -26,10 +24,9 @@ public class User {
         this.verified = false;
     }
 
-    public User(String id,String username, String email, boolean imperialSystem, boolean timeFormat, boolean issNotifications, boolean eventsNotifications, boolean verified) {
+    public User(String id,String username, boolean imperialSystem, boolean timeFormat, boolean issNotifications, boolean eventsNotifications, boolean verified) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.imperialSystem = imperialSystem;
         this.timeFormat = timeFormat;
         this.issNotifications = issNotifications;
@@ -51,14 +48,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public boolean isImperialSystem() {
@@ -126,7 +115,6 @@ public class User {
         return "User{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
                 ", imperialSystem=" + imperialSystem +
                 ", timeFormat=" + timeFormat +
                 ", issNotifications=" + issNotifications +

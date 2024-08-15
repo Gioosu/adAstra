@@ -66,7 +66,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                     User user = new User(
                             document.getString(USER_ID),
                             document.getString(USERNAME),
-                            document.getString(EMAIL_ADDRESS),
                             document.getBoolean(IMPERIAL_SYSTEM),
                             document.getBoolean(TIME_FORMAT),
                             document.getBoolean(ISS_NOTIFICATIONS),
@@ -144,9 +143,9 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     }
 
     @Override
-    public void setEmail(User user, String newEmail, String password) {
+    public void setEmail(User user, String newEmail, String email, String password) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
 
         currentUser.reauthenticate(credential)
                 .addOnCompleteListener(task -> {
@@ -162,7 +161,6 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                                             .addOnSuccessListener(aVoid -> {
                                                 Log.d(TAG, "Aggiornamento dell'email avvenuto con successo.");
 
-                                                user.setEmail(newEmail);
                                                 userResponseCallback.onSuccessFromRemoteDatabase(user);
                                             })
                                             .addOnFailureListener(e -> {

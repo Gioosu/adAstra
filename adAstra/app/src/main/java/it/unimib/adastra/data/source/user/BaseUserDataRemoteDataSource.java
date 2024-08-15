@@ -20,7 +20,7 @@ public abstract class BaseUserDataRemoteDataSource {
 
     public abstract void setUsername(User user, String username);
 
-    public abstract void setEmail(User user, String email, String password);
+    public abstract void setEmail(User user, String newEmail, String email, String password);
 
     public abstract void deleteAccount(User user, String email, String password);
 }

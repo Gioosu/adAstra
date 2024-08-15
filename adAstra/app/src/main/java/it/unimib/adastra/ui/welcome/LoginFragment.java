@@ -47,6 +47,7 @@ public class LoginFragment extends Fragment {
     private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
+    private User user;
     private String email;
     private String password;
 
@@ -104,20 +105,13 @@ public class LoginFragment extends Fragment {
                     userViewModel.getUserMutableLiveData("", email, password, true).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
-                                User user = ((Result.UserResponseSuccess) result).getUser();
+                                user = ((Result.UserResponseSuccess) result).getUser();
 
                                 if (user != null && user.isVerified()) {
                                     Log.d(TAG, "L'utente è verificato e l'operazione di login è avvenuta con successo: " + user);
 
                                     userViewModel.setAuthenticationError(false);
-
-                                    try {
-                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
-                                        dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
-                                    } catch (GeneralSecurityException | IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-
+                                    saveLoginData(email, password);
                                     Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainActivity);
                                     activity.finish();
                                 }
@@ -164,6 +158,15 @@ public class LoginFragment extends Fragment {
     // Verifica campo Password
     private boolean isPasswordNonEmpty(String password) {
         return password != null && !password.isEmpty();
+    }
+
+    private void saveLoginData(String email, String password) {
+        try {
+            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
+            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getErrorMessage(String message) {

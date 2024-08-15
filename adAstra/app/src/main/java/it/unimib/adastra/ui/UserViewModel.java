@@ -38,8 +38,8 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> setEmail(User user, String email, String password) {
-        userRepository.setEmail(user, email, password);
+    public MutableLiveData<Result> setEmail(User user, String newEmail, String email, String password) {
+        userRepository.setEmail(user, newEmail, email, password);
 
         return userMutableLiveData;
     }

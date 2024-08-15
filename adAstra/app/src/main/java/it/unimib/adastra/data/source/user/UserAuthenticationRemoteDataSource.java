@@ -42,7 +42,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                             Log.d(TAG, "Registrazioen avvenuta con successo.");
 
                             firebaseUser.sendEmailVerification();
-                            userResponseCallback.onSuccessFromAuthentication(new User(firebaseUser.getUid(), username, email));
+                            userResponseCallback.onSuccessFromAuthentication(new User(firebaseUser.getUid(), username));
                         } else {
                             Log.d(TAG, "Errore: L'oggetto FirebaseUser è nullo. [SignUp]");
 

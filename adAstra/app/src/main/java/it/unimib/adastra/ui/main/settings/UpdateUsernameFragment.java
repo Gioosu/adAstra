@@ -79,6 +79,8 @@ public class UpdateUsernameFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         activity = getActivity();
+        user = null;
+        idToken = userViewModel.getLoggedUser();
 
         ((MainActivity) activity).setToolBarTitle(getString(R.string.update_username));
 
@@ -86,7 +88,7 @@ public class UpdateUsernameFragment extends Fragment {
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
-                        User user = ((Result.UserResponseSuccess) result).getUser();
+                        user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null)
                             updateUI(user);
@@ -104,9 +106,6 @@ public class UpdateUsernameFragment extends Fragment {
             String newUsername = Objects.requireNonNull(binding.usernameInputEditTextUpdateUsername.getText()).toString();
 
             if (isUsernameValid(newUsername)) {
-                idToken = userViewModel.getLoggedUser();
-                user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-
                 userViewModel.setUsername(user, newUsername).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {

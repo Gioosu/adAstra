@@ -98,13 +98,12 @@ public class SignupFragment extends Fragment {
                                     Log.d(TAG, "Registrazione avvenuta con successo.");
 
                                     userViewModel.setAuthenticationError(false);
-
-                                    Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_verifyEmailFragment);
+                                    showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
+                                    Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_loginFragment);
                                 } else {
                                     Log.d(TAG, "Errore: Registrazione fallita.");
 
                                     userViewModel.setAuthenticationError(true);
-
                                     showSnackbar(v, getString(R.string.error_signup_failure));
                                 }
                             });
@@ -123,6 +122,12 @@ public class SignupFragment extends Fragment {
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    // Visualizza una snackbar con un'azione integrata
+    private void showSnackbarWithAction(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
     // Controlla che il nome utente sia valido
