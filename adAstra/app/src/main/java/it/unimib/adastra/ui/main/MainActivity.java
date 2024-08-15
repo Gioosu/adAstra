@@ -1,6 +1,7 @@
 package it.unimib.adastra.ui.main;
 
 import static it.unimib.adastra.util.Constants.DARK_THEME;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
@@ -20,18 +21,22 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Locale;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.ActivityMainBinding;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
+import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 
 public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
+    private DataEncryptionUtil dataEncryptionUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        dataEncryptionUtil = new DataEncryptionUtil(this);
 
         if (currentUser == null) {
             // L'utente non è loggato
@@ -49,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "reload() ha dato esito positivo");
                 } else {
-                    backToLogin();
                     Log.d(TAG, "reload() ha dato esito negativo");
+                    
+                    backToLogin();
                 }
             });
         }
@@ -75,10 +82,19 @@ public class MainActivity extends AppCompatActivity {
 
     // Ritorna a Login
     private void backToLogin() {
+        clearEncryptedData();
         Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
         intent.putExtra("SHOW_NEW_AUTHENTICATION", true);
         startActivity(intent);
         finish();
+    }
+
+    private void clearEncryptedData() {
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Prende le impostazioni da SharedPreferences
