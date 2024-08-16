@@ -103,6 +103,11 @@
     <string name="confirm_new_password">Confirm new password</string>
     <string name="password_changed">Password changed successfully</string>
 
+    <!-- Iss -->
+    <string name="iss_refresh">Update ISS position</string>
+    <string name="iss_longitude">Longitude</string>
+    <string name="iss_latitude">Latitude</string>
+
     <!-- Errors -->
     <string name="error_invalid_email">Invalid email address</string>
     <string name="error_invalid_password">Password must be at least 8 characters</string>

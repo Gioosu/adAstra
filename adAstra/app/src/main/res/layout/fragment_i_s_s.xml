@@ -1,6 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.ISSFragment"/>
+    tools:context=".ui.main.ISSFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_horizontal_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="8dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_sx_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="8dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_dx_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="8dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardElevation="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_settings">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/iss_filled"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+        <Button
+            android:id="@+id/floatingActionButton_iss_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/iss_refresh"
+            android:textSize="24sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="32dp"
+            android:contentDescription="@string/iss_refresh"
+            app:fabCustomSize="48dp"
+            app:fabSize="auto"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:text="@string/iss_longitude"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_iss_refresh"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
+            app:layout_constraintTop_toBottomOf="@+id/card_settings"
+            app:layout_constraintVertical_bias="0.811" />
+
+        <TextView
+            android:id="@+id/latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:text="@string/iss_latitude"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_iss_refresh"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_settings"
+            app:layout_constraintVertical_bias="0.945" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

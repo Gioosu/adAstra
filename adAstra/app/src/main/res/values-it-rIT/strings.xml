@@ -92,6 +92,9 @@
     <string name="confirm_new_password">Conferma nuova password</string>
     <string name="password_changed">Password modificata con successo</string>
 
+    <!-- Iss -->
+    <string name="iss_refresh">Aggiorna posizione ISS</string>
+
     <!-- Errors -->
     <string name="error_invalid_username">Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
     <string name="error_invalid_email">Indirizzo email non valido</string>
@@ -118,4 +121,6 @@
     <string name="error_password_change_failed">Cambio password fallito</string>
     <string name="error_invalid_new_email">Scegli un nuovo indirizzo email diversa dalla precedente</string>
     <string name="error_unexpected">Errore inatteso</string>
+    <string name="iss_longitude">Longitudine</string>
+    <string name="iss_latitude">Latitudine</string>
 </resources>

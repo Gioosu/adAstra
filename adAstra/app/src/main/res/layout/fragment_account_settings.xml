@@ -164,6 +164,7 @@
             android:layout_height="wrap_content"
             android:text="@string/delete_account"
             android:textSize="20sp"
+            android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile" />
