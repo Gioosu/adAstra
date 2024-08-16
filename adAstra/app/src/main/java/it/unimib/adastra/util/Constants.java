@@ -21,9 +21,6 @@ public class Constants {
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.encrypted_preferences";
 
-    // Constants for Encrypted files
-    public static final String ENCRYPTED_DATA_FILE_NAME = "it.unimib.adastra.encrypted_file.txt";
-
     // Constants for Assets Folder
     public static final String ISS_API_TEST_JSON_FILE = "ISSResponse.json";
     public static final String ASTRO_API_TEST_JSON_FILE = "AstroResponse.json";
@@ -49,7 +46,8 @@ public class Constants {
     public static final String ACCOUNT_DELETION_FAILED = "account_deletion_failed";
 
     // Constants for Time
-    public static final int FRESH_TIMEOUT = 1000 * 60 * 60; // 1 hour in milliseconds
+    // 5 minuti in millisecondi
+    public static final int FRESH_TIMEOUT = 1000 * 60 * 5;
 
     // Constants for Firestore
     public static final String USERS_COLLECTION = "users";

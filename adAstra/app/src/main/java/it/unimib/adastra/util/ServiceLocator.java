@@ -40,7 +40,7 @@ public class ServiceLocator {
     }
 
     public ISSApiService getISSApiService() {
-        if(retrofit==null){
+        if(retrofit == null){
             retrofit = new Retrofit.Builder()
                     .baseUrl("https://perenual.com/api/")
                     .addConverterFactory(GsonConverterFactory.create())
@@ -58,11 +58,14 @@ public class ServiceLocator {
         BaseISSPositionRemoteDataSource issPositionRemoteDataSource;
         BaseISSPositionLocalDataSource issPositionLocalDataSource;
 
-        issPositionRemoteDataSource = new ISSPositionRemoteDataSource();
+        issPositionRemoteDataSource =
+                new ISSPositionRemoteDataSource();
 
-        issPositionLocalDataSource = new ISSPositionLocalDataSource(getISSDao(application));
+        issPositionLocalDataSource =
+                new ISSPositionLocalDataSource(getISSDao(application));
 
-        return new ISSPositionResponseRepository(issPositionRemoteDataSource, issPositionLocalDataSource);
+        return new ISSPositionResponseRepository(issPositionRemoteDataSource,
+                issPositionLocalDataSource);
     }
 
     public IUserRepository getUserRepository(Application application) {

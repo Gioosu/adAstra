@@ -14,14 +14,14 @@ import it.unimib.adastra.model.Result;
 
 public class ISSPositionResponseRepository implements IISSPositionRepository, ISSPositionResponseCallback {
 
-    private final MutableLiveData<Result> allIssMutableLiveData;
+    private final MutableLiveData<Result> ISSPositionMutableLiveData;
     private final BaseISSPositionRemoteDataSource issPositionRemoteDataSource;
     private final BaseISSPositionLocalDataSource issPositionLocalDataSource;
 
     public ISSPositionResponseRepository(BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
                                          BaseISSPositionLocalDataSource issPositionLocalDataSource) {
 
-        allIssMutableLiveData = new MutableLiveData<>();
+        ISSPositionMutableLiveData = new MutableLiveData<>();
         this.issPositionRemoteDataSource = issPositionRemoteDataSource;
         this.issPositionLocalDataSource = issPositionLocalDataSource;
     }
@@ -34,7 +34,7 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
         } else {
             issPositionLocalDataSource.getISSPosition();
         }
-        return allIssMutableLiveData;
+        return ISSPositionMutableLiveData;
     }
 
     @Override
@@ -60,15 +60,15 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     @Override
     public void onFailureFromRemote(Exception exception) {
         Result.Error result = new Result.Error(exception.getMessage());
-        allIssMutableLiveData.postValue(result);
+        ISSPositionMutableLiveData.postValue(result);
     }
 
     @Override
     public void onSuccessFromLocal(ISSPositionApiResponse issPositionApiResponse) {
-        if(allIssMutableLiveData.getValue() != null && allIssMutableLiveData.getValue().isSuccess()) {
+        if(ISSPositionMutableLiveData.getValue() != null && ISSPositionMutableLiveData.getValue().isSuccess()) {
             issPositionApiResponse.setCoordinates(issPositionApiResponse.getCoordinates());
             Result.ISSPositionResponseSuccess result = new Result.ISSPositionResponseSuccess(issPositionApiResponse);
-            allIssMutableLiveData.postValue(result);
+            ISSPositionMutableLiveData.postValue(result);
         }
 
     }

@@ -20,7 +20,6 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -33,8 +32,8 @@ import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentUpdateEmailBinding;
 import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.User;
-import it.unimib.adastra.ui.UserViewModel;
-import it.unimib.adastra.ui.UserViewModelFactory;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;

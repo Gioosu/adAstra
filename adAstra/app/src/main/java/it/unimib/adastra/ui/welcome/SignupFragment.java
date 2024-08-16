@@ -21,8 +21,8 @@ import java.util.Objects;
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
-import it.unimib.adastra.ui.UserViewModel;
-import it.unimib.adastra.ui.UserViewModelFactory;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
 
 /**

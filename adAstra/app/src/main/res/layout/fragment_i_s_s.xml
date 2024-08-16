@@ -60,8 +60,33 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:text="@string/iss_longitude"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonUpdateISS"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
+            app:layout_constraintTop_toBottomOf="@+id/card_settings"
+            app:layout_constraintVertical_bias="0.811" />
+
+        <TextView
+            android:id="@+id/latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:text="@string/iss_latitude"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonUpdateISS"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_settings"
+            app:layout_constraintVertical_bias="0.945" />
+
         <Button
-            android:id="@+id/floatingActionButton_iss_refresh"
+            android:id="@+id/buttonUpdateISS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/iss_refresh"
@@ -74,30 +99,6 @@
             app:fabSize="auto"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/longitude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="56dp"
-            android:text="@string/iss_longitude"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_iss_refresh"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/card_settings"
-            app:layout_constraintVertical_bias="0.811" />
-
-        <TextView
-            android:id="@+id/latitude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="64dp"
-            android:text="@string/iss_latitude"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_iss_refresh"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_settings"
-            app:layout_constraintVertical_bias="0.945" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

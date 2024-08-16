@@ -10,7 +10,5 @@ import retrofit2.http.GET;
 public interface ISSApiService {
 
     @GET(ISS_ENDPOINT)
-    Call<ISSPositionResponse> getISS();
-
     Call<ISSPositionApiResponse> getISSPosition();
 }

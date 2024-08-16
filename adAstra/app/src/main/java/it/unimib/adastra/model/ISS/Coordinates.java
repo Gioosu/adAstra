@@ -1,16 +1,22 @@
 package it.unimib.adastra.model.ISS;
 
-import androidx.room.Ignore;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Coordinates {
+import androidx.annotation.NonNull;
+
+public class Coordinates implements Parcelable {
     private double longitude;
     private double latitude;
 
-    @Ignore
     public Coordinates() {}
     public Coordinates(double longitude, double latitude) {
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    public Coordinates(Parcel parcel) {
+
     }
 
     public double getLongitude() {
@@ -36,4 +42,27 @@ public class Coordinates {
                 ", latitude=" + latitude +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int Flags) {
+        dest.writeDouble(this.longitude);
+        dest.writeDouble(this.latitude);
+    }
+
+    public static final Creator<Coordinates> CREATOR = new Creator<Coordinates>() {
+        @Override
+        public Coordinates createFromParcel(Parcel source) {
+            return new Coordinates(source);
+        }
+
+        @Override
+        public Coordinates[] newArray(int i) {
+            return new Coordinates[i];
+        }
+    };
 }

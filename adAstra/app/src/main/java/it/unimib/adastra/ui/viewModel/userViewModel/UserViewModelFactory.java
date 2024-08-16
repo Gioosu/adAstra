@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui;
+package it.unimib.adastra.ui.viewModel.userViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
