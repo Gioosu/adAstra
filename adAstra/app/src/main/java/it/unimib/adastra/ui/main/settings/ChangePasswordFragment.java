@@ -7,6 +7,7 @@ import static it.unimib.adastra.util.Constants.PASSWORD;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -26,10 +28,16 @@ import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
+import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.User;
+import it.unimib.adastra.ui.UserViewModel;
+import it.unimib.adastra.ui.UserViewModelFactory;
 import it.unimib.adastra.ui.main.MainActivity;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,13 +45,17 @@ import it.unimib.adastra.util.DataEncryptionUtil;
  * create an instance of this fragment.
  */
 public class ChangePasswordFragment extends Fragment {
-    String TAG = ChangePasswordFragment.class.getSimpleName();
+    private static final String TAG = ChangePasswordFragment.class.getSimpleName();
     private FragmentChangePasswordBinding binding;
-    private FirebaseAuth mAuth;
     private DataEncryptionUtil dataEncryptionUtil;
+    private String idToken;
     private String password;
     private Activity activity;
     private String email;
+    private IUserRepository userRepository;
+    private UserViewModel userViewModel;
+    private User user;
+
 
     public ChangePasswordFragment() {
         // Required empty public constructor
@@ -62,6 +74,12 @@ public class ChangePasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -76,7 +94,23 @@ public class ChangePasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
+        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        activity = getActivity();
+        user = null;
+        idToken = userViewModel.getLoggedUser();
+        password = getPassword();
+
+        ((MainActivity) activity).setToolBarTitle(getString(R.string.change_password));
+
+        // Aggiornamento dinamico
+        userViewModel.getUserInfoMutableLiveData(idToken).observe(
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        user = ((Result.UserResponseSuccess) result).getUser();
+                    } else {
+                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                    }
+                });
 
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         try {
@@ -84,9 +118,6 @@ public class ChangePasswordFragment extends Fragment {
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
-        activity = getActivity();
-
-        ((MainActivity) activity).setToolBarTitle(getString(R.string.change_password));
 
         // Bottone di Forgot password
         binding.buttonForgotPasswordChangePassword.setOnClickListener(v -> {
@@ -115,17 +146,12 @@ public class ChangePasswordFragment extends Fragment {
             String confirmNewPassword = Objects.requireNonNull(binding.confirmNewPasswordInputEditText.getText()).toString();
 
             if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)){
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Objects.requireNonNull(user).updatePassword(newPassword)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                try {
-                                    dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, newPassword);
-                                    showSnackbar(v, getString(R.string.password_changed));
-                                    Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_accountSettingsFragment);
-                                } catch (GeneralSecurityException | IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                userViewModel.changePassword(user, newPassword).observe(
+                        getViewLifecycleOwner(), result -> {
+                            if (result.isSuccess()) {
+                                savePassword(newPassword);
+                                showSnackbar(v, getString(R.string.password_changed));
+                                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_accountSettingsFragment);
                             } else {
                                 showSnackbar(v, getString(R.string.error_password_change_failed));
                             }
@@ -172,14 +198,10 @@ public class ChangePasswordFragment extends Fragment {
 
     // Invia l'email per reimpostare la password
     private void sendPasswordResetEmail(String email, View view) {
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        try {
-                            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                        } catch (GeneralSecurityException | IOException e) {
-                            throw new RuntimeException(e);
-                        }
+        userViewModel.resetPassword(email)
+                .observe(requireActivity(), result -> {
+                    if (result.isSuccess()) {
+                        Log.d(TAG, "Email di reimpostazione inviata.");
                         backToLogin();
                     } else {
                         showSnackbar(view, getString(R.string.error_email_send_failed));
@@ -191,18 +213,45 @@ public class ChangePasswordFragment extends Fragment {
     private void backToLogin() {
         Intent intent = new Intent(getContext(), WelcomeActivity.class);
         intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+
+        clearEncryptedData();
+
+        startActivity(intent);
+        activity.finish();
+    }
+
+    // Ottiene la password dal file di secret
+    private String getPassword() {
+        String password;
+
         try {
-            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
-        FirebaseAuth.getInstance().signOut();
-        startActivity(intent);
-        activity.finish();
+
+        return password;
     }
 
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void savePassword(String password) {
+        try {
+            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Cancella i dati crittografati
+    private void clearEncryptedData() {
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

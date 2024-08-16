@@ -25,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.UserResponseCallback;
 import it.unimib.adastra.model.User;
 import it.unimib.adastra.util.exception.DeleteAccountException;
 import it.unimib.adastra.util.exception.InvalidUsernameException;
@@ -39,6 +41,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         db = FirebaseFirestore.getInstance();
     }
 
+    // Salva i dati dell'utente
     @Override
     public void saveUserData(User user) {
         db.collection(USERS_COLLECTION).document(user.getId()).set(user)
@@ -54,6 +57,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 });
     }
 
+    // Recupera i dati dell'utente
     @Override
     public void getUserInfo(String idToken) {
         db.collection(USERS_COLLECTION).document(idToken).get().addOnCompleteListener(task -> {
@@ -84,6 +88,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         });
     }
 
+    // Imposta lo stato di verifica dell'email
     @Override
     public void setVerified(String idToken) {
         Map<String, Object> data = new HashMap<>();
@@ -103,6 +108,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         });
     }
 
+    // Aggiorna lo switch
     @Override
     public void updateSwitch(User user, String key, boolean value) {
         Map<String, Object> data = new HashMap<>();
@@ -123,6 +129,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         });
     }
 
+    // Cambia il nome utente
     @Override
     public void setUsername(User user, String username) {
         Map<String, Object> data = new HashMap<>();
@@ -142,6 +149,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         });
     }
 
+    // Cambia l'email
     @Override
     public void setEmail(User user, String newEmail, String email, String password) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -175,6 +183,37 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 });
     }
 
+    // Cambia la password
+    @Override
+    public void changePassword(User user, String newPassword) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser.updatePassword(newPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        userResponseCallback.onSuccessFromRemoteDatabase(user);
+                    }
+                    else {
+                        userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
+                    }
+        });
+    }
+
+    // Invia l'email per reimpostare la password
+    @Override
+    public void resetPassword(String email) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Email di reimpostazione inviata.");
+                        userResponseCallback.onSuccessFromResetPassword();
+                    } else {
+                        Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
+                        userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
+                    }
+                });
+    }
+
+    // Elimina l'account
     @Override
     public void deleteAccount(User user, String email, String password) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();

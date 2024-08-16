@@ -99,6 +99,16 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
+    public void changePassword(User user, String newPassword) {
+        userDataRemoteDataSource.changePassword(user, newPassword);
+    }
+
+    @Override
+    public void resetPassword(String newPassword) {
+        userDataRemoteDataSource.resetPassword(newPassword);
+    }
+
+    @Override
     public void deleteAccount(User user, String email, String password) {
         userDataRemoteDataSource.deleteAccount(user, email, password);
     }
@@ -131,6 +141,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     public void onFailureFromRemoteDatabase(String message) {
         Result.Error result = new Result.Error(message);
         userMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessFromResetPassword() {
+        logout();
     }
 
     @Override

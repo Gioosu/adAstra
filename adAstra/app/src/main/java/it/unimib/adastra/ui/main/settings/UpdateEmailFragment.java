@@ -48,7 +48,6 @@ import it.unimib.adastra.util.ServiceLocator;
 public class UpdateEmailFragment extends Fragment {
     private static final String TAG = UpdateEmailFragment.class.getSimpleName();
     private FragmentUpdateEmailBinding binding;
-    private FirebaseAuth mAuth;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
@@ -95,7 +94,6 @@ public class UpdateEmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
         user = null;
@@ -136,8 +134,6 @@ public class UpdateEmailFragment extends Fragment {
             String currentPassword = Objects.requireNonNull(binding.passwordInputEditTextUpdateEmail.getText()).toString();
 
             if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
-                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-
                 userViewModel.setEmail(user, newEmail, email, currentPassword).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
@@ -162,6 +158,7 @@ public class UpdateEmailFragment extends Fragment {
         snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
     }
 
+    // Aggiorna l'interfaccia con i dati dell'utente
     private void updateUI(User user) {
         if (user != null) {
             if (email != null) {
@@ -172,6 +169,7 @@ public class UpdateEmailFragment extends Fragment {
         }
     }
 
+    // Ottiene l'email dell'utente
     private String getEmail() {
         String email;
 
@@ -184,6 +182,7 @@ public class UpdateEmailFragment extends Fragment {
         return email;
     }
 
+    // Ottiene la password dell'utente
     private String getPassword() {
         String password;
 
@@ -196,6 +195,7 @@ public class UpdateEmailFragment extends Fragment {
         return password;
     }
 
+    // Controlla che l'email sia valida
     private boolean isEmailValid(String newEmail) {
         boolean result = EmailValidator.getInstance().isValid(newEmail);
         boolean notEqualResult = !newEmail.equalsIgnoreCase(email);
@@ -222,9 +222,9 @@ public class UpdateEmailFragment extends Fragment {
 
     // Invia l'email per reimpostare la password
     private void sendPasswordResetEmail(String email, View view) {
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+        userViewModel.resetPassword(email)
+                .observe(requireActivity(), result -> {
+                    if (result.isSuccess()) {
                         backToLogin();
                     } else {
                         showSnackbar(view, getString(R.string.error_email_send_failed));
@@ -238,11 +238,12 @@ public class UpdateEmailFragment extends Fragment {
         intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
 
         clearEncryptedData();
-        FirebaseAuth.getInstance().signOut();
+
         startActivity(intent);
         activity.finish();
     }
 
+    // Cancella i dati crittografati
     private void clearEncryptedData() {
         try {
             dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);

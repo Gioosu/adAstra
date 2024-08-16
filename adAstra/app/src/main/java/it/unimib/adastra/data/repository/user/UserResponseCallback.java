@@ -11,5 +11,7 @@ public interface UserResponseCallback {
     void onSuccessFromRemoteDatabase(User user);
     void onFailureFromRemoteDatabase(String message);
 
+    void onSuccessFromResetPassword();
+
     void onSuccessFromLogout();
 }

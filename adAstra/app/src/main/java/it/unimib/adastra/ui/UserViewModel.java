@@ -66,6 +66,18 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
+    public MutableLiveData<Result> changePassword(User user, String newPassword) {
+        userRepository.changePassword(user, newPassword);
+
+        return userMutableLiveData;
+    }
+
+    public MutableLiveData<Result> resetPassword(String email) {
+        userRepository.resetPassword(email);
+
+        return userMutableLiveData;
+    }
+
     private void getUserData(String username, String email, String password, boolean isUserRegistered) {
         userMutableLiveData = userRepository.getUser(username, email, password, isUserRegistered);
     }

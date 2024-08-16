@@ -171,6 +171,7 @@ public class LoginFragment extends Fragment {
         return password != null && !password.isEmpty();
     }
 
+    // Salva le credenziali di accesso
     private void saveLoginData(String email, String password) {
         try {
             dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
@@ -180,6 +181,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    // Ottiene il messaggio di errore
     private String getErrorMessage(String message) {
         switch(message) {
             case INVALID_CREDENTIALS_ERROR:
