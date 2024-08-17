@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 import it.unimib.adastra.databinding.FragmentISSBinding;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
@@ -72,12 +73,13 @@ public class ISSFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         activity = getActivity();
-        int id = 25544;
         timestamp = 0;
 
-        issPositionViewModel.getISSPosition(timestamp).observe(
+        // Aggiornamento dinamico
+        issPositionViewModel.getISSPosition().observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
+                        Log.d(TAG, "Aggiornamento dinamico");
                         issPosition = ((Result.ISSPositionResponseSuccess) result).getData();
                         timestamp = issPosition.getTimestamp();
 
@@ -88,14 +90,30 @@ public class ISSFragment extends Fragment {
                     }
                 });
 
-        binding.buttonUpdateISS.setOnClickListener(v -> issPositionViewModel.getISSPosition(timestamp));
+        // Bottone di Aggiornamento
+        binding.buttonUpdateISS.setOnClickListener(v -> {
+
+            issPositionViewModel.fetchISSPosition(timestamp).observe(
+                    getViewLifecycleOwner(), task -> {
+                        Log.d(TAG, "Bottone");
+                        if (task.isSuccess()) {
+                            issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
+                            timestamp = issPosition.getTimestamp();
+
+                            if (issPosition != null)
+                                updateUI(issPosition);
+                        }else {
+                            Log.d(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                        }
+                    });
+        });
     }
 
     public void updateUI(ISSPositionResponse issPosition) {
         String newLatitude = Double.toString(issPosition.getLatitude());
         String newLongitude = Double.toString(issPosition.getLongitude());
 
-        binding.latitude.setText(newLatitude);
-        binding.longitude.setText(newLongitude);
+        binding.latitude.setText(requireActivity().getString(R.string.iss_latitude) + ": " + newLatitude);
+        binding.longitude.setText(requireActivity().getString(R.string.iss_longitude) + ": " + newLongitude);
     }
 }

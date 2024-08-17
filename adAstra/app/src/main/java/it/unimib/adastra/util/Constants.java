@@ -47,8 +47,8 @@ public class Constants {
     public static final String ACCOUNT_DELETION_FAILED = "account_deletion_failed";
 
     // Constants for Time
-    // 5 minuti in millisecondi
-    public static final int FRESH_TIMEOUT = 1000 * 60 * 5;
+    // 1 secondo in millisecondi
+    public static final int FRESH_TIMEOUT = 1000;
 
     // Constants for Firestore
     public static final String USERS_COLLECTION = "users";

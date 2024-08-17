@@ -1,5 +1,8 @@
 package it.unimib.adastra.ui.viewModel.ISSPositionViewModel;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,7 +19,20 @@ public class ISSPositionViewModel extends ViewModel {
         this.issPositionRepository = ISSPositionRepository;
     }
 
-    public MutableLiveData<Result> getISSPosition(long timestamp) {
+    public LiveData<Result> getISSPosition() {
+        Log.d(TAG, "getISSPosition");
+
+        if(issPositionLiveData == null)
+            issPositionLiveData = issPositionRepository.fetchISSPosition(0);
+
+        // TODO capire perchè è sempre null
+        Log.d(TAG, "issPositionLiveData: " + issPositionLiveData.getValue());
+        return issPositionLiveData;
+    }
+
+    public MutableLiveData<Result> fetchISSPosition(long timestamp) {
+        Log.d(TAG, "fetchISSPosition");
+
         if (issPositionLiveData == null) {
             issPositionLiveData = issPositionRepository.fetchISSPosition(timestamp);
         }

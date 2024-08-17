@@ -9,7 +9,6 @@ import androidx.room.Update;
 import java.util.List;
 
 import it.unimib.adastra.model.ISS.Astronaut;
-import it.unimib.adastra.model.ISS.Coordinates;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 @Dao
