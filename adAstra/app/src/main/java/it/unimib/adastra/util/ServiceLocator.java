@@ -1,5 +1,7 @@
 package it.unimib.adastra.util;
 
+import static it.unimib.adastra.util.Constants.ISS_API_BASE_URL;
+
 import android.app.Application;
 
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
@@ -42,7 +44,7 @@ public class ServiceLocator {
     public ISSApiService getISSApiService() {
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://perenual.com/api/")
+                    .baseUrl(ISS_API_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
@@ -55,13 +57,10 @@ public class ServiceLocator {
     }
 
     public IISSPositionRepository getISSRepository(Application application) {
-        BaseISSPositionRemoteDataSource issPositionRemoteDataSource;
-        BaseISSPositionLocalDataSource issPositionLocalDataSource;
-
-        issPositionRemoteDataSource =
+        BaseISSPositionRemoteDataSource issPositionRemoteDataSource =
                 new ISSPositionRemoteDataSource();
 
-        issPositionLocalDataSource =
+        BaseISSPositionLocalDataSource issPositionLocalDataSource =
                 new ISSPositionLocalDataSource(getISSDao(application));
 
         return new ISSPositionResponseRepository(issPositionRemoteDataSource,

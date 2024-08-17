@@ -6,7 +6,7 @@ import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 public interface ISSPositionResponseCallback {
-    void onSuccessFromRemote(ISSPositionApiResponse issPositionApiResponse, Long lastUpdate);
+    void onSuccessFromRemote(ISSPositionApiResponse issPositionApiResponse);
     void onFailureFromRemote(Exception exception);
     void onSuccessFromLocal(ISSPositionApiResponse issPositionApiResponse);
     void onFailureFromLocal(Exception exception);

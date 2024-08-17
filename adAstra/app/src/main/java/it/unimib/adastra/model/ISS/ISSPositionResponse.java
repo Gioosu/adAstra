@@ -13,14 +13,17 @@ import com.google.gson.annotations.SerializedName;
 @Entity
 public class ISSPositionResponse implements Parcelable {
 
+    // TODO Valutare utilità
     private boolean isLoading;
 
     @SerializedName("iss_position")
     @Embedded
     private Coordinates coordinates;
 
-    @PrimaryKey
     private long timestamp;
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
     public ISSPositionResponse() {
     }
@@ -53,6 +56,14 @@ public class ISSPositionResponse implements Parcelable {
     public boolean isLoading() { return isLoading; }
 
     public void setLoading(boolean isLoading) { this.isLoading = isLoading; }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public int describeContents() {

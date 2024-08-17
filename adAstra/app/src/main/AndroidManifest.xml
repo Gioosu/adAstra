@@ -4,6 +4,8 @@
 
     <!-- Permetti all'app di accedere a Internet per inviare email -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="true"

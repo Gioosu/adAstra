@@ -8,16 +8,16 @@ import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 
 public class ISSPositionViewModelFactory implements ViewModelProvider.Factory {
 
-    private final IISSPositionRepository ISSPositionRepository;
+    private final IISSPositionRepository issPositionRepository;
 
-    public ISSPositionViewModelFactory(IISSPositionRepository ISSPositionRepository) {
-        this.ISSPositionRepository = ISSPositionRepository;
+    public ISSPositionViewModelFactory(IISSPositionRepository issPositionRepository) {
+        this.issPositionRepository = issPositionRepository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new ISSPositionViewModel(ISSPositionRepository);
+        return (T) new ISSPositionViewModel(issPositionRepository);
     }
 }
 

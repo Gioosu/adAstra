@@ -19,6 +19,7 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
         ISSRoomDatabase.databaseWriteExecutor.execute(() -> {
             ISSPositionApiResponse issPositionApiResponse = new ISSPositionApiResponse();
             issPositionApiResponse.setTimestamp(issDao.getTimestamp());
+
             issPositionResponseCallback.onSuccessFromLocal(issPositionApiResponse);
         });
     }
@@ -37,6 +38,7 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
         ISSRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (issPositionResponse != null) {
                 int rowUpdatedCounter = issDao.updateIss(issPositionResponse);
+
                 if (rowUpdatedCounter == 1) {
                     ISSPositionResponse updatedIssPositionResponse = issDao.getISS();
                     issPositionResponseCallback.onISSPositionStatusChanged(updatedIssPositionResponse);

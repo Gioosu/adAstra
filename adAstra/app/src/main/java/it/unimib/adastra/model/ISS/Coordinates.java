@@ -10,6 +10,7 @@ public class Coordinates implements Parcelable {
     private double latitude;
 
     public Coordinates() {}
+
     public Coordinates(double longitude, double latitude) {
         this.longitude = longitude;
         this.latitude = latitude;

@@ -4,24 +4,20 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 import it.unimib.adastra.databinding.FragmentISSBinding;
+import it.unimib.adastra.model.ISS.ISSPositionResponse;
+import it.unimib.adastra.model.Result;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModel;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModelFactory;
-import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
-import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
 
 /**
@@ -33,8 +29,10 @@ public class ISSFragment extends Fragment {
     public static final String TAG = ISSFragment.class.getSimpleName();
     private FragmentISSBinding binding;
     private Activity activity;
-    private IISSPositionRepository ISSPositionRepository;
-    private ISSPositionViewModel ISSPositionViewModel;
+    private IISSPositionRepository issPositionRepository;
+    private ISSPositionViewModel issPositionViewModel;
+    private ISSPositionResponse issPosition;
+    private long timestamp;
 
     public ISSFragment() {
         // Required empty public constructor
@@ -54,11 +52,11 @@ public class ISSFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ISSPositionRepository = ServiceLocator.getInstance().
+        issPositionRepository = ServiceLocator.getInstance().
                 getISSRepository(requireActivity().getApplication());
-        ISSPositionViewModel = new ViewModelProvider(
+        issPositionViewModel = new ViewModelProvider(
                 requireActivity(),
-                new ISSPositionViewModelFactory(ISSPositionRepository)).get(ISSPositionViewModel.class);
+                new ISSPositionViewModelFactory(issPositionRepository)).get(ISSPositionViewModel.class);
     }
 
     @Override
@@ -74,7 +72,29 @@ public class ISSFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         activity = getActivity();
+        timestamp = 0;
+
+        issPositionViewModel.getISSPosition(timestamp).observe(
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        issPosition = ((Result.ISSPositionResponseSuccess) result).getData();
+                        timestamp = issPosition.getTimestamp();
+
+                        if (issPosition != null)
+                            updateUI(issPosition);
+                    } else {
+                        Log.d(TAG, "Errore: " + ((Result.Error) result).getMessage());
+                    }
+                });
 
         binding.buttonUpdateISS.setOnClickListener(v -> Log.d(TAG, "ISS"));
+    }
+
+    public void updateUI(ISSPositionResponse issPosition) {
+        String newLatitude = Double.toString(issPosition.getCoordinates().getLatitude());
+        String newLongitude = Double.toString(issPosition.getCoordinates().getLongitude());
+
+        binding.latitude.setText(newLatitude);
+        binding.longitude.setText(newLongitude);
     }
 }

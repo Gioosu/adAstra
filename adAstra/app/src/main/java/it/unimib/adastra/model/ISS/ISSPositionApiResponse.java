@@ -8,6 +8,7 @@ import androidx.room.Ignore;
 // Class to represent the source of ISS information
 @Entity
 public class ISSPositionApiResponse extends ISSPositionResponse {
+
     private String message;
 
     @Ignore
