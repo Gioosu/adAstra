@@ -18,8 +18,11 @@ public interface ISSDao {
     @Query("SELECT * FROM ISSPositionResponse")
     ISSPositionResponse getISS();
 
-    @Query("SELECT longitude, latitude FROM ISSPositionResponse")
-    Coordinates getISSPosition();
+    @Query("SELECT latitude FROM ISSPositionResponse")
+    double getLatitude();
+
+    @Query("SELECT longitude FROM ISSPositionResponse")
+    double getLongitude();
 
     @Query("SELECT timestamp FROM ISSPositionResponse")
     long getTimestamp();
@@ -38,6 +41,9 @@ public interface ISSDao {
 
     @Update
     int updateIss(ISSPositionResponse issPosition);
+
+    @Insert
+    void insertIss(ISSPositionResponse issPosition);
 
     @Update
     int updateAstronaut(Astronaut astronaut);

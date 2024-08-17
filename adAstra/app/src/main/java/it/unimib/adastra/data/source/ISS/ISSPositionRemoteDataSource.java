@@ -5,8 +5,9 @@ import static it.unimib.adastra.util.Constants.RETROFIT_ERROR;
 import android.util.Log;
 
 import it.unimib.adastra.data.service.ISSApiService;
-import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
+import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.util.ServiceLocator;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,21 +22,28 @@ public class ISSPositionRemoteDataSource extends BaseISSPositionRemoteDataSource
 
     @Override
     public void getISSPosition() {
-        Call<ISSPositionApiResponse> issPositionApiResponseCall = issApiService.getISSPosition();
-
-        issPositionApiResponseCall.enqueue(new Callback<ISSPositionApiResponse>() {
+        Call<ISSPositionResponse> issPositionResponseCall = issApiService.getISSPosition();
+        Request request = issPositionResponseCall.request();
+        Log.d(TAG, "getISSPosition RemoteDS: " + request.url()
+                + ", " + request.headers() + ", "
+                + request.method());
+        issPositionResponseCall.enqueue(new Callback<ISSPositionResponse>() {
 
             @Override
-            public void onResponse(Call<ISSPositionApiResponse> call, Response<ISSPositionApiResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getMessage().equals("success")) {
+            public void onResponse(Call<ISSPositionResponse> call, Response<ISSPositionResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "onResponse succesful");
+                    Log.d(TAG, "response.body: " + response.body().toString());
                     issPositionResponseCallback.onSuccessFromRemote(response.body());
                 } else {
+                    Log.d(TAG, "onResponse failure");
                     issPositionResponseCallback.onFailureFromRemote(new Exception());
                 }
             }
 
             @Override
-            public void onFailure(Call<ISSPositionApiResponse> call, Throwable t) {
+            public void onFailure(Call<ISSPositionResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure call" + t.getMessage());
                 issPositionResponseCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }
         });

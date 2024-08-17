@@ -2,13 +2,12 @@ package it.unimib.adastra.data.repository.ISSPosition;
 
 import java.util.List;
 
-import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 public interface ISSPositionResponseCallback {
-    void onSuccessFromRemote(ISSPositionApiResponse issPositionApiResponse);
+    void onSuccessFromRemote(ISSPositionResponse issPositionResponse);
     void onFailureFromRemote(Exception exception);
-    void onSuccessFromLocal(ISSPositionApiResponse issPositionApiResponse);
+    void onSuccessFromLocal(ISSPositionResponse issPositionResponse);
     void onFailureFromLocal(Exception exception);
     void onSuccessFromCloudReading(List<ISSPositionResponse> issPositionResponses);
     void onSuccessFromCloudWriting(ISSPositionResponse issPositionResponses);

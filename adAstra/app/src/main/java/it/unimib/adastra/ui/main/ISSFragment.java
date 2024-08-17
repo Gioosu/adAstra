@@ -72,6 +72,7 @@ public class ISSFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         activity = getActivity();
+        int id = 25544;
         timestamp = 0;
 
         issPositionViewModel.getISSPosition(timestamp).observe(
@@ -87,12 +88,12 @@ public class ISSFragment extends Fragment {
                     }
                 });
 
-        binding.buttonUpdateISS.setOnClickListener(v -> Log.d(TAG, "ISS"));
+        binding.buttonUpdateISS.setOnClickListener(v -> issPositionViewModel.getISSPosition(timestamp));
     }
 
     public void updateUI(ISSPositionResponse issPosition) {
-        String newLatitude = Double.toString(issPosition.getCoordinates().getLatitude());
-        String newLongitude = Double.toString(issPosition.getCoordinates().getLongitude());
+        String newLatitude = Double.toString(issPosition.getLatitude());
+        String newLongitude = Double.toString(issPosition.getLongitude());
 
         binding.latitude.setText(newLatitude);
         binding.longitude.setText(newLongitude);

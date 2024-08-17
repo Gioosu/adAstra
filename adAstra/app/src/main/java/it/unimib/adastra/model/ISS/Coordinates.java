@@ -6,12 +6,12 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class Coordinates implements Parcelable {
-    private double longitude;
-    private double latitude;
+    private String longitude;
+    private String latitude;
 
     public Coordinates() {}
 
-    public Coordinates(double longitude, double latitude) {
+    public Coordinates(String longitude, String latitude) {
         this.longitude = longitude;
         this.latitude = latitude;
     }
@@ -20,20 +20,20 @@ public class Coordinates implements Parcelable {
 
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public double getLatitude() {
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLongitude(double newLongitude) {
-        longitude = newLongitude;
-    }
-
-    public void setLatitude(double newLatitude) {
-        latitude = newLatitude;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     @Override
@@ -51,8 +51,8 @@ public class Coordinates implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int Flags) {
-        dest.writeDouble(this.longitude);
-        dest.writeDouble(this.latitude);
+        dest.writeString(this.longitude);
+        dest.writeString(this.latitude);
     }
 
     public static final Creator<Coordinates> CREATOR = new Creator<Coordinates>() {

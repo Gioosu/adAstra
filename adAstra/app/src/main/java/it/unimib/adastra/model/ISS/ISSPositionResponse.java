@@ -13,49 +13,61 @@ import com.google.gson.annotations.SerializedName;
 @Entity
 public class ISSPositionResponse implements Parcelable {
 
-    // TODO Valutare utilità
-    private boolean isLoading;
-
-    @SerializedName("iss_position")
-    @Embedded
-    private Coordinates coordinates;
-
-    private long timestamp;
-
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
+
+    private double latitude;
+    private double longitude;
+    private double altitude;
+    private double velocity;
+    private String visibility;
+    private double footprint;
+    private long timestamp;
+    private double daynum;
+    private double solar_lat;
+    private double solar_lon;
+    private String units;
 
     public ISSPositionResponse() {
     }
 
-    public ISSPositionResponse(Coordinates coordinates, long timestamp) {
-        this.coordinates = coordinates;
+    public ISSPositionResponse(int id, double latitude, double longitude, double altitude,
+                               double velocity, String visibility, double footprint, long timestamp,
+                               double daynum, double solar_lat, double solar_lon, String units) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+        this.velocity = velocity;
+        this.visibility = visibility;
+        this.footprint = footprint;
         this.timestamp = timestamp;
+        this.daynum = daynum;
+        this.solar_lat = solar_lat;
+        this.solar_lon = solar_lon;
+        this.units = units;
+    }
+
+    public ISSPositionResponse(long timestamp, double longitude, double latitude) {
+        this.timestamp = timestamp;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     protected ISSPositionResponse(Parcel in) {
-        isLoading = in.readByte() != 0;
-        coordinates = in.readParcelable(Coordinates.class.getClassLoader());
-        timestamp = in.readLong();
+       id = in.readInt();
+       latitude = in.readDouble();
+       longitude = in.readDouble();
+       altitude = in.readDouble();
+       velocity = in.readDouble();
+       visibility = in.readString();
+       footprint = in.readDouble();
+       timestamp = in.readLong();
+       daynum = in.readDouble();
+       solar_lat = in.readDouble();
+       solar_lon = in.readDouble();
+       units = in.readString();
     }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public long getTimestamp() {return timestamp;}
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public boolean isLoading() { return isLoading; }
-
-    public void setLoading(boolean isLoading) { this.isLoading = isLoading; }
 
     public int getId() {
         return id;
@@ -65,6 +77,94 @@ public class ISSPositionResponse implements Parcelable {
         this.id = id;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
+
+    public double getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(double velocity) {
+        this.velocity = velocity;
+    }
+
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
+    public double getFootprint() {
+        return footprint;
+    }
+
+    public void setFootprint(double footprint) {
+        this.footprint = footprint;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public double getDaynum() {
+        return daynum;
+    }
+
+    public void setDaynum(double daynum) {
+        this.daynum = daynum;
+    }
+
+    public double getSolar_lat() {
+        return solar_lat;
+    }
+
+    public void setSolar_lat(double solar_lat) {
+        this.solar_lat = solar_lat;
+    }
+
+    public double getSolar_lon() {
+        return solar_lon;
+    }
+
+    public void setSolar_lon(double solar_lon) {
+        this.solar_lon = solar_lon;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -72,21 +172,50 @@ public class ISSPositionResponse implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.isLoading ? (byte) 1 : (byte) 0);
-        dest.writeTypedObject(this.coordinates, flags);
+       dest.writeInt(id);
+       dest.writeDouble(latitude);
+       dest.writeDouble(longitude);
+       dest.writeDouble(altitude);
+       dest.writeDouble(velocity);
+       dest.writeString(visibility);
+       dest.writeDouble(footprint);
+       dest.writeLong(timestamp);
+       dest.writeDouble(daynum);
+       dest.writeDouble(solar_lat);
+       dest.writeDouble(solar_lon);
+       dest.writeString(units);
     }
 
     public void readFromParcel(Parcel source) {
-        this.isLoading = source.readByte() != 0;
-        this.coordinates = source.readTypedObject(Coordinates.CREATOR);
+        this.id = source.readInt();
+        this.latitude = source.readDouble();
+        this.longitude = source.readDouble();
+        this.altitude = source.readDouble();
+        this.velocity = source.readDouble();
+        this.visibility = source.readString();
+        this.footprint = source.readDouble();
+        this.timestamp = source.readLong();
+        this.daynum = source.readDouble();
+        this.solar_lat = source.readDouble();
+        this.solar_lon = source.readDouble();
+        this.units = source.readString();
     }
 
     @Override
     public String toString() {
         return "ISSPositionResponse{" +
-                "isLoading=" + isLoading +
-                ", coordinates=" + coordinates +
+                "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", altitude=" + altitude +
+                ", velocity=" + velocity +
+                ", visibility='" + visibility + '\'' +
+                ", footprint=" + footprint +
                 ", timestamp=" + timestamp +
+                ", daynum=" + daynum +
+                ", solar_lat=" + solar_lat +
+                ", solar_lon=" + solar_lon +
+                ", units='" + units + '\'' +
                 '}';
     }
 

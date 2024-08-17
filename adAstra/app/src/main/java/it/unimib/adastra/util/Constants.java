@@ -25,9 +25,9 @@ public class Constants {
     public static final String ISS_API_TEST_JSON_FILE = "ISSResponse.json";
     public static final String ASTRO_API_TEST_JSON_FILE = "AstroResponse.json";
 
-    // Constants for ISS API (http://api.open-notify.org/)
-    public static final String ISS_API_BASE_URL = "http://api.open-notify.org/";
-    public static final String ISS_ENDPOINT = "iss-now.json";
+    // Constants for ISS API (https://api.wheretheiss.at/)
+    public static final String ISS_API_BASE_URL = "https://api.wheretheiss.at/";
+    public static final String ISS_ENDPOINT = "v1/satellites/25544";
     public static final String ASTROS_ENDPOINT = "astros.json";
 
     // Constants for Room

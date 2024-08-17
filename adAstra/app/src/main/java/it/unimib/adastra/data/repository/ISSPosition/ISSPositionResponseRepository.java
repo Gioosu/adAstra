@@ -10,7 +10,6 @@ import java.util.List;
 
 import it.unimib.adastra.data.source.ISS.BaseISSPositionLocalDataSource;
 import it.unimib.adastra.data.source.ISS.BaseISSPositionRemoteDataSource;
-import it.unimib.adastra.model.ISS.ISSPositionApiResponse;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.Result;
 
@@ -62,8 +61,8 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     }
 
     @Override
-    public void onSuccessFromRemote(ISSPositionApiResponse issPositionApiResponse) {
-        issPositionLocalDataSource.updateISS(issPositionApiResponse);
+    public void onSuccessFromRemote(ISSPositionResponse issPositionResponse) {
+        issPositionLocalDataSource.updateISS(issPositionResponse);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     }
 
     @Override
-    public void onSuccessFromLocal(ISSPositionApiResponse issPositionApiResponse) {
+    public void onSuccessFromLocal(ISSPositionResponse issPositionResponse) {
 
     }
 
