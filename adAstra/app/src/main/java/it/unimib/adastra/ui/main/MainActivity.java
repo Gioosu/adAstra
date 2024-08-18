@@ -67,15 +67,9 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.materialToolbarMain);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("");
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.main_nav_host_fragment);
         NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
-
-        navController.addOnDestinationChangedListener((controller, destination, arguments) ->
-                binding.materialToolbarMain.setTitle(destination.getLabel()));
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
     }

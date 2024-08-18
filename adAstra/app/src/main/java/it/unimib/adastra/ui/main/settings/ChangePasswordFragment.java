@@ -98,8 +98,6 @@ public class ChangePasswordFragment extends Fragment {
         idToken = userViewModel.getLoggedUser();
         password = getPassword();
 
-        ((MainActivity) activity).setToolBarTitle(getString(R.string.change_password));
-
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {

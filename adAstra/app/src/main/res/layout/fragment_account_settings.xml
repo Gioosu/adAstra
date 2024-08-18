@@ -31,46 +31,17 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="8dp" />
 
-        <ImageView
-            android:id="@+id/imageView_profile"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:contentDescription="@string/account_settings"
-            android:src="@drawable/alien"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_profile" />
-
-        <TextView
-            android:id="@+id/textView_username_account_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_profile" />
-
-        <TextView
-            android:id="@+id/textView_email_account_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-            app:layout_constraintTop_toBottomOf="@+id/textView_username_account_settings" />
-
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-            app:layout_constraintTop_toBottomOf="@+id/textView_email_account_settings">
+            app:layout_constraintTop_toBottomOf="@+id/textView_account_settings">
 
             <ImageView
                 android:id="@+id/imageView_icon_update_username"
@@ -86,6 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:paddingRight="@dimen/m3_btn_text_btn_padding_right"
                 android:text="@string/update_username"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
@@ -98,7 +70,9 @@
             android:id="@+id/linearLayout2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
@@ -118,19 +92,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:paddingRight="@dimen/m3_btn_text_btn_padding_right"
                 android:text="@string/update_email"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
                 app:icon="@drawable/arrow_forward"
                 app:iconGravity="end"
                 tools:ignore="DuplicateSpeakableTextCheck" />
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
@@ -150,6 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:paddingRight="@dimen/m3_btn_text_btn_padding_right"
                 android:text="@string/change_password"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
@@ -162,22 +141,101 @@
             android:id="@+id/button_delete_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="@string/delete_account"
             android:textSize="20sp"
-            android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton_back"
+        <View
+            android:id="@+id/divider_account_settings"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+        <TextView
+            android:id="@+id/textView_account_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:src="@drawable/arrow_backward"
-            app:fabCustomSize="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/account_settings"
+            android:textColor="?android:textColorPrimary"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
-            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_profile" />
+            app:layout_constraintTop_toBottomOf="@+id/divider_account_settings" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardElevation="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_profile"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_profile"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_profile">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView_profile"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/account_settings"
+                    android:src="@drawable/alien"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView_username_account_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView_profile" />
+
+                <TextView
+                    android:id="@+id/textView_email_account_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_username_account_settings" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:src="@drawable/arrow_backward"
+                    app:fabCustomSize="32dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -109,8 +109,6 @@ public class SettingsFragment extends Fragment {
         user = null;
         idToken = userViewModel.getLoggedUser();
 
-        ((MainActivity) activity).setToolBarTitle(getString(R.string.settings));
-
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
             if (result.isSuccess()) {

@@ -1,6 +1,5 @@
 package it.unimib.adastra.ui.main;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import it.unimib.adastra.R;
  * create an instance of this fragment.
  */
 public class EventsFragment extends Fragment {
-private Activity activity;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -50,9 +48,5 @@ private Activity activity;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        activity = getActivity();
-        assert activity != null;
-        ((MainActivity) activity).setToolBarTitle(getString(R.string.events));
     }
 }

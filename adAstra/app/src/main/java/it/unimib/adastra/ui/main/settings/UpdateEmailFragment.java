@@ -100,8 +100,6 @@ public class UpdateEmailFragment extends Fragment {
         email = getEmail();
         password = getPassword();
 
-        ((MainActivity) activity).setToolBarTitle(getString(R.string.update_email));
-
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {

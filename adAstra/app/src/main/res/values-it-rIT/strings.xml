@@ -94,6 +94,7 @@
 
     <!-- Iss -->
     <string name="iss_refresh">Aggiorna posizione ISS</string>
+    <string name="iss_filled">Icona ISS piena</string>
 
     <!-- Errors -->
     <string name="error_invalid_username">Il nome utente deve essere lunga tra 3 e 10 caratteri</string>

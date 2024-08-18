@@ -1,6 +1,5 @@
 package it.unimib.adastra.ui.main;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentHomeBinding;
-import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.

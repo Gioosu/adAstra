@@ -91,29 +91,27 @@ public class ISSFragment extends Fragment {
                 });
 
         // Bottone di Aggiornamento
-        binding.buttonUpdateISS.setOnClickListener(v -> {
+        binding.floatingActionButtonIssRefresh.setOnClickListener(v ->
+                issPositionViewModel.fetchISSPosition(timestamp).observe(
+                getViewLifecycleOwner(), task -> {
+                    Log.d(TAG, "Bottone");
+                    if (task.isSuccess()) {
+                        issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
+                        timestamp = issPosition.getTimestamp();
 
-            issPositionViewModel.fetchISSPosition(timestamp).observe(
-                    getViewLifecycleOwner(), task -> {
-                        Log.d(TAG, "Bottone");
-                        if (task.isSuccess()) {
-                            issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
-                            timestamp = issPosition.getTimestamp();
-
-                            if (issPosition != null)
-                                updateUI(issPosition);
-                        }else {
-                            Log.d(TAG, "Errore: " + ((Result.Error) task).getMessage());
-                        }
-                    });
-        });
+                        if (issPosition != null)
+                            updateUI(issPosition);
+                    }else {
+                        Log.d(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                    }
+                }));
     }
 
     public void updateUI(ISSPositionResponse issPosition) {
         String newLatitude = Double.toString(issPosition.getLatitude());
         String newLongitude = Double.toString(issPosition.getLongitude());
 
-        binding.latitude.setText(requireActivity().getString(R.string.iss_latitude) + ": " + newLatitude);
-        binding.longitude.setText(requireActivity().getString(R.string.iss_longitude) + ": " + newLongitude);
+        binding.textViewLatitude.setText(requireActivity().getString(R.string.iss_latitude) + ": " + newLatitude);
+        binding.textViewLongitude.setText(requireActivity().getString(R.string.iss_longitude) + ": " + newLongitude);
     }
 }

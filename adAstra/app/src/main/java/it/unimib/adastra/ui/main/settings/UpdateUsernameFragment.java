@@ -82,8 +82,6 @@ public class UpdateUsernameFragment extends Fragment {
         user = null;
         idToken = userViewModel.getLoggedUser();
 
-        ((MainActivity) activity).setToolBarTitle(getString(R.string.update_username));
-
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {

@@ -107,6 +107,7 @@
     <string name="iss_refresh">Update ISS position</string>
     <string name="iss_longitude">Longitude</string>
     <string name="iss_latitude">Latitude</string>
+    <string name="iss_filled">ISS icon filled</string>
 
     <!-- Errors -->
     <string name="error_invalid_email">Invalid email address</string>

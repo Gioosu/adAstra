@@ -95,8 +95,6 @@ public class AccountSettingsFragment extends Fragment {
         email = getEmail();
         password = getPassword();
 
-        ((MainActivity) requireActivity()).setToolBarTitle(getString(R.string.account_settings));
-
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
