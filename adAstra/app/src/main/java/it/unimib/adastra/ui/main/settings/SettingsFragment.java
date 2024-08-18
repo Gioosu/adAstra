@@ -255,7 +255,7 @@ public class SettingsFragment extends Fragment {
         binding.buttonReportIssue.setOnClickListener(v ->
                 sendEmail());
 
-        // Bottone di Build information
+        // Bottone di Build information, ottiene versione da build.gradle.kts (Module: app), riga 15
         binding.buttonBuildInformation.setText(BuildConfig.VERSION_NAME);
         binding.buttonBuildInformation.setOnClickListener(v -> {
             //TODO implement build information easter egg

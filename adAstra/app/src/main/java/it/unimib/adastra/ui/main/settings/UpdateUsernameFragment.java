@@ -95,6 +95,10 @@ public class UpdateUsernameFragment extends Fragment {
                     }
                 });
 
+        // Bottone di Back to settings
+        binding.floatingActionButtonBack.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_updateUsernameFragment_to_accountSettingsFragment));
+
         // Bottone di Cancel
         binding.buttonCancelUpdateUsername.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_updateUsernameFragment_to_accountSettingsFragment));

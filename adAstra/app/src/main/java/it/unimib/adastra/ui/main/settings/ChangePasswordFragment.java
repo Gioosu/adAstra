@@ -115,6 +115,10 @@ public class ChangePasswordFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
+        // Bottone di Back to settings
+        binding.floatingActionButtonBack.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_accountSettingsFragment));
+
         // Bottone di Forgot password
         binding.buttonForgotPasswordChangePassword.setOnClickListener(v -> {
             try {

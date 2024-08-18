@@ -113,6 +113,10 @@ public class UpdateEmailFragment extends Fragment {
                     }
                 });
 
+        // Bottone di Back to settings
+        binding.floatingActionButtonBack.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment));
+
         // Bottone di Forgot password
         binding.buttonForgotPasswordUpdateEmail.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.confirm_reset)
