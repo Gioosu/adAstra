@@ -110,7 +110,7 @@
 
     <!-- Errors -->
     <string name="error_invalid_email">Invalid email address</string>
-    <string name="error_invalid_password">Password must be at least 8 characters</string>
+    <string name="error_invalid_password">Password must be at least 6 characters</string>
     <string name="error_invalid_confirm_password">Passwords must match</string>
     <string name="error_invalid_username">The username must be between 3 and 10 characters</string>
     <string name="error_email_send_failed">Failed to send the email</string>

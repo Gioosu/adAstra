@@ -45,6 +45,7 @@ public class Constants {
     public static final String USER_COLLISION_ERROR = "user_collision_error";
     public static final String NULL_FIREBASE_OBJECT = "null_firebase_object";
     public static final String ACCOUNT_DELETION_FAILED = "account_deletion_failed";
+    public static final String ERROR_PARAMETERS = "invalid_parameters";
 
     // Constants for Time
     // 1 secondo in millisecondi

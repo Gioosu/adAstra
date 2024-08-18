@@ -99,7 +99,7 @@
     <!-- Errors -->
     <string name="error_invalid_username">Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
     <string name="error_invalid_email">Indirizzo email non valido</string>
-    <string name="error_invalid_password">La password deve essere lunga almeno 8 caratteri</string>
+    <string name="error_invalid_password">La password deve essere lunga almeno 6 caratteri</string>
     <string name="error_invalid_confirm_password">Le password devono corrispondere</string>
     <string name="error_email_send_failed">Failed to send the email</string>
     <string name="error_email_already_exists">Indirizzo email già in uso</string>

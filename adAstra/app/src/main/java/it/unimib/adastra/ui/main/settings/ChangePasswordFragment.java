@@ -173,7 +173,7 @@ public class ChangePasswordFragment extends Fragment {
 
     // Controlla che la password sia valida
     private boolean isNewPasswordValid(String newPassword) {
-        boolean result = newPassword != null && newPassword.length() >= 8;
+        boolean result = newPassword != null && newPassword.length() >= 6;
         boolean notEqualResult = newPassword != null && !(newPassword.equalsIgnoreCase(password));
 
         if (!result) {

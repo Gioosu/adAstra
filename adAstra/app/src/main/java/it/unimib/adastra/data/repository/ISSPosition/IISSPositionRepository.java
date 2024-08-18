@@ -8,8 +8,6 @@ import it.unimib.adastra.model.Result;
 public interface IISSPositionRepository {
     MutableLiveData<Result> fetchISSPosition(long timestamp);
 
-    void fetchISSPosition();
-
     void updateISSPosition(ISSPositionResponse issPositionResponse);
 
     void deleteISSPosition();

@@ -19,6 +19,7 @@ import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.Result;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModel;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModelFactory;
+import it.unimib.adastra.util.CoordinateConverter;
 import it.unimib.adastra.util.ServiceLocator;
 
 /**
@@ -76,10 +77,9 @@ public class ISSFragment extends Fragment {
         timestamp = 0;
 
         // Aggiornamento dinamico
-        issPositionViewModel.getISSPosition().observe(
+        issPositionViewModel.getISSPosition(timestamp).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
-                        Log.d(TAG, "Aggiornamento dinamico");
                         issPosition = ((Result.ISSPositionResponseSuccess) result).getData();
                         timestamp = issPosition.getTimestamp();
 
@@ -92,26 +92,19 @@ public class ISSFragment extends Fragment {
 
         // Bottone di Aggiornamento
         binding.floatingActionButtonIssRefresh.setOnClickListener(v ->
-                issPositionViewModel.fetchISSPosition(timestamp).observe(
-                getViewLifecycleOwner(), task -> {
-                    Log.d(TAG, "Bottone");
-                    if (task.isSuccess()) {
-                        issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
-                        timestamp = issPosition.getTimestamp();
-
-                        if (issPosition != null)
-                            updateUI(issPosition);
-                    }else {
-                        Log.d(TAG, "Errore: " + ((Result.Error) task).getMessage());
-                    }
-                }));
+                issPositionViewModel.getISSPosition(timestamp)
+        );
     }
 
-    public void updateUI(ISSPositionResponse issPosition) {
-        String newLatitude = Double.toString(issPosition.getLatitude());
-        String newLongitude = Double.toString(issPosition.getLongitude());
 
-        binding.textViewLatitude.setText(requireActivity().getString(R.string.iss_latitude) + ": " + newLatitude);
-        binding.textViewLongitude.setText(requireActivity().getString(R.string.iss_longitude) + ": " + newLongitude);
+
+    public void updateUI(ISSPositionResponse issPosition) {
+        String newLatitude = CoordinateConverter.decimalToDMS(issPosition.getLatitude());
+        String newLongitude = CoordinateConverter.decimalToDMS(issPosition.getLongitude());
+
+        newLatitude = CoordinateConverter.formatDMS(newLatitude, "N");
+        newLongitude = CoordinateConverter.formatDMS(newLongitude, "E");
+
+        binding.textViewCoordinates.setText(newLatitude + ", " + newLongitude);
     }
 }

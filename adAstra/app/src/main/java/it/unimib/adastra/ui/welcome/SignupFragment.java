@@ -165,7 +165,7 @@ public class SignupFragment extends Fragment {
 
     // Controlla che la password sia valida
     private boolean isPasswordValid(String password) {
-        boolean result = password != null && password.length() >= 8;
+        boolean result = password != null && password.length() >= 6;
 
         if (!result) {
             binding.textPasswordSignup.setError(getString(R.string.error_invalid_password));

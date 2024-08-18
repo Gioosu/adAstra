@@ -19,23 +19,9 @@ public class ISSPositionViewModel extends ViewModel {
         this.issPositionRepository = ISSPositionRepository;
     }
 
-    public LiveData<Result> getISSPosition() {
-        Log.d(TAG, "getISSPosition");
+    public MutableLiveData<Result> getISSPosition(long timestamp) {
 
-        if(issPositionLiveData == null)
-            issPositionLiveData = issPositionRepository.fetchISSPosition(0);
-
-        // TODO capire perchè è sempre null
-        Log.d(TAG, "issPositionLiveData: " + issPositionLiveData.getValue());
-        return issPositionLiveData;
-    }
-
-    public MutableLiveData<Result> fetchISSPosition(long timestamp) {
-        Log.d(TAG, "fetchISSPosition");
-
-        if (issPositionLiveData == null) {
-            issPositionLiveData = issPositionRepository.fetchISSPosition(timestamp);
-        }
+        issPositionLiveData = issPositionRepository.fetchISSPosition(timestamp);
 
         return issPositionLiveData;
     }

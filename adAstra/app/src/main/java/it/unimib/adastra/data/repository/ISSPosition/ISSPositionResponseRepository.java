@@ -34,19 +34,12 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     public MutableLiveData<Result> fetchISSPosition(long timestamp) {
         long currentTime = System.currentTimeMillis();
         if(currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
-            Log.d(TAG, "Recupero dati da remoto");
             issPositionRemoteDataSource.getISSPosition();
         } else {
-            Log.d(TAG, "Recupero dati da locale");
             issPositionLocalDataSource.getISSPosition();
         }
 
         return issPositionMutableLiveData;
-    }
-
-    @Override
-    public void fetchISSPosition() {
-        issPositionRemoteDataSource.getISSPosition();
     }
 
     @Override
