@@ -74,7 +74,6 @@
     </string-array>
     <string name="notification_settings">Notification settings</string>
     <string name="report_issue">Report an issue</string>
-    <string name="build_code" translatable="false">0.00.1</string>
     <string name="build_information">Build information</string>
 
     <!-- AccountSettings -->

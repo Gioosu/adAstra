@@ -31,35 +31,14 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="8dp" />
 
-        <ImageView
-            android:id="@+id/imageView_update_password"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:contentDescription="@string/error_username_update_failed"
-            android:src="@drawable/email"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
-            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_update_email" />
-
-        <TextView
-            android:id="@+id/textView_email_update_email"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginTop="8dp"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_update_password" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_update_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
-            app:layout_constraintTop_toBottomOf="@+id/textView_email_update_email">
+            app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailTextInputEditText_update_email"
@@ -125,6 +104,59 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
             app:layout_constraintStart_toEndOf="@+id/button_cancel_update_email" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardElevation="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_update_email">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView_update_password"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/error_username_update_failed"
+                    android:src="@drawable/email"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView_email_update_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView_update_password" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:src="@drawable/arrow_backward"
+                    app:fabCustomSize="32dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

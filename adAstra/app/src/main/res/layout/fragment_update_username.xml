@@ -31,36 +31,15 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="8dp" />
 
-        <ImageView
-            android:id="@+id/imageView_update_username"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:contentDescription="@string/update_email"
-            android:src="@drawable/astronaut_outlined"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_username"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username"
-            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_update_username" />
-
-        <TextView
-            android:id="@+id/textView_username_update_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_username"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_update_username" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernameInputLayout_update_username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_username"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username"
-            app:layout_constraintTop_toBottomOf="@+id/textView_username_update_username">
+            app:layout_constraintTop_toBottomOf="@+id/cardView3">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usernameInputEditText_update_username"
@@ -93,6 +72,58 @@
             app:layout_constraintEnd_toStartOf="@+id/button_save_update_username"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardElevation="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_username"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username"
+            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_update_username">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView_update_username"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/update_email"
+                    android:src="@drawable/astronaut_outlined"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView_username_update_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView_update_username" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:src="@drawable/arrow_backward"
+                    app:fabCustomSize="32dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
