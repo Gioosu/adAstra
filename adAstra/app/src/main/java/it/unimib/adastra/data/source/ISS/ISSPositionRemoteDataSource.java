@@ -22,26 +22,30 @@ public class ISSPositionRemoteDataSource extends BaseISSPositionRemoteDataSource
 
     @Override
     public void getISSPosition(boolean isKilometers) {
-        Call<ISSPositionResponse> issPositionResponseCall = null;
+        Call<ISSPositionResponse> issPositionResponseCall;
+
         if (!isKilometers) {
             issPositionResponseCall = issApiService.getISSPositionKilometers();
         } else {
             issPositionResponseCall = issApiService.getISSPositionMiles();
         }
+
         Request request = issPositionResponseCall.request();
         Log.d(TAG, "getISSPosition RemoteDS: " + request.url()
                 + ", " + request.headers() + ", "
                 + request.method());
-        issPositionResponseCall.enqueue(new Callback<ISSPositionResponse>() {
 
+        issPositionResponseCall.enqueue(new Callback<ISSPositionResponse>() {
             @Override
             public void onResponse(Call<ISSPositionResponse> call, Response<ISSPositionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "onResponse succesful");
                     Log.d(TAG, "response.body: " + response.body().toString());
+
                     issPositionResponseCallback.onSuccessFromRemote(response.body());
                 } else {
                     Log.d(TAG, "onResponse failure");
+
                     issPositionResponseCallback.onFailureFromRemote(new Exception());
                 }
             }

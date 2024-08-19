@@ -1,6 +1,7 @@
 package it.unimib.adastra.model;
 
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
+import it.unimib.adastra.model.user.User;
 
 public abstract class Result {
     private Result() {}

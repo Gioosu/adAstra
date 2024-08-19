@@ -1,8 +1,5 @@
 package it.unimib.adastra.ui.viewModel.ISSPositionViewModel;
 
-import android.util.Log;
-
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -20,7 +17,6 @@ public class ISSPositionViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> getISSPosition(long timestamp, boolean isKilometers) {
-
         issPositionLiveData = issPositionRepository.fetchISSPosition(timestamp, isKilometers);
 
         return issPositionLiveData;

@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 import it.unimib.adastra.util.exception.NullException;
 import it.unimib.adastra.util.exception.UnverifiedEmailException;
 

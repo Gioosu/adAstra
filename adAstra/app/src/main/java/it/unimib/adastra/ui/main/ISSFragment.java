@@ -20,7 +20,7 @@ import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentISSBinding;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.Result;
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModel;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModelFactory;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
@@ -42,10 +42,9 @@ public class ISSFragment extends Fragment {
     private ISSPositionResponse issPosition;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
-    private long timestamp;
-    private String idToken;
     private User user;
-    private User user1;
+    private String idToken;
+    private long timestamp;
     private boolean isKilometers;
 
     public ISSFragment() {
@@ -66,19 +65,19 @@ public class ISSFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Inizializzazione dei ViewModel per ISS
-        issPositionRepository = ServiceLocator.getInstance().
-                getISSRepository(requireActivity().getApplication());
-        issPositionViewModel = new ViewModelProvider(
-                requireActivity(),
-                new ISSPositionViewModelFactory(issPositionRepository)).get(ISSPositionViewModel.class);
-
         // Inizializzazione dei ViewModel per User
         userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
         userViewModel = new ViewModelProvider(
                 requireActivity(),
                 new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
+        // Inizializzazione dei ViewModel per ISS
+        issPositionRepository = ServiceLocator.getInstance().
+                getISSRepository(requireActivity().getApplication());
+        issPositionViewModel = new ViewModelProvider(
+                requireActivity(),
+                new ISSPositionViewModelFactory(issPositionRepository)).get(ISSPositionViewModel.class);
     }
 
     @Override
@@ -94,53 +93,50 @@ public class ISSFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         activity = getActivity();
-        timestamp = 0;
-        idToken = userViewModel.getLoggedUser();
         user = null;
+        idToken = userViewModel.getLoggedUser();
+        timestamp = 0;
+        isKilometers = false;
 
-        // Recupero dati utente
+        // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
+                        Log.d(TAG, "result.isSucceful()");
                         user = ((Result.UserResponseSuccess) result).getUser();
+
                         if (user != null) {
                             isKilometers = user.isImperialSystem();
-                            issPositionViewModel.getISSPosition(timestamp, isKilometers);
+
+                            issPositionViewModel.getISSPosition(timestamp, isKilometers).observe(
+                                    getViewLifecycleOwner(), task -> {
+                                        Log.d(TAG, "task.isSucceful()");
+
+                                        if (result.isSuccess()) {
+                                            issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
+                                            timestamp = issPosition.getTimestamp();
+
+                                            if (issPosition != null)
+                                                updateUI(issPosition);
+                                        } else {
+                                            Log.d(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                                        }
+                                    });
                         }
                     } else {
                         Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
                     }
-                    Log.d(TAG, "user dentro:" + user);
-                });
-
-        // Aggiornamento dinamico ISS
-        issPositionViewModel.getISSPosition(timestamp, isKilometers).observe(
-                getViewLifecycleOwner(), result -> {
-                    if (result.isSuccess()) {
-                        issPosition = ((Result.ISSPositionResponseSuccess) result).getData();
-                        timestamp = issPosition.getTimestamp();
-
-                        if (issPosition != null)
-                            updateUI(issPosition);
-                    } else {
-                        Log.d(TAG, "Errore: " + ((Result.Error) result).getMessage());
-                    }
                 });
 
         // Bottone di Aggiornamento
-        binding.floatingActionButtonIssRefresh.setOnClickListener(v ->
-        {
+        binding.floatingActionButtonIssRefresh.setOnClickListener(v -> {
+            Log.d(TAG, "Bottone di Aggiornamento premuto");
             issPositionViewModel.getISSPosition(timestamp, isKilometers);
         });
 
         String info =  getString(R.string.altitude) + ": " + getString(R.string.iss_altitude_description) + "\n\n" +
                         getString(R.string.velocity) + ": " + getString(R.string.iss_velocity_description) + "\n\n" +
-                        getString(R.string.visibility) + ": " + getString(R.string.iss_visibility_description) + "\n\n" +
-                        getString(R.string.footprint) + ": " + getString(R.string.iss_footprint_description) + "\n\n" +
-                        getString(R.string.timestamp) + ": " + getString(R.string.iss_timestamp_description) + "\n\n" +
-                        getString(R.string.daynum) + ": " + getString(R.string.iss_daynum_description) + "\n\n" +
-                        getString(R.string.solar_latitude) + ": " + getString(R.string.iss_solar_latitude_description) + "\n\n" +
-                        getString(R.string.solar_longitude) + ": " + getString(R.string.iss_solar_longitude_description);
+                        getString(R.string.visibility) + ": " + getString(R.string.iss_visibility_description);
 
         // Bottone di Info
         binding.floatingActionButtonIssInfo.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
@@ -149,8 +145,6 @@ public class ISSFragment extends Fragment {
                 .setPositiveButton(R.string.close, null)
                 .show());
     }
-
-
 
     public void updateUI(ISSPositionResponse issPosition) {
         String newLatitude = CoordinateUtil.decimalToDMS(issPosition.getLatitude());

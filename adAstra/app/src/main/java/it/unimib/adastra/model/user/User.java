@@ -1,4 +1,4 @@
-package it.unimib.adastra.model;
+package it.unimib.adastra.model.user;
 
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;

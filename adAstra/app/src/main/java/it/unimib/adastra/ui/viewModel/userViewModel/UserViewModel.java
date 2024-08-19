@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.model.Result;
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 
 public class UserViewModel extends ViewModel {
     private static final String TAG = UserViewModel.class.getSimpleName();

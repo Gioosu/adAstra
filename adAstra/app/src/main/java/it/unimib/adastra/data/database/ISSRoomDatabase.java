@@ -11,14 +11,11 @@ import androidx.room.Room;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import it.unimib.adastra.model.ISS.Astronaut;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
-@Database(entities = {ISSPositionResponse.class, Astronaut.class}, version = DATABASE_VERSION, exportSchema = false)
+@Database(entities = {ISSPositionResponse.class}, version = DATABASE_VERSION, exportSchema = false)
 public abstract class ISSRoomDatabase extends androidx.room.RoomDatabase {
-
     public abstract ISSDao issDao();
-
     private static volatile ISSRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
     public static final ExecutorService databaseWriteExecutor =

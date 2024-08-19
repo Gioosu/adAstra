@@ -16,16 +16,15 @@ import it.unimib.adastra.model.Result;
 public class ISSPositionResponseRepository implements IISSPositionRepository, ISSPositionResponseCallback {
 
     private static final String TAG = ISSPositionResponseRepository.class.getSimpleName();
-    private final MutableLiveData<Result> issPositionMutableLiveData;
     private final BaseISSPositionRemoteDataSource issPositionRemoteDataSource;
     private final BaseISSPositionLocalDataSource issPositionLocalDataSource;
+    private final MutableLiveData<Result> issPositionMutableLiveData;
 
     public ISSPositionResponseRepository(BaseISSPositionRemoteDataSource issPositionRemoteDataSource,
                                          BaseISSPositionLocalDataSource issPositionLocalDataSource) {
-
-        this.issPositionMutableLiveData = new MutableLiveData<>();
         this.issPositionRemoteDataSource = issPositionRemoteDataSource;
         this.issPositionLocalDataSource = issPositionLocalDataSource;
+        this.issPositionMutableLiveData = new MutableLiveData<>();
         this.issPositionRemoteDataSource.setISSPositionCallback(this);
         this.issPositionLocalDataSource.setISSPositionCallback(this);
     }
@@ -33,6 +32,7 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     @Override
     public MutableLiveData<Result> fetchISSPosition(long timestamp, boolean isKilometers) {
         long currentTime = System.currentTimeMillis();
+
         if(currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
             issPositionRemoteDataSource.getISSPosition(isKilometers);
         } else {

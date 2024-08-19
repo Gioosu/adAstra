@@ -29,7 +29,7 @@ import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentLoginBinding;
 import it.unimib.adastra.model.Result;
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.DataEncryptionUtil;

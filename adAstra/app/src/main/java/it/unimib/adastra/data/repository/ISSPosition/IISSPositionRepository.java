@@ -11,6 +11,4 @@ public interface IISSPositionRepository {
     void updateISSPosition(ISSPositionResponse issPositionResponse);
 
     void deleteISSPosition();
-
-
 }

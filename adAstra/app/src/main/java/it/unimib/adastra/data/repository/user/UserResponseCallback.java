@@ -1,6 +1,6 @@
 package it.unimib.adastra.data.repository.user;
 
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 
 public interface UserResponseCallback {
     void onSuccessFromAuthentication(User user);

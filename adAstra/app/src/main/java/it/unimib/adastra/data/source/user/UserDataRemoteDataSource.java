@@ -25,9 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.unimib.adastra.R;
-import it.unimib.adastra.data.repository.user.UserResponseCallback;
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 import it.unimib.adastra.util.exception.DeleteAccountException;
 import it.unimib.adastra.util.exception.InvalidUsernameException;
 

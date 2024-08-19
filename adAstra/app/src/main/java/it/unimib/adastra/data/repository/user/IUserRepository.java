@@ -3,7 +3,7 @@ package it.unimib.adastra.data.repository.user;
 import androidx.lifecycle.MutableLiveData;
 
 import it.unimib.adastra.model.Result;
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 
 public interface IUserRepository {
     MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered);

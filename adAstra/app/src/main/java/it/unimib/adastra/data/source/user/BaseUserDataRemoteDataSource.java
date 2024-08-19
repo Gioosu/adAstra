@@ -1,7 +1,7 @@
 package it.unimib.adastra.data.source.user;
 
 import it.unimib.adastra.data.repository.user.UserResponseCallback;
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 
 public abstract class BaseUserDataRemoteDataSource {
     protected UserResponseCallback userResponseCallback;

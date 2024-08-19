@@ -9,8 +9,8 @@ import it.unimib.adastra.data.database.ISSRoomDatabase;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
-    private final ISSDao issDao;
     private static final String TAG = ISSPositionLocalDataSource.class.getSimpleName();
+    private final ISSDao issDao;
 
     public ISSPositionLocalDataSource(ISSRoomDatabase ISSRoomDatabase) {
         this.issDao = ISSRoomDatabase.issDao();
@@ -32,6 +32,7 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
             ISSPositionResponse issPositionResponse = new ISSPositionResponse();
             issPositionResponse.setLatitude(issDao.getLatitude());
             issPositionResponse.setLongitude(issDao.getLongitude());
+
             issPositionResponseCallback.onSuccessFromLocal(issPositionResponse);
         });
     }
@@ -41,20 +42,25 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
         ISSRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (issPositionResponse != null) {
                 int rowUpdatedCounter = issDao.updateIss(issPositionResponse);
+
                 if (rowUpdatedCounter == 0) {
                     Log.e(TAG, "updateISS: rowUpdatedCounter is 0");
+
                     issDao.insertIss(issPositionResponse);
                     issPositionResponseCallback.onISSPositionStatusChanged(issPositionResponse);
                 } else if (rowUpdatedCounter == 1) {
                     Log.d(TAG, "updateISS: rowUpdatedCounter is 1");
+
                     ISSPositionResponse updatedIssPositionResponse = issDao.getISS();
                     issPositionResponseCallback.onISSPositionStatusChanged(updatedIssPositionResponse);
                 } else {
                     Log.e(TAG, "updateISS: rowUpdatedCounter is not 1");
+
                     issPositionResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
                 }
             } else{
                 Log.e(TAG, "updateISS: issPositionResponse is null");
+
                 issPositionResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });

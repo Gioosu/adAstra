@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData;
 import it.unimib.adastra.data.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.adastra.data.source.user.BaseUserDataRemoteDataSource;
 import it.unimib.adastra.model.Result;
-import it.unimib.adastra.model.User;
+import it.unimib.adastra.model.user.User;
 
 public class UserRepository implements IUserRepository, UserResponseCallback {
-    String TAG = UserRepository.class.getSimpleName();
+    private static final String TAG = UserRepository.class.getSimpleName();
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
