@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 import it.unimib.adastra.databinding.FragmentISSBinding;
@@ -94,6 +96,20 @@ public class ISSFragment extends Fragment {
         binding.floatingActionButtonIssRefresh.setOnClickListener(v ->
                 issPositionViewModel.getISSPosition(timestamp)
         );
+        String info =  getString(R.string.altitude) + ": " + getString(R.string.iss_altitude_description) + "\n\n" +
+                        getString(R.string.velocity) + ": " + getString(R.string.iss_velocity_description) + "\n\n" +
+                        getString(R.string.visibility) + ": " + getString(R.string.iss_visibility_description) + "\n\n" +
+                        getString(R.string.footprint) + ": " + getString(R.string.iss_footprint_description) + "\n\n" +
+                        getString(R.string.timestamp) + ": " + getString(R.string.iss_timestamp_description) + "\n\n" +
+                        getString(R.string.daynum) + ": " + getString(R.string.iss_daynum_description) + "\n\n" +
+                        getString(R.string.solar_latitude) + ": " + getString(R.string.iss_solar_latitude_description) + "\n\n" +
+                        getString(R.string.solar_longitude) + ": " + getString(R.string.iss_solar_longitude_description);
+        // Bottone di Info
+        binding.floatingActionButtonIssInfo.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.more_info)
+                .setMessage(info)
+                .setPositiveButton(R.string.close, null)
+                .show());
     }
 
 

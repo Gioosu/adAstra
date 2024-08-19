@@ -39,6 +39,7 @@
     <string name="resend">Resend</string>
     <string name="sending_email">Sending email…</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="close">Close</string>
     <string name="email_resend">Email resent successfully</string>
     <string name="back_to_login">Back to login</string>
 
@@ -107,6 +108,24 @@
     <string name="iss_longitude">Longitude</string>
     <string name="iss_latitude">Latitude</string>
     <string name="iss_filled">ISS icon filled</string>
+    <string name="more_info">More informations</string>
+    <string name="altitude">Altitude</string>
+    <string name="velocity">Velocity</string>
+    <string name="visibility">Visibility</string>
+    <string name="footprint">Footprint</string>
+    <string name="timestamp">Timestamp</string>
+    <string name="daynum">DayNum</string>
+    <string name="solar_latitude">Solar Latitude</string>
+    <string name="solar_longitude">Solar Longitude</string>
+    <string name="iss_altitude_description">It describes the distance between the ISS and the Earth.</string>
+    <string name="iss_velocity_description">It describes the speed of the ISS.</string>
+    <string name="iss_visibility_description">It describes the visibility of earth from the ISS.</string>
+    <string name="iss_footprint_description">It describes the trajectory of the ISS.</string>
+    <string name="iss_timestamp_description">It describes the time of the ISS.</string>
+    <string name="iss_daynum_description">It describes the day of the ISS.</string>
+    <string name="iss_solar_latitude_description">It describes the latitude of the sun.</string>
+    <string name="iss_solar_longitude_description">It describes the longitude of the sun.</string>
+
 
     <!-- Errors -->
     <string name="error_invalid_email">Invalid email address</string>

@@ -10,6 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:id="@+id/divider_change_email"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_horizontal_update_email"
             android:layout_width="wrap_content"
@@ -38,7 +50,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_email"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_email"
-            app:layout_constraintTop_toBottomOf="@+id/cardView2">
+            app:layout_constraintTop_toBottomOf="@+id/divider_change_email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailTextInputEditText_update_email"

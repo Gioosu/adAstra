@@ -95,6 +95,23 @@
     <!-- Iss -->
     <string name="iss_refresh">Aggiorna posizione ISS</string>
     <string name="iss_filled">Icona ISS piena</string>
+    <string name="more_info">Informazioni aggiuntive</string>
+    <string name="altitude">Altitudine</string>
+    <string name="velocity">Velocità</string>
+    <string name="visibility">Visibilità</string>
+    <string name="footprint">Traiettoria</string>
+    <string name="timestamp">Data</string>
+    <string name="daynum">Giorno</string>
+    <string name="solar_latitude">Latitudine solare</string>
+    <string name="solar_longitude">Longitudine solare</string>
+    <string name="iss_altitude_description">Indica la quota dell\'ISS rispetto all\'equatore terrestre.</string>
+    <string name="iss_velocity_description">Indica la velocità dell\'ISS rispetto alla superficie terrestre.</string>
+    <string name="iss_visibility_description">Indica la visibilità della superficie terrestre rispetto all\'ISS, visualizzabile come la zona di luce sulla mappa.</string>
+    <string name="iss_footprint_description">Indica la traiettoria dell\'ISS sulla mappa.</string>
+    <string name="iss_timestamp_description">Indica la data del posizionamento dell\'ISS.</string>
+    <string name="iss_daynum_description">Indica il giorno dell\'anno del posizionamento dell\'ISS.</string>
+    <string name="iss_solar_latitude_description">Indica la posizione della luce sulla superficie terrestre.</string>
+    <string name="iss_solar_longitude_description">Indica la posizione della luce sulla superficie terrestre.</string>
 
     <!-- Errors -->
     <string name="error_invalid_username">Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
@@ -124,4 +141,5 @@
     <string name="error_unexpected">Errore inatteso</string>
     <string name="iss_longitude">Longitudine</string>
     <string name="iss_latitude">Latitudine</string>
+    <string name="close">Chiudi</string>
 </resources>

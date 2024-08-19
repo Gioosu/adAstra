@@ -10,6 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:id="@+id/divider_update_username"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_username"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username"
+            app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_horizontal_update_username"
             android:layout_width="wrap_content"
@@ -39,7 +51,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_update_username"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_update_username"
-            app:layout_constraintTop_toBottomOf="@+id/cardView3">
+            app:layout_constraintTop_toBottomOf="@+id/divider_update_username">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usernameInputEditText_update_username"
