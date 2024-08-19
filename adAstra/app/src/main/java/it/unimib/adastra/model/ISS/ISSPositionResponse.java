@@ -158,6 +158,12 @@ public class ISSPositionResponse implements Parcelable {
     }
 
     public String getUnits() {
+        if (units.equals("kilometers")) {
+            units = "km";
+        }
+        else if (units.equals("miles")) {
+            units = "mi";
+        }
         return units;
     }
 

@@ -14,5 +14,5 @@ public abstract class BaseISSPositionRemoteDataSource {
         this.issPositionResponseCallback = issPositionResponseCallback;
     }
 
-    public abstract void getISSPosition();
+    public abstract void getISSPosition(boolean isKilometers);
 }

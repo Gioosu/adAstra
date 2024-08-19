@@ -6,7 +6,7 @@ import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.Result;
 
 public interface IISSPositionRepository {
-    MutableLiveData<Result> fetchISSPosition(long timestamp);
+    MutableLiveData<Result> fetchISSPosition(long timestamp, boolean isKilometers);
 
     void updateISSPosition(ISSPositionResponse issPositionResponse);
 

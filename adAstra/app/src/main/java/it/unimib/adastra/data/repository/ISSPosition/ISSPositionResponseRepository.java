@@ -31,10 +31,10 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     }
 
     @Override
-    public MutableLiveData<Result> fetchISSPosition(long timestamp) {
+    public MutableLiveData<Result> fetchISSPosition(long timestamp, boolean isKilometers) {
         long currentTime = System.currentTimeMillis();
         if(currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
-            issPositionRemoteDataSource.getISSPosition();
+            issPositionRemoteDataSource.getISSPosition(isKilometers);
         } else {
             issPositionLocalDataSource.getISSPosition();
         }

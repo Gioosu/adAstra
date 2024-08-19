@@ -19,9 +19,9 @@ public class ISSPositionViewModel extends ViewModel {
         this.issPositionRepository = ISSPositionRepository;
     }
 
-    public MutableLiveData<Result> getISSPosition(long timestamp) {
+    public MutableLiveData<Result> getISSPosition(long timestamp, boolean isKilometers) {
 
-        issPositionLiveData = issPositionRepository.fetchISSPosition(timestamp);
+        issPositionLiveData = issPositionRepository.fetchISSPosition(timestamp, isKilometers);
 
         return issPositionLiveData;
     }

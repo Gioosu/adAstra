@@ -16,12 +16,16 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentISSBinding;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.User;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModel;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModelFactory;
-import it.unimib.adastra.util.CoordinateConverter;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
+import it.unimib.adastra.util.CoordinateUtil;
 import it.unimib.adastra.util.ServiceLocator;
 
 /**
@@ -36,7 +40,13 @@ public class ISSFragment extends Fragment {
     private IISSPositionRepository issPositionRepository;
     private ISSPositionViewModel issPositionViewModel;
     private ISSPositionResponse issPosition;
+    private IUserRepository userRepository;
+    private UserViewModel userViewModel;
     private long timestamp;
+    private String idToken;
+    private User user;
+    private User user1;
+    private boolean isKilometers;
 
     public ISSFragment() {
         // Required empty public constructor
@@ -56,11 +66,19 @@ public class ISSFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Inizializzazione dei ViewModel per ISS
         issPositionRepository = ServiceLocator.getInstance().
                 getISSRepository(requireActivity().getApplication());
         issPositionViewModel = new ViewModelProvider(
                 requireActivity(),
                 new ISSPositionViewModelFactory(issPositionRepository)).get(ISSPositionViewModel.class);
+
+        // Inizializzazione dei ViewModel per User
+        userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -77,9 +95,26 @@ public class ISSFragment extends Fragment {
 
         activity = getActivity();
         timestamp = 0;
+        idToken = userViewModel.getLoggedUser();
+        user = null;
 
-        // Aggiornamento dinamico
-        issPositionViewModel.getISSPosition(timestamp).observe(
+        // Recupero dati utente
+        userViewModel.getUserInfoMutableLiveData(idToken).observe(
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        user = ((Result.UserResponseSuccess) result).getUser();
+                        if (user != null) {
+                            isKilometers = user.isImperialSystem();
+                            issPositionViewModel.getISSPosition(timestamp, isKilometers);
+                        }
+                    } else {
+                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                    }
+                    Log.d(TAG, "user dentro:" + user);
+                });
+
+        // Aggiornamento dinamico ISS
+        issPositionViewModel.getISSPosition(timestamp, isKilometers).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
                         issPosition = ((Result.ISSPositionResponseSuccess) result).getData();
@@ -94,8 +129,10 @@ public class ISSFragment extends Fragment {
 
         // Bottone di Aggiornamento
         binding.floatingActionButtonIssRefresh.setOnClickListener(v ->
-                issPositionViewModel.getISSPosition(timestamp)
-        );
+        {
+            issPositionViewModel.getISSPosition(timestamp, isKilometers);
+        });
+
         String info =  getString(R.string.altitude) + ": " + getString(R.string.iss_altitude_description) + "\n\n" +
                         getString(R.string.velocity) + ": " + getString(R.string.iss_velocity_description) + "\n\n" +
                         getString(R.string.visibility) + ": " + getString(R.string.iss_visibility_description) + "\n\n" +
@@ -104,6 +141,7 @@ public class ISSFragment extends Fragment {
                         getString(R.string.daynum) + ": " + getString(R.string.iss_daynum_description) + "\n\n" +
                         getString(R.string.solar_latitude) + ": " + getString(R.string.iss_solar_latitude_description) + "\n\n" +
                         getString(R.string.solar_longitude) + ": " + getString(R.string.iss_solar_longitude_description);
+
         // Bottone di Info
         binding.floatingActionButtonIssInfo.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.more_info)
@@ -115,12 +153,15 @@ public class ISSFragment extends Fragment {
 
 
     public void updateUI(ISSPositionResponse issPosition) {
-        String newLatitude = CoordinateConverter.decimalToDMS(issPosition.getLatitude());
-        String newLongitude = CoordinateConverter.decimalToDMS(issPosition.getLongitude());
+        String newLatitude = CoordinateUtil.decimalToDMS(issPosition.getLatitude());
+        String newLongitude = CoordinateUtil.decimalToDMS(issPosition.getLongitude());
 
-        newLatitude = CoordinateConverter.formatDMS(newLatitude, "N");
-        newLongitude = CoordinateConverter.formatDMS(newLongitude, "E");
+        newLatitude = CoordinateUtil.formatDMS(newLatitude, "N");
+        newLongitude = CoordinateUtil.formatDMS(newLongitude, "E");
 
         binding.textViewCoordinates.setText(newLatitude + ", " + newLongitude);
+        binding.textViewAltitude.setText(getString(R.string.altitude) + ": " + CoordinateUtil.formatRoundAltitude(issPosition.getAltitude(), issPosition.getUnits()));
+        binding.textViewVelocity.setText(getString(R.string.velocity) + ": " + CoordinateUtil.formatRoundVelocity(issPosition.getVelocity(), issPosition.getUnits()));
+        binding.textViewVisibility.setText(getString(R.string.visibility) + ": " + issPosition.getVisibility());
     }
 }

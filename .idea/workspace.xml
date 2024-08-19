@@ -5,7 +5,7 @@
       <config />
     </shared>
     <layouts>
-      <layout url="file://$PROJECT_DIR$/adAstra/app/src/main/res/xml/network_security_config.xml">
+      <layout url="file://$PROJECT_DIR$/adAstra/app/src/main/res/layout/fragment_i_s_s.xml">
         <config>
           <theme>@style/Theme.AdAstra</theme>
         </config>
@@ -17,24 +17,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ddba3a5-a372-4b64-9402-91b2f104134b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/migrations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/database/ISSDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/database/ISSDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/ISSPositionResponseCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/ISSPositionResponseCallback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/IISSPositionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/IISSPositionRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/ISSPositionResponseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/ISSPositionResponseRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/service/ISSApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/service/ISSApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/ISSPositionLocalDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/ISSPositionLocalDataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/BaseISSPositionRemoteDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/BaseISSPositionRemoteDataSource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/ISSPositionRemoteDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/ISSPositionRemoteDataSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/model/ISS/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/model/ISS/Coordinates.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/model/ISS/ISSPositionApiResponse.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/model/ISS/ISSPositionResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/model/ISS/ISSPositionResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/main/ISSFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/main/ISSFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/viewModel/ISSPositionViewModel/ISSPositionViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/viewModel/ISSPositionViewModel/ISSPositionViewModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/JSONParserUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/JSONParserUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/CoordinateConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/CoordinateUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/res/layout/fragment_i_s_s.xml" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/res/layout/fragment_i_s_s.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +75,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/moeasy/github/adAstra",

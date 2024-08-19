@@ -27,7 +27,8 @@ public class Constants {
 
     // Constants for ISS API (https://api.wheretheiss.at/)
     public static final String ISS_API_BASE_URL = "https://api.wheretheiss.at/";
-    public static final String ISS_ENDPOINT = "v1/satellites/25544";
+    public static final String ISS_ENDPOINT_KILOMETERS = "v1/satellites/25544?units=kilometers";
+    public static final String ISS_ENDPOINT_MILES = "v1/satellites/25544?units=miles";
     public static final String ASTROS_ENDPOINT = "astros.json";
 
     // Constants for Room

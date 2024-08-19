@@ -1,6 +1,8 @@
 package it.unimib.adastra.util;
 
-public class CoordinateConverter {
+import it.unimib.adastra.R;
+
+public class CoordinateUtil {
     public static String decimalToDMS(double decimalDegrees) {
         int degrees = (int) decimalDegrees;
 
@@ -23,5 +25,21 @@ public class CoordinateConverter {
         if (direction.equals("E"))
             return dms + "E";
         return Constants.ERROR_PARAMETERS;
+    }
+
+    public static String formatRoundVelocity(double velocity, String unit) {
+        if (unit.equals("km")){
+            unit = "km/h";
+        }
+        else if (unit.equals("mi")){
+            unit = "mph";
+        }
+        else return Constants.ERROR_PARAMETERS;
+
+        return Math.round(velocity * 100.0) / 100.0 + " " + unit;
+    }
+
+    public static String formatRoundAltitude(double altitude, String unit) {
+        return Math.round(altitude * 100.0) / 100.0 + " " + unit;
     }
 }
