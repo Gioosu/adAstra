@@ -44,13 +44,13 @@ import it.unimib.adastra.util.ServiceLocator;
 public class ChangePasswordFragment extends Fragment {
     private static final String TAG = ChangePasswordFragment.class.getSimpleName();
     private FragmentChangePasswordBinding binding;
+    private IUserRepository userRepository;
+    private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
     private String idToken;
     private String password;
     private Activity activity;
     private String email;
-    private IUserRepository userRepository;
-    private UserViewModel userViewModel;
     private User user;
 
 
@@ -95,6 +95,7 @@ public class ChangePasswordFragment extends Fragment {
         activity = getActivity();
         user = null;
         idToken = userViewModel.getLoggedUser();
+        email = getEmail();
         password = getPassword();
 
         // Aggiornamento dinamico
@@ -107,32 +108,17 @@ public class ChangePasswordFragment extends Fragment {
                     }
                 });
 
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
-        try {
-            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
-
         // Bottone di Back to settings
         binding.floatingActionButtonBack.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_accountSettingsFragment));
 
         // Bottone di Forgot password
-        binding.buttonForgotPasswordChangePassword.setOnClickListener(v -> {
-            try {
-                email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.confirm_reset)
-                    .setMessage(R.string.confirm_reset_message)
-                    .setPositiveButton(R.string.reset, (dialog, which) -> sendPasswordResetEmail(email, v))
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
-        });
+        binding.buttonForgotPasswordChangePassword.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
+                 .setTitle(R.string.confirm_reset)
+                 .setMessage(R.string.confirm_reset_message)
+                 .setPositiveButton(R.string.reset, (dialog, which) -> sendPasswordResetEmail(email, v))
+                 .setNegativeButton(R.string.cancel, null)
+                 .show());
 
         // Bottone di Cancel
         binding.buttonCancelChangePassword.setOnClickListener(v ->
@@ -157,6 +143,11 @@ public class ChangePasswordFragment extends Fragment {
                         });
             }
         });
+    }
+
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     // Controlla che la password coincida con quella corrente
@@ -220,6 +211,19 @@ public class ChangePasswordFragment extends Fragment {
         activity.finish();
     }
 
+    // Ottiene l'email dell'utente
+    private String getEmail() {
+        String email;
+
+        try {
+            email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return email;
+    }
+
     // Ottiene la password dal file di secret
     private String getPassword() {
         String password;
@@ -231,11 +235,6 @@ public class ChangePasswordFragment extends Fragment {
         }
 
         return password;
-    }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     private void savePassword(String password) {

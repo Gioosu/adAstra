@@ -160,21 +160,12 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                     currentUser.verifyBeforeUpdateEmail(newEmail)
                             .addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
-                                    Map<String, Object> updates = new HashMap<>();
-                                    updates.put(EMAIL_ADDRESS, newEmail);
+                                    Log.d(TAG, "Aggiornamento dell'email avvenuto con successo");
 
-                                    db.collection(USERS_COLLECTION).document(user.getId()).update(updates)
-                                            .addOnSuccessListener(aVoid -> {
-                                                Log.d(TAG, "Aggiornamento dell'email avvenuto con successo.");
-
-                                                userResponseCallback.onSuccessFromRemoteDatabase(user);
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
-
-                                                userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(e));
-                                            });
+                                    userResponseCallback.onSuccessFromRemoteDatabase(user);
                                 } else {
+                                    Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
+
                                     userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
                                 }
                             });
@@ -188,9 +179,13 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
         currentUser.updatePassword(newPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        Log.d(TAG, "Aggiornamento della password avvenuto con successo.");
+
                         userResponseCallback.onSuccessFromRemoteDatabase(user);
                     }
                     else {
+                        Log.d(TAG, "Errore: Aggiornamento della password fallito.");
+
                         userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
                     }
         });

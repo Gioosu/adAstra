@@ -54,14 +54,12 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> updateSwitch(User user, String imperialSystem, boolean isChecked) {
+    public void updateSwitch(User user, String imperialSystem, boolean isChecked) {
         if (userMutableLiveData == null) {
             userMutableLiveData = userRepository.updateSwitch(user, imperialSystem, isChecked);
         } else {
             userRepository.updateSwitch(user, imperialSystem, isChecked);
         }
-
-        return userMutableLiveData;
     }
 
     public MutableLiveData<Result> setUsername(User user, String username) {

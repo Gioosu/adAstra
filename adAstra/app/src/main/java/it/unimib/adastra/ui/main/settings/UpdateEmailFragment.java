@@ -137,6 +137,7 @@ public class UpdateEmailFragment extends Fragment {
                 userViewModel.setEmail(user, newEmail, email, currentPassword).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
+                                saveEmail(newEmail);
                                 showSnackbarWithAction(v, getString(R.string.email_updated));
                                 Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
                             } else {
@@ -241,6 +242,14 @@ public class UpdateEmailFragment extends Fragment {
 
         startActivity(intent);
         activity.finish();
+    }
+
+    private void saveEmail(String email) {
+        try {
+            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Cancella i dati crittografati

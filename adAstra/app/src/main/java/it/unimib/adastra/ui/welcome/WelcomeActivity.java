@@ -13,21 +13,25 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Locale;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.ActivityWelcomeBinding;
 import it.unimib.adastra.ui.main.MainActivity;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
+import it.unimib.adastra.util.ServiceLocator;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 public class WelcomeActivity extends AppCompatActivity {
     private ActivityWelcomeBinding binding;
+    private IUserRepository userRepository;
+    private UserViewModel userViewModel;
     SharedPreferencesUtil sharedPreferencesUtil;
 
     @Override
@@ -37,23 +41,21 @@ public class WelcomeActivity extends AppCompatActivity {
         binding = ActivityWelcomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        userRepository = ServiceLocator.getInstance().
+                getUserRepository(this.getApplication());
+        userViewModel = new ViewModelProvider(
+                this,
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
         sharedPreferencesUtil = new SharedPreferencesUtil(this);
 
         fetchSettingsFromSharedPreferences();
 
-        // Verifica se Firebase è già stato inizializzato
-        if (FirebaseApp.getApps(this).isEmpty()) {
-            FirebaseApp.initializeApp(this);
-        }
-
         // Login rapido
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null && currentUser.isEmailVerified()) {
+        if (userViewModel.getLoggedUser() != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
-        } else {
-            FirebaseAuth.getInstance().signOut();
         }
 
         checkIntentAndShowSnackbar();

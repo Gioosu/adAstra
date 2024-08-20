@@ -135,38 +135,26 @@ public class SettingsFragment extends Fragment {
 
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (binding.switchImperialSystem.isPressed()) {
-                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-
+            if (binding.switchImperialSystem.isPressed())
                 userViewModel.updateSwitch(user, IMPERIAL_SYSTEM, isChecked);
-            }
         });
 
         // Switch di TIME_FORMAT
         binding.switchTimeFormat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (binding.switchTimeFormat.isPressed()) {
-                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-
+            if (binding.switchTimeFormat.isPressed())
                 userViewModel.updateSwitch(user, TIME_FORMAT, isChecked);
-            }
         });
 
         // Switch di ISS_NOTIFICATIONS
         binding.switchIssNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (binding.switchIssNotifications.isPressed()) {
-                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-
+            if (binding.switchIssNotifications.isPressed())
                 userViewModel.updateSwitch(user, ISS_NOTIFICATIONS, isChecked);
-            }
         });
 
         // Switch di EVENTS_NOTIFICATIONS
         binding.switchEventsNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (binding.switchEventsNotifications.isPressed()) {
-                User user = ((Result.UserResponseSuccess) userViewModel.getUserInfoMutableLiveData(idToken).getValue()).getUser();
-
+            if (binding.switchEventsNotifications.isPressed())
                 userViewModel.updateSwitch(user, EVENTS_NOTIFICATIONS, isChecked);
-            }
         });
 
 
