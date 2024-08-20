@@ -1,8 +1,9 @@
 package it.unimib.adastra.util;
 
-import it.unimib.adastra.R;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class CoordinateUtil {
+public class ISSUtil {
     public static String decimalToDMS(double decimalDegrees) {
         int degrees = (int) decimalDegrees;
 
@@ -24,22 +25,30 @@ public class CoordinateUtil {
             return dms + "N";
         if (direction.equals("E"))
             return dms + "E";
+
         return Constants.ERROR_PARAMETERS;
     }
 
     public static String formatRoundVelocity(double velocity, String unit) {
         if (unit.equals("km")){
             unit = "km/h";
-        }
-        else if (unit.equals("mi")){
+        } else if (unit.equals("mi")){
             unit = "mph";
-        }
-        else return Constants.ERROR_PARAMETERS;
+        } else
+            return Constants.ERROR_PARAMETERS;
 
         return Math.round(velocity * 100.0) / 100.0 + " " + unit;
     }
 
     public static String formatRoundAltitude(double altitude, String unit) {
         return Math.round(altitude * 100.0) / 100.0 + " " + unit;
+    }
+
+    // Formatta timestamp in HH:mm:ss
+    public static String formatTimestamp(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        Date netDate = (new Date(timestamp * 1000));
+
+        return sdf.format(netDate);
     }
 }

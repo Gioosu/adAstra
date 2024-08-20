@@ -109,23 +109,26 @@
     <string name="iss_latitude">Latitude</string>
     <string name="iss_filled">ISS icon filled</string>
     <string name="more_info">More informations</string>
-    <string name="altitude">Altitude</string>
-    <string name="velocity">Velocity</string>
-    <string name="visibility">Visibility</string>
+    <string name="altitude">Altitude:</string>
+    <string name="velocity">Velocity:</string>
+    <string name="visibility">Visibility:</string>
     <string name="footprint">Footprint</string>
     <string name="timestamp">Timestamp</string>
     <string name="daynum">DayNum</string>
     <string name="solar_latitude">Solar Latitude</string>
     <string name="solar_longitude">Solar Longitude</string>
-    <string name="iss_altitude_description">It describes the distance between the ISS and the Earth.</string>
-    <string name="iss_velocity_description">It describes the speed of the ISS.</string>
-    <string name="iss_visibility_description">It describes the visibility of earth from the ISS.</string>
+    <string name="iss_altitude_description">Describes the height of the International Space Station (ISS) above the Earth\'s surface.</string>
+    <string name="iss_velocity_description">Indicates the speed at which the International Space Station (ISS) is traveling.</string>
+    <string name="iss_visibility_description">Refers to whether the International Space Station (ISS) is currently in sunlight (daylight) or in Earth\'s shadow (eclipsed).</string>
     <string name="iss_footprint_description">It describes the trajectory of the ISS.</string>
     <string name="iss_timestamp_description">It describes the time of the ISS.</string>
     <string name="iss_daynum_description">It describes the day of the ISS.</string>
     <string name="iss_solar_latitude_description">It describes the latitude of the sun.</string>
     <string name="iss_solar_longitude_description">It describes the longitude of the sun.</string>
+    <string name="iss_last_update">Last update:</string>
 
+    <!-- Home -->
+    <string name="welcome_user">Welcome, </string>">
 
     <!-- Errors -->
     <string name="error_invalid_email">Invalid email address</string>
@@ -153,4 +156,7 @@
     <string name="error_password_change_failed">Password change failed</string>
     <string name="error_invalid_new_email">Choose a new email address different from the previous one</string>
     <string name="error_unexpected">Unexpected error</string>
+    <string name="iss_eclipsed">Eclipsed</string>
+    <string name="iss_daylight">Daylight</string>
+    <string name="nasa_pod">NASA Picture of the Day:</string>
 </resources>

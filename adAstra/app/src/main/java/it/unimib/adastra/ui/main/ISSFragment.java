@@ -25,7 +25,7 @@ import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModel;
 import it.unimib.adastra.ui.viewModel.ISSPositionViewModel.ISSPositionViewModelFactory;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
-import it.unimib.adastra.util.CoordinateUtil;
+import it.unimib.adastra.util.ISSUtil;
 import it.unimib.adastra.util.ServiceLocator;
 
 /**
@@ -134,9 +134,9 @@ public class ISSFragment extends Fragment {
             issPositionViewModel.getISSPosition(timestamp, isKilometers);
         });
 
-        String info =  getString(R.string.altitude) + ": " + getString(R.string.iss_altitude_description) + "\n\n" +
-                        getString(R.string.velocity) + ": " + getString(R.string.iss_velocity_description) + "\n\n" +
-                        getString(R.string.visibility) + ": " + getString(R.string.iss_visibility_description);
+        String info =  getString(R.string.altitude) + " " + getString(R.string.iss_altitude_description) + "\n\n" +
+                        getString(R.string.velocity) + " " + getString(R.string.iss_velocity_description) + "\n\n" +
+                        getString(R.string.visibility) + " " + getString(R.string.iss_visibility_description);
 
         // Bottone di Info
         binding.floatingActionButtonIssInfo.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
@@ -147,15 +147,22 @@ public class ISSFragment extends Fragment {
     }
 
     public void updateUI(ISSPositionResponse issPosition) {
-        String newLatitude = CoordinateUtil.decimalToDMS(issPosition.getLatitude());
-        String newLongitude = CoordinateUtil.decimalToDMS(issPosition.getLongitude());
+        String newLatitude = ISSUtil.decimalToDMS(issPosition.getLatitude());
+        String newLongitude = ISSUtil.decimalToDMS(issPosition.getLongitude());
 
-        newLatitude = CoordinateUtil.formatDMS(newLatitude, "N");
-        newLongitude = CoordinateUtil.formatDMS(newLongitude, "E");
+        newLatitude = ISSUtil.formatDMS(newLatitude, "N");
+        newLongitude = ISSUtil.formatDMS(newLongitude, "E");
 
-        binding.textViewCoordinates.setText(newLatitude + ", " + newLongitude);
-        binding.textViewAltitude.setText(getString(R.string.altitude) + ": " + CoordinateUtil.formatRoundAltitude(issPosition.getAltitude(), issPosition.getUnits()));
-        binding.textViewVelocity.setText(getString(R.string.velocity) + ": " + CoordinateUtil.formatRoundVelocity(issPosition.getVelocity(), issPosition.getUnits()));
-        binding.textViewVisibility.setText(getString(R.string.visibility) + ": " + issPosition.getVisibility());
+        binding.textViewCoordinates.setText(newLatitude + " " + newLongitude);
+
+        binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(issPosition.getTimestamp()));
+        binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(issPosition.getAltitude(), issPosition.getUnits()));
+        binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(issPosition.getVelocity(), issPosition.getUnits()));
+        binding.textViewVisibility.setText(issPosition.getVisibility());
+
+        if (issPosition.getVisibility().equals("eclipsed"))
+            binding.textViewVisibility.setText(getString(R.string.iss_eclipsed));
+        else
+            binding.textViewVisibility.setText(getString(R.string.iss_daylight));
     }
 }

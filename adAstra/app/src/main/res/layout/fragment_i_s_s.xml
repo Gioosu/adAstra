@@ -56,12 +56,12 @@
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/floatingActionButton_iss_refresh"
-                    android:contentDescription="@string/iss_refresh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:clickable="true"
+                    android:contentDescription="@string/iss_refresh"
                     android:src="@drawable/refresh_icon"
                     app:fabCustomSize="32dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -69,12 +69,12 @@
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/floatingActionButton_iss_info"
-                    android:contentDescription="@string/more_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:clickable="true"
+                    android:contentDescription="@string/more_info"
                     android:src="@drawable/info"
                     app:fabCustomSize="32dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -123,61 +123,168 @@
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
             app:layout_constraintTop_toBottomOf="@+id/iss_topcard" />
 
-        <ScrollView
-            android:layout_width="match_parent"
+        <fragment
+            android:id="@+id/mapView_iss"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            tools:context=".ISSFragment" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
+            app:layout_constraintTop_toBottomOf="@+id/mapView_iss" />
+
+        <TextView
+            android:id="@+id/textView_last_update"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:shadowColor="?android:textColorPrimary"
+            android:text="@string/iss_last_update"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+        <TextView
+            android:id="@+id/textView_iss_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:shadowColor="?android:textColorPrimary"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_last_update"
+            app:layout_constraintStart_toEndOf="@+id/textView_last_update"
+            app:layout_constraintTop_toTopOf="@+id/textView_last_update" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/divider">
+            app:layout_constraintTop_toBottomOf="@+id/textView_last_update">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <fragment
-                    android:id="@+id/mapView_iss"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                <ImageView
+                    android:id="@+id/imageView_altitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/spacing_height"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_altitude"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:context=".ISSFragment" />
+                    app:layout_constraintTop_toTopOf="@+id/textView_altitude" />
+
+                <TextView
+                    android:id="@+id/textView_altitude_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:shadowColor="?android:textColorPrimary"
+                    android:text="@string/altitude"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_altitude"
+                    app:layout_constraintStart_toEndOf="@+id/imageView_altitude"
+                    app:layout_constraintTop_toTopOf="@+id/textView_altitude" />
 
                 <TextView
                     android:id="@+id/textView_altitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:shadowColor="?android:textColorPrimary"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView_altitude_placeholder"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView_velocity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/iss_speed"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_velocity_placeholder"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mapView_iss" />
+                    app:layout_constraintTop_toTopOf="@+id/textView_velocity_placeholder" />
+
+                <TextView
+                    android:id="@+id/textView_velocity_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:shadowColor="?android:textColorPrimary"
+                    android:text="@string/velocity"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_velocity"
+                    app:layout_constraintStart_toEndOf="@+id/imageView_velocity"
+                    app:layout_constraintTop_toTopOf="@+id/textView_velocity" />
 
                 <TextView
                     android:id="@+id/textView_velocity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20dp"
+                    android:shadowColor="@color/ic_launcher_background"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView_velocity_placeholder"
                     app:layout_constraintTop_toBottomOf="@+id/textView_altitude" />
+
+                <ImageView
+                    android:id="@+id/imageView_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/eclipse_moon"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_visibility"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView_visibility" />
+
+                <TextView
+                    android:id="@+id/textView_visibility_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:shadowColor="?android:textColorPrimary"
+                    android:text="@string/visibility"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_visibility"
+                    app:layout_constraintStart_toEndOf="@+id/imageView_visibility"
+                    app:layout_constraintTop_toTopOf="@+id/textView_visibility" />
 
                 <TextView
                     android:id="@+id/textView_visibility"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20dp"
+                    android:shadowColor="?android:textColorPrimary"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView_visibility_placeholder"
                     app:layout_constraintTop_toBottomOf="@+id/textView_velocity" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
