@@ -10,11 +10,19 @@ public interface IUserRepository {
 
     MutableLiveData<Result> getGoogleUser(String idToken);
 
-    String getLoggedUser();
-
     MutableLiveData<Result> getUserInfo(String idToken);
 
+    MutableLiveData<Result> updateSwitch(User user, String imperialSystem, boolean isChecked);
+
+    MutableLiveData<Result> setUsername(User user, String username);
+
     MutableLiveData<Result> logout();
+
+    MutableLiveData<Result> deleteAccount(User user, String email, String password);
+
+    MutableLiveData<Result> resetPassword(String email);
+
+    String getLoggedUser();
 
     void getInfo(String idToken);
 
@@ -24,15 +32,7 @@ public interface IUserRepository {
 
     void signIn(String email, String password);
 
-    void updateSwitch(User user, String imperialSystem, boolean isChecked);
-
-    void setUsername(User user, String username);
-
     void setEmail(User user, String newEmail, String email, String password);
 
     void changePassword(User user, String newPassword);
-
-    void resetPassword(String newPassword);
-
-    void deleteAccount(User user, String email, String password);
 }

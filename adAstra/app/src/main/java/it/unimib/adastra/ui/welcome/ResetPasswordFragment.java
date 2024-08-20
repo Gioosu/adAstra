@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -24,8 +25,12 @@ import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.ServiceLocator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,10 +39,12 @@ import it.unimib.adastra.util.DataEncryptionUtil;
  */
 public class ResetPasswordFragment extends Fragment {
     private FragmentResetPasswordBinding binding;
-    private FirebaseAuth mAuth;
-    private String email;
+    private IUserRepository userRepository;
+    private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
+    private String idToken;
+    private String email;
 
     public ResetPasswordFragment() {
         // Required empty public constructor
@@ -56,6 +63,12 @@ public class ResetPasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
     }
 
     @Override
@@ -70,9 +83,9 @@ public class ResetPasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
+        String idToken = null;
 
         // Bottone di Reset Password
         binding.buttonResetPassword.setOnClickListener(v -> {
@@ -89,16 +102,16 @@ public class ResetPasswordFragment extends Fragment {
         });
     }
 
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
     // Invia l'email per reimpostare la password
     private void sendPasswordResetEmail(String email, View view) {
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        try {
-                            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-                        } catch (GeneralSecurityException | IOException e) {
-                            throw new RuntimeException(e);
-                        }
+        userViewModel.resetPassword(email)
+                .observe(requireActivity(), result -> {
+                    if (result.isSuccess()) {
                         backToLogin();
                     } else {
                         showSnackbar(view, getString(R.string.error_email_send_failed));
@@ -110,12 +123,7 @@ public class ResetPasswordFragment extends Fragment {
     private void backToLogin() {
         Intent intent = new Intent(getContext(), WelcomeActivity.class);
         intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
-        try {
-            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        FirebaseAuth.getInstance().signOut();
+
         startActivity(intent);
         activity.finish();
     }
@@ -129,10 +137,5 @@ public class ResetPasswordFragment extends Fragment {
         }
 
         return isValid;
-    }
-
-    // Visualizza una snackbar
-    private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }

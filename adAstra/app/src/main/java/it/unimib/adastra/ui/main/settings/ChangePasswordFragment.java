@@ -201,6 +201,7 @@ public class ChangePasswordFragment extends Fragment {
                 .observe(requireActivity(), result -> {
                     if (result.isSuccess()) {
                         Log.d(TAG, "Email di reimpostazione inviata.");
+
                         backToLogin();
                     } else {
                         showSnackbar(view, getString(R.string.error_email_send_failed));

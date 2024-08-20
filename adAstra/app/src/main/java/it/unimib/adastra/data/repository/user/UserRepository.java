@@ -45,13 +45,22 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public String getLoggedUser() {
-        return userRemoteDataSource.getLoggedUser();
+    public MutableLiveData<Result> getUserInfo(String idToken) {
+        getInfo(idToken);
+
+        return userMutableLiveData;
     }
 
     @Override
-    public MutableLiveData<Result> getUserInfo(String idToken) {
-        getInfo(idToken);
+    public MutableLiveData<Result> updateSwitch(User user, String key, boolean value) {
+        userDataRemoteDataSource.updateSwitch(user, key, value);
+
+        return userMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Result> setUsername(User user, String username) {
+        userDataRemoteDataSource.setUsername(user, username);
 
         return userMutableLiveData;
     }
@@ -61,6 +70,25 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
         userRemoteDataSource.logout();
 
         return userMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Result> deleteAccount(User user, String email, String password) {
+        userDataRemoteDataSource.deleteAccount(user, email, password);
+
+        return userMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Result> resetPassword(String email) {
+        userDataRemoteDataSource.resetPassword(email);
+
+        return userMutableLiveData;
+    }
+
+    @Override
+    public String getLoggedUser() {
+        return userRemoteDataSource.getLoggedUser();
     }
 
     @Override
@@ -84,16 +112,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void updateSwitch(User user, String key, boolean value) {
-        userDataRemoteDataSource.updateSwitch(user, key, value);
-    }
-
-    @Override
-    public void setUsername(User user, String username) {
-        userDataRemoteDataSource.setUsername(user, username);
-    }
-
-    @Override
     public void setEmail(User user, String newEmail, String email, String password) {
         userDataRemoteDataSource.setEmail(user, newEmail, email, password);
     }
@@ -101,16 +119,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     @Override
     public void changePassword(User user, String newPassword) {
         userDataRemoteDataSource.changePassword(user, newPassword);
-    }
-
-    @Override
-    public void resetPassword(String newPassword) {
-        userDataRemoteDataSource.resetPassword(newPassword);
-    }
-
-    @Override
-    public void deleteAccount(User user, String email, String password) {
-        userDataRemoteDataSource.deleteAccount(user, email, password);
     }
 
     @Override

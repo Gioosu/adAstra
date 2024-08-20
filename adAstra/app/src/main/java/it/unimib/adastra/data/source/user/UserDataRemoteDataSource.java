@@ -203,9 +203,11 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Email di reimpostazione inviata.");
+
                         userResponseCallback.onSuccessFromResetPassword();
                     } else {
                         Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
+
                         userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
                     }
                 });

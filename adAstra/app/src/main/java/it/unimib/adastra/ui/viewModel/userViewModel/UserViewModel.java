@@ -54,8 +54,22 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
+    public MutableLiveData<Result> updateSwitch(User user, String imperialSystem, boolean isChecked) {
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.updateSwitch(user, imperialSystem, isChecked);
+        } else {
+            userRepository.updateSwitch(user, imperialSystem, isChecked);
+        }
+
+        return userMutableLiveData;
+    }
+
     public MutableLiveData<Result> setUsername(User user, String username) {
-        userRepository.setUsername(user, username);
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.setUsername(user, username);
+        } else {
+            userRepository.setUsername(user, username);
+        }
 
         return userMutableLiveData;
     }
@@ -73,7 +87,31 @@ public class UserViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> resetPassword(String email) {
-        userRepository.resetPassword(email);
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.resetPassword(email);
+        } else {
+            userRepository.resetPassword(email);
+        }
+
+        return userMutableLiveData;
+    }
+
+    public MutableLiveData<Result> logout() {
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.logout();
+        } else {
+            userRepository.logout();
+        }
+
+        return userMutableLiveData;
+    }
+
+    public MutableLiveData<Result> deleteAccount(User user, String email, String password) {
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.deleteAccount(user, email, password);
+        } else {
+            userRepository.deleteAccount(user, email, password);
+        }
 
         return userMutableLiveData;
     }
@@ -88,25 +126,5 @@ public class UserViewModel extends ViewModel {
 
     public void getUser(String username, String email, String password, boolean isUserRegistered) {
         userRepository.getUser(username, email, password, isUserRegistered);
-    }
-
-    public void updateSwitch(User user, String imperialSystem, boolean isChecked) {
-        userRepository.updateSwitch(user, imperialSystem, isChecked);
-    }
-
-    public MutableLiveData<Result> logout() {
-        if (userMutableLiveData == null) {
-            userMutableLiveData = userRepository.logout();
-        } else {
-            userRepository.logout();
-        }
-
-        return userMutableLiveData;
-    }
-
-    public MutableLiveData<Result> deleteAccount(User user, String email, String password) {
-        userRepository.deleteAccount(user, email, password);
-
-        return userMutableLiveData;
     }
 }

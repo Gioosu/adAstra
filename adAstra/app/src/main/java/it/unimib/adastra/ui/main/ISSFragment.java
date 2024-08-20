@@ -153,7 +153,7 @@ public class ISSFragment extends Fragment {
         newLatitude = ISSUtil.formatDMS(newLatitude, "N");
         newLongitude = ISSUtil.formatDMS(newLongitude, "E");
 
-        binding.textViewCoordinates.setText(newLatitude + " " + newLongitude);
+        binding.textViewCoordinates.setText(newLatitude + "   " + newLongitude);
 
         binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(issPosition.getTimestamp()));
         binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(issPosition.getAltitude(), issPosition.getUnits()));
