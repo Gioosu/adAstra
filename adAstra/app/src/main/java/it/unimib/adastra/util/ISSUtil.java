@@ -2,6 +2,7 @@ package it.unimib.adastra.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class ISSUtil {
     public static String decimalToDMS(double decimalDegrees) {
@@ -10,12 +11,6 @@ public class ISSUtil {
         // Calcola la parte decimale e converti in minuti
         double decimalMinutes = Math.abs(decimalDegrees - degrees) * 60;
         int minutes = (int) decimalMinutes;
-
-        // Calcola la parte decimale dei minuti e converti in secondi
-        double decimalSeconds = (decimalMinutes - minutes) * 60;
-
-        // int seconds = (int) Math.round(decimalSeconds);
-        // return degrees + "° " + minutes + "' " + seconds + "\"";
 
         return degrees + "° " + minutes + "' ";
     }
@@ -44,11 +39,15 @@ public class ISSUtil {
         return Math.round(altitude * 100.0) / 100.0 + " " + unit;
     }
 
-    // Formatta timestamp in HH:mm:ss
-    public static String formatTimestamp(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        Date netDate = (new Date(timestamp * 1000));
-
+    // Formatta timestamp
+    public static String formatTimestamp(long timestamp, boolean isTimeFormat) {
+        String pattern = isTimeFormat ? "hh:mm:ss a" : "HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
+        Date netDate= new Date(timestamp * 1000);
         return sdf.format(netDate);
+    }
+
+    public static double milesToKilometers(double miles) {
+        return miles * 1.60934;
     }
 }

@@ -12,6 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import it.unimib.adastra.R;
@@ -33,7 +43,7 @@ import it.unimib.adastra.util.ServiceLocator;
  * Use the {@link ISSFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ISSFragment extends Fragment {
+public class ISSFragment extends Fragment implements OnMapReadyCallback {
     public static final String TAG = ISSFragment.class.getSimpleName();
     private FragmentISSBinding binding;
     private Activity activity;
@@ -45,7 +55,12 @@ public class ISSFragment extends Fragment {
     private User user;
     private String idToken;
     private long timestamp;
-    private boolean isKilometers;
+    private boolean isImperial;
+    private boolean isTimeFormat;
+    private double footprintRadiusKm;
+    private GoogleMap googleMap;
+    private Marker marker;
+    private Circle currentCircle;
 
     public ISSFragment() {
         // Required empty public constructor
@@ -85,6 +100,11 @@ public class ISSFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentISSBinding.inflate(inflater, container, false);
+
+        // Inizializza la MapView e il suo ciclo di vita
+        binding.mapViewIss.onCreate(savedInstanceState);
+        binding.mapViewIss.getMapAsync(this);
+
         return binding.getRoot();
     }
 
@@ -96,7 +116,8 @@ public class ISSFragment extends Fragment {
         user = null;
         idToken = userViewModel.getLoggedUser();
         timestamp = 0;
-        isKilometers = false;
+        isImperial = false;
+        isTimeFormat = false;
 
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
@@ -106,15 +127,17 @@ public class ISSFragment extends Fragment {
                         user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null) {
-                            isKilometers = user.isImperialSystem();
+                            isImperial = user.isImperialSystem();
+                            isTimeFormat = user.isTimeFormat();
 
-                            issPositionViewModel.getISSPosition(timestamp, isKilometers).observe(
+                            issPositionViewModel.getISSPosition(timestamp, isImperial).observe(
                                     getViewLifecycleOwner(), task -> {
                                         Log.d(TAG, "task.isSucceful()");
 
-                                        if (result.isSuccess()) {
+                                        if (task.isSuccess()) {
                                             issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
                                             timestamp = issPosition.getTimestamp();
+                                            footprintRadiusKm = issPosition.getFootprint();
 
                                             if (issPosition != null)
                                                 updateUI(issPosition);
@@ -131,7 +154,7 @@ public class ISSFragment extends Fragment {
         // Bottone di Aggiornamento
         binding.floatingActionButtonIssRefresh.setOnClickListener(v -> {
             Log.d(TAG, "Bottone di Aggiornamento premuto");
-            issPositionViewModel.getISSPosition(timestamp, isKilometers);
+            issPositionViewModel.getISSPosition(timestamp, isImperial);
         });
 
         String info =  getString(R.string.altitude) + " " + getString(R.string.iss_altitude_description) + "\n\n" +
@@ -155,7 +178,7 @@ public class ISSFragment extends Fragment {
 
         binding.textViewCoordinates.setText(newLatitude + "   " + newLongitude);
 
-        binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(issPosition.getTimestamp()));
+        binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(issPosition.getTimestamp(), user.isTimeFormat()));
         binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(issPosition.getAltitude(), issPosition.getUnits()));
         binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(issPosition.getVelocity(), issPosition.getUnits()));
         binding.textViewVisibility.setText(issPosition.getVisibility());
@@ -164,5 +187,87 @@ public class ISSFragment extends Fragment {
             binding.textViewVisibility.setText(getString(R.string.iss_eclipsed));
         else
             binding.textViewVisibility.setText(getString(R.string.iss_daylight));
+
+        onMapReady(googleMap);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+        MapsInitializer.initialize(getContext());
+
+        if (marker != null) {
+            marker.remove();
+        }
+
+        if (currentCircle != null) {
+            currentCircle.remove();
+        }
+
+        if (googleMap != null && issPosition != null) {
+            double lat = issPosition.getLatitude();
+            double lng = issPosition.getLongitude();
+
+            // Aggiungi un marker e muovi la camera
+            LatLng iss = new LatLng(lat, lng);
+            marker = googleMap.addMarker(new MarkerOptions().position(iss).title(getString(R.string.iss))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.iss_filled_map_icon)));
+            drawFootprint(iss, footprintRadiusKm, isImperial);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
+        } else {
+            Log.d(TAG, "Errore: IssPosition è null");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.mapViewIss.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        binding.mapViewIss.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        binding.mapViewIss.onDestroy();
+        // Pulizia del binding
+        binding = null;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        binding.mapViewIss.onLowMemory();
+    }
+
+    private void drawFootprint(LatLng center, double footprintRadiusKm, boolean isImperial) {
+        double radiusInMeters;
+
+        Log.d(TAG, "footprintRadiusKm: " + footprintRadiusKm);
+
+        if (isImperial){
+            footprintRadiusKm = ISSUtil.milesToKilometers(footprintRadiusKm);
+        }
+
+        Log.d(TAG, "footprintRadiusKm: " + footprintRadiusKm);
+
+        // Converte il raggio della footprint da chilometri a metri
+        radiusInMeters = footprintRadiusKm * 1000;
+
+        // Configura le opzioni del cerchio (footprint)
+        CircleOptions circleOptions = new CircleOptions()
+                .center(center) // Centro del cerchio
+                .radius(radiusInMeters) // Raggio in metri
+                .strokeColor(0x220000FF) // Colore del bordo (trasparenza + colore)
+                .fillColor(0x220000FF) // Colore di riempimento (trasparenza + colore)
+                .strokeWidth(2); // Larghezza del bordo
+
+        // Aggiungi il cerchio alla mappa
+        currentCircle = googleMap.addCircle(circleOptions);
     }
 }

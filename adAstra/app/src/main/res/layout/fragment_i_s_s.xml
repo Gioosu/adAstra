@@ -123,16 +123,14 @@
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
             app:layout_constraintTop_toBottomOf="@+id/iss_topcard" />
 
-        <fragment
+        <com.google.android.gms.maps.MapView
             android:id="@+id/mapView_iss"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
             android:layout_height="300dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_settings"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
-            tools:context=".ISSFragment" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <View
             android:id="@+id/divider3"
