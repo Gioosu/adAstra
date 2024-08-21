@@ -1,8 +1,5 @@
 package it.unimib.adastra.ui.main;
 
-import static it.unimib.adastra.util.Constants.DARK_THEME;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,7 +19,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapColorScheme;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -40,7 +36,6 @@ import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.ISSUtil;
 import it.unimib.adastra.util.ServiceLocator;
-import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +49,6 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     private ISSPositionViewModel issPositionViewModel;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
-    private SharedPreferencesUtil sharedPreferencesUtil;
-    private int theme;
     private User user;
     private String idToken;
     private ISSPositionResponse issPosition;
@@ -66,7 +59,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     private LatLng iss;
     private GoogleMap googleMap;
     private Marker marker;
-    private Circle currentCircle;
+    private Circle circle;
 
     public ISSFragment() {
         // Required empty public constructor
@@ -118,9 +111,6 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sharedPreferencesUtil = new SharedPreferencesUtil(getContext());
-        theme = setTheme();
-
         user = null;
         idToken = userViewModel.getLoggedUser();
         isImperial = false;
@@ -139,7 +129,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         iss = null;
         googleMap = null;
         marker = null;
-        currentCircle = null;
+        circle = null;
 
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
@@ -233,12 +223,12 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         if (marker != null)
             marker.remove();
 
-        if (currentCircle != null)
-            currentCircle.remove();
+        if (circle != null)
+            circle.remove();
 
         if (googleMap != null && issPosition != null) {
             marker = drawMarker();
-            currentCircle = drawFootprint();
+            circle = drawFootprint();
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
         } else {
@@ -272,22 +262,12 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         binding.mapViewIss.onLowMemory();
     }
 
-    private int setTheme() {
-        return sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME);
-    }
-
     private void setGoogleMapOptions(GoogleMap googleMap) {
-        switch (theme) {
-            case 0:
-                googleMap.setMapColorScheme(MapColorScheme.FOLLOW_SYSTEM);
-                break;
-            case 1:
-                googleMap.setMapColorScheme(MapColorScheme.DARK);
-                break;
-            case 2:
-                googleMap.setMapColorScheme(MapColorScheme.LIGHT);
-                break;
-        }
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        googleMap.setOnMarkerClickListener(marker ->
+                marker.getTitle().equals(getString(R.string.iss)));
+
     }
 
     private Marker drawMarker() {
@@ -311,9 +291,8 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         CircleOptions circleOptions = new CircleOptions()
                 .center(iss)
                 .radius(footprint)
-                .strokeColor(0x220000FF)
-                .fillColor(0x220000FF)
-                .strokeWidth(2);
+                .strokeColor(0x22FFFF00)
+                .strokeWidth(10);
 
         return googleMap.addCircle(circleOptions);
     }
