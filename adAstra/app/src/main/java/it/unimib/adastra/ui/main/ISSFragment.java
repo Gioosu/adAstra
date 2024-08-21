@@ -1,6 +1,8 @@
 package it.unimib.adastra.ui.main;
 
-import android.app.Activity;
+import static it.unimib.adastra.util.Constants.DARK_THEME;
+import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapColorScheme;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -37,6 +40,7 @@ import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.ISSUtil;
 import it.unimib.adastra.util.ServiceLocator;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,18 +50,20 @@ import it.unimib.adastra.util.ServiceLocator;
 public class ISSFragment extends Fragment implements OnMapReadyCallback {
     public static final String TAG = ISSFragment.class.getSimpleName();
     private FragmentISSBinding binding;
-    private Activity activity;
     private IISSPositionRepository issPositionRepository;
     private ISSPositionViewModel issPositionViewModel;
-    private ISSPositionResponse issPosition;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
+    private SharedPreferencesUtil sharedPreferencesUtil;
+    private int theme;
     private User user;
     private String idToken;
+    private ISSPositionResponse issPosition;
+    private double lat, lng, altitude, velocity, footprint;
     private long timestamp;
-    private boolean isImperial;
-    private boolean isTimeFormat;
-    private double footprintRadiusKm;
+    private boolean isImperial, is12Format;
+    private String visibility, units;
+    private LatLng iss;
     private GoogleMap googleMap;
     private Marker marker;
     private Circle currentCircle;
@@ -112,35 +118,62 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        activity = getActivity();
+        sharedPreferencesUtil = new SharedPreferencesUtil(getContext());
+        theme = setTheme();
+
         user = null;
         idToken = userViewModel.getLoggedUser();
-        timestamp = 0;
         isImperial = false;
-        isTimeFormat = false;
+        is12Format = false;
+
+        issPosition = null;
+        lat = 0;
+        lng = 0;
+        altitude = 0;
+        velocity = 0;
+        visibility = null;
+        footprint = 0;
+        timestamp = 0;
+        units = null;
+
+        iss = null;
+        googleMap = null;
+        marker = null;
+        currentCircle = null;
 
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
-                        Log.d(TAG, "result.isSucceful()");
+                        Log.d(TAG, "Recupero dati dell'utente avvenuto con successo.");
                         user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null) {
                             isImperial = user.isImperialSystem();
-                            isTimeFormat = user.isTimeFormat();
+                            is12Format = user.isTimeFormat();
 
                             issPositionViewModel.getISSPosition(timestamp, isImperial).observe(
                                     getViewLifecycleOwner(), task -> {
-                                        Log.d(TAG, "task.isSucceful()");
-
                                         if (task.isSuccess()) {
+                                            Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
                                             issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
-                                            timestamp = issPosition.getTimestamp();
-                                            footprintRadiusKm = issPosition.getFootprint();
 
-                                            if (issPosition != null)
-                                                updateUI(issPosition);
+                                            if (issPosition != null) {
+                                                lat = issPosition.getLatitude();
+                                                lng = issPosition.getLongitude();
+                                                altitude = issPosition.getAltitude();
+                                                velocity = issPosition.getVelocity();
+                                                visibility = issPosition.getVisibility();
+                                                footprint = issPosition.getFootprint();
+                                                timestamp = issPosition.getTimestamp();
+                                                units = issPosition.getUnits();
+
+                                                iss = new LatLng(lat, lng);
+
+                                                updateUI();
+                                            } else {
+                                                Log.d(TAG, "Errore: Recupero dati dell'ISS fallito.");
+                                            }
                                         } else {
                                             Log.d(TAG, "Errore: " + ((Result.Error) task).getMessage());
                                         }
@@ -152,10 +185,8 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                 });
 
         // Bottone di Aggiornamento
-        binding.floatingActionButtonIssRefresh.setOnClickListener(v -> {
-            Log.d(TAG, "Bottone di Aggiornamento premuto");
-            issPositionViewModel.getISSPosition(timestamp, isImperial);
-        });
+        binding.floatingActionButtonIssRefresh.setOnClickListener(v ->
+                issPositionViewModel.getISSPosition(timestamp, isImperial));
 
         String info =  getString(R.string.altitude) + " " + getString(R.string.iss_altitude_description) + "\n\n" +
                         getString(R.string.velocity) + " " + getString(R.string.iss_velocity_description) + "\n\n" +
@@ -169,19 +200,19 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                 .show());
     }
 
-    public void updateUI(ISSPositionResponse issPosition) {
-        String newLatitude = ISSUtil.decimalToDMS(issPosition.getLatitude());
-        String newLongitude = ISSUtil.decimalToDMS(issPosition.getLongitude());
+    public void updateUI() {
+        String newLatitude = ISSUtil.decimalToDMS(lat);
+        String newLongitude = ISSUtil.decimalToDMS(lng);
 
         newLatitude = ISSUtil.formatDMS(newLatitude, "N");
         newLongitude = ISSUtil.formatDMS(newLongitude, "E");
 
         binding.textViewCoordinates.setText(newLatitude + "   " + newLongitude);
 
-        binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(issPosition.getTimestamp(), user.isTimeFormat()));
-        binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(issPosition.getAltitude(), issPosition.getUnits()));
-        binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(issPosition.getVelocity(), issPosition.getUnits()));
-        binding.textViewVisibility.setText(issPosition.getVisibility());
+        binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(timestamp, is12Format));
+        binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(altitude, units));
+        binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(velocity, units));
+        binding.textViewVisibility.setText(visibility);
 
         if (issPosition.getVisibility().equals("eclipsed"))
             binding.textViewVisibility.setText(getString(R.string.iss_eclipsed));
@@ -196,26 +227,22 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         googleMap = map;
         MapsInitializer.initialize(getContext());
 
-        if (marker != null) {
-            marker.remove();
-        }
+        if (googleMap != null)
+            setGoogleMapOptions(googleMap);
 
-        if (currentCircle != null) {
+        if (marker != null)
+            marker.remove();
+
+        if (currentCircle != null)
             currentCircle.remove();
-        }
 
         if (googleMap != null && issPosition != null) {
-            double lat = issPosition.getLatitude();
-            double lng = issPosition.getLongitude();
+            marker = drawMarker();
+            currentCircle = drawFootprint();
 
-            // Aggiungi un marker e muovi la camera
-            LatLng iss = new LatLng(lat, lng);
-            marker = googleMap.addMarker(new MarkerOptions().position(iss).title(getString(R.string.iss))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.iss_filled_map_icon)));
-            drawFootprint(iss, footprintRadiusKm, isImperial);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
         } else {
-            Log.d(TAG, "Errore: IssPosition è null");
+            Log.d(TAG, "Errore: Impossibile visualizzare la mappa.");
         }
     }
 
@@ -235,7 +262,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         super.onDestroy();
         binding.mapViewIss.onDestroy();
-        // Pulizia del binding
+
         binding = null;
     }
 
@@ -245,29 +272,49 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         binding.mapViewIss.onLowMemory();
     }
 
-    private void drawFootprint(LatLng center, double footprintRadiusKm, boolean isImperial) {
-        double radiusInMeters;
+    private int setTheme() {
+        return sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME);
+    }
 
-        Log.d(TAG, "footprintRadiusKm: " + footprintRadiusKm);
+    private void setGoogleMapOptions(GoogleMap googleMap) {
+        switch (theme) {
+            case 0:
+                googleMap.setMapColorScheme(MapColorScheme.FOLLOW_SYSTEM);
+                break;
+            case 1:
+                googleMap.setMapColorScheme(MapColorScheme.DARK);
+                break;
+            case 2:
+                googleMap.setMapColorScheme(MapColorScheme.LIGHT);
+                break;
+        }
+    }
 
+    private Marker drawMarker() {
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(iss)
+                .title(getString(R.string.iss))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iss_map_icon));
+
+       return googleMap.addMarker(markerOptions);
+    }
+
+    private Circle drawFootprint() {
+        // Conversione in km
         if (isImperial){
-            footprintRadiusKm = ISSUtil.milesToKilometers(footprintRadiusKm);
+            footprint = ISSUtil.milesToKilometers(footprint);
         }
 
-        Log.d(TAG, "footprintRadiusKm: " + footprintRadiusKm);
+        // Conversione in metri
+        footprint = footprint * 1000;
 
-        // Converte il raggio della footprint da chilometri a metri
-        radiusInMeters = footprintRadiusKm * 1000;
-
-        // Configura le opzioni del cerchio (footprint)
         CircleOptions circleOptions = new CircleOptions()
-                .center(center) // Centro del cerchio
-                .radius(radiusInMeters) // Raggio in metri
-                .strokeColor(0x220000FF) // Colore del bordo (trasparenza + colore)
-                .fillColor(0x220000FF) // Colore di riempimento (trasparenza + colore)
-                .strokeWidth(2); // Larghezza del bordo
+                .center(iss)
+                .radius(footprint)
+                .strokeColor(0x220000FF)
+                .fillColor(0x220000FF)
+                .strokeWidth(2);
 
-        // Aggiungi il cerchio alla mappa
-        currentCircle = googleMap.addCircle(circleOptions);
+        return googleMap.addCircle(circleOptions);
     }
 }
