@@ -10,8 +10,6 @@ public abstract class BaseISSPositionLocalDataSource {
         this.issPositionResponseCallback = issPositionResponseCallback;
     }
 
-    public abstract void getTimestamp();
-
     public abstract void getISSPosition();
 
     public abstract void updateISS(ISSPositionResponse issPositionResponse);

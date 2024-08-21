@@ -16,21 +16,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ddba3a5-a372-4b64-9402-91b2f104134b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/IISSPositionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/IISSPositionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/ISSPositionResponseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/repository/ISSPosition/ISSPositionResponseRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/service/ISSApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/service/ISSApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/BaseISSPositionRemoteDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/BaseISSPositionRemoteDataSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/ISSPositionRemoteDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/data/source/ISS/ISSPositionRemoteDataSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/model/ISS/ISSPositionResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/model/ISS/ISSPositionResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/main/ISSFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/main/ISSFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/viewModel/ISSPositionViewModel/ISSPositionViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/ui/viewModel/ISSPositionViewModel/ISSPositionViewModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/CoordinateConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/java/it/unimib/adastra/util/CoordinateUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adAstra/app/src/main/res/layout/fragment_i_s_s.xml" beforeDir="false" afterPath="$PROJECT_DIR$/adAstra/app/src/main/res/layout/fragment_i_s_s.xml" afterDir="false" />
-    </list>
+    <list default="true" id="1ddba3a5-a372-4b64-9402-91b2f104134b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,7 +64,7 @@
     "com.google.services.firebase.aqiPopupShown": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/moeasy/github/adAstra",
+    "last_opened_file_path": "/home/moeasy/github/adAstra/adAstra",
     "settings.editor.selected.configurable": "AndroidSdkUpdater"
   }
 }]]></component>

@@ -12,21 +12,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
+import it.unimib.adastra.model.NASA.NASAResponse;
 
-@Database(entities = {ISSPositionResponse.class}, version = DATABASE_VERSION, exportSchema = false)
-public abstract class ISSRoomDatabase extends androidx.room.RoomDatabase {
+@Database(entities = {ISSPositionResponse.class, NASAResponse.class}, version = DATABASE_VERSION, exportSchema = false)
+public abstract class AdAstraRoomDatabase extends androidx.room.RoomDatabase {
     public abstract ISSDao issDao();
-    private static volatile ISSRoomDatabase INSTANCE;
+    public abstract NASADao nasaDao();
+    private static volatile AdAstraRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    public static ISSRoomDatabase getDatabase(final Context context) {
+    public static AdAstraRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (ISSRoomDatabase.class) {
+            synchronized (AdAstraRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            ISSRoomDatabase.class, DATABASE_NAME).build();
+                            AdAstraRoomDatabase.class, DATABASE_NAME).build();
                 }
             }
         }

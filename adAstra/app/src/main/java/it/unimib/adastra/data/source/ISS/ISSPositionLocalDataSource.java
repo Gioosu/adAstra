@@ -4,31 +4,21 @@ import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
 import android.util.Log;
 
+import it.unimib.adastra.data.database.AdAstraRoomDatabase;
 import it.unimib.adastra.data.database.ISSDao;
-import it.unimib.adastra.data.database.ISSRoomDatabase;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 
 public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
     private static final String TAG = ISSPositionLocalDataSource.class.getSimpleName();
     private final ISSDao issDao;
 
-    public ISSPositionLocalDataSource(ISSRoomDatabase ISSRoomDatabase) {
-        this.issDao = ISSRoomDatabase.issDao();
-    }
-
-    @Override
-    public void getTimestamp() {
-        ISSRoomDatabase.databaseWriteExecutor.execute(() -> {
-            ISSPositionResponse issPositionResponse = new ISSPositionResponse();
-            issPositionResponse.setTimestamp(issDao.getTimestamp());
-
-            issPositionResponseCallback.onSuccessFromLocal(issPositionResponse);
-        });
+    public ISSPositionLocalDataSource(AdAstraRoomDatabase AdAstraRoomDatabase) {
+        this.issDao = AdAstraRoomDatabase.issDao();
     }
 
     @Override
     public void getISSPosition() {
-        ISSRoomDatabase.databaseWriteExecutor.execute(() -> {
+        AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
             ISSPositionResponse issPositionResponse = new ISSPositionResponse();
             issPositionResponse.setLatitude(issDao.getLatitude());
             issPositionResponse.setLongitude(issDao.getLongitude());
@@ -39,7 +29,7 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
 
     @Override
     public void updateISS(ISSPositionResponse issPositionResponse) {
-        ISSRoomDatabase.databaseWriteExecutor.execute(() -> {
+        AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
             if (issPositionResponse != null) {
                 int rowUpdatedCounter = issDao.updateIss(issPositionResponse);
 
@@ -68,7 +58,7 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
 
     @Override
     public void delete() {
-        ISSRoomDatabase.databaseWriteExecutor.execute(issDao::deleteISSPosition);
+        AdAstraRoomDatabase.databaseWriteExecutor.execute(issDao::deleteISSPosition);
         issPositionResponseCallback.onSuccessDeletion();
     }
 }

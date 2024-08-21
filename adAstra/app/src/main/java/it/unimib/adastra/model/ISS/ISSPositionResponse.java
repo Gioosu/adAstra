@@ -28,8 +28,7 @@ public class ISSPositionResponse implements Parcelable {
     private double solar_lon;
     private String units;
 
-    public ISSPositionResponse() {
-    }
+    public ISSPositionResponse() {}
 
     public ISSPositionResponse(int id, double latitude, double longitude, double altitude,
                                double velocity, String visibility, double footprint, long timestamp,

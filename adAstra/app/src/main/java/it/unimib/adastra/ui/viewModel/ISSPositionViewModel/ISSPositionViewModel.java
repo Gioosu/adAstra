@@ -7,7 +7,6 @@ import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 import it.unimib.adastra.model.Result;
 
 public class ISSPositionViewModel extends ViewModel {
-    private static final String TAG = ISSPositionViewModel.class.getSimpleName();
 
     private final IISSPositionRepository issPositionRepository;
     private MutableLiveData<Result> issPositionLiveData;
