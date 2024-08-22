@@ -1,10 +1,6 @@
 package it.unimib.adastra.data.repository.NASA;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
-
-import java.util.List;
 
 import it.unimib.adastra.data.source.NASA.BaseNASALocalDataSource;
 import it.unimib.adastra.data.source.NASA.BaseNASARemoteDataSource;
@@ -27,33 +23,19 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
     }
 
     @Override
-    public MutableLiveData<Result> fetchNasaApod() {
-        // TODO: aggiungere chiamata local
-        Log.d(TAG, "FetchNasaApod dentro metodo: " + nasaMutableLiveData.getValue());
-//        Date currentDate = new Date();
-        nasaRemoteDataSource.getNASA("apod");
-//        if (date.equals(currentDate.toString())) {
-//            nasaLocalDataSource.getNASA();
-//        } else {
-//            nasaRemoteDataSource.getNASA("apod");
-//        }
-        Log.d(TAG, "fetchNasaApod Response Repository: " + nasaMutableLiveData.getValue());
+    public MutableLiveData<Result> fetchNASAApod(String query) {
+        nasaLocalDataSource.getNASAData(query);
         return nasaMutableLiveData;
     }
 
     @Override
-    public void updateNasaApod(NASAResponse nasaResponse) {
-        nasaLocalDataSource.updateNASA(nasaResponse);
-    }
-
-    @Override
-    public void deleteNASA() {
+    public void deleteNASAData() {
         nasaLocalDataSource.delete();
     }
 
     @Override
     public void onSuccessFromRemote(NASAResponse nasaResponse) {
-        nasaLocalDataSource.updateNASA(nasaResponse);
+        nasaLocalDataSource.updateNASAData(nasaResponse);
     }
 
     @Override
@@ -64,7 +46,8 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
 
     @Override
     public void onSuccessFromLocal(NASAResponse nasaResponse) {
-
+        Result.NASAResponseSuccess result = new Result.NASAResponseSuccess(nasaResponse);
+        nasaMutableLiveData.postValue(result);
     }
 
     @Override
@@ -74,29 +57,8 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
     }
 
     @Override
-    public void onSuccessFromCloudReading(List<NASAResponse> nasaResponses) {
-
-    }
-
-    @Override
-    public void onSuccessFromCloudWriting(NASAResponse nasaResponses) {
-
-    }
-
-    @Override
-    public void onFailureFromCloud(Exception exception) {
-
-    }
-
-    @Override
-    public void onSuccessSynchronization() {
-
-    }
-
-    @Override
-    public void onNASAStatusChanged(NASAResponse nasaResponse) {
-        Result.NASAResponseSuccess result = new Result.NASAResponseSuccess(nasaResponse);
-        nasaMutableLiveData.postValue(result);
+    public void onFailureFromLocal() {
+        nasaRemoteDataSource.getNASAData("apod");
     }
 
     @Override

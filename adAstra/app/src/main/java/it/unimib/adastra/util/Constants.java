@@ -31,7 +31,8 @@ public class Constants {
 
     // Constants for NASA API (https://api.nasa.gov/)
     public static final String NASA_API_BASE_URL = "https://api.nasa.gov/";
-    public static final String NASA_ENDPOINT_APOD = "planetary/apod?api_key=Zb5Gb0UFIQPvrmkC6H1tvigH5It4PHVBiTKwOa07";
+    public static final String NASA_ENDPOINT_APOD = "planetary/apod";
+    public static final String NASA_API_KEY = "Zb5Gb0UFIQPvrmkC6H1tvigH5It4PHVBiTKwOa07";
 
     // Constants for Room
     public static final String DATABASE_NAME = "adAstraDatabase";

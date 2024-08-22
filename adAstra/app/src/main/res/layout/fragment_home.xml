@@ -41,14 +41,96 @@
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_home" />
 
+        <TextView
+            android:id="@+id/textView_welcome_user_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/welcome_user"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_icon_home" />
+
+        <TextView
+            android:id="@+id/textView_username_account_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome utente"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
+            app:layout_constraintTop_toBottomOf="@+id/textView_welcome_user_home" />
+
+        <TextView
+            android:id="@+id/textView_image_of_the_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nasa_pod"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_apod_title"
+            app:layout_constraintEnd_toStartOf="@+id/textView_apod_title"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
+            app:layout_constraintTop_toTopOf="@+id/textView_apod_title" />
+
+        <TextView
+            android:id="@+id/textView_apod_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView_image_of_the_day"
+            app:layout_constraintTop_toBottomOf="@+id/textView_username_account_home" />
+
+        <ImageView
+            android:id="@+id/imageView_image_of_the_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
+            app:layout_constraintTop_toBottomOf="@+id/textView_apod_title"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textView_copyright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_image_of_the_day" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
+            app:layout_constraintTop_toBottomOf="@+id/textView_copyright" />
+
         <ScrollView
             android:id="@+id/scrollView_home"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+            app:layout_constraintTop_toBottomOf="@+id/divider2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -56,70 +138,29 @@
                 android:layout_marginTop="8dp">
 
                 <TextView
-                    android:id="@+id/textView_image_of_the_day"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textView_apod_explanation"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/nasa_pod"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Descrizione"
                     android:textColor="?android:textColorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView_apod_explanation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Descrizione"
-                    android:textColor="?android:textColorPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView_image_of_the_day" />
-
-                <ImageView
-                    android:id="@+id/imageView_image_of_the_day"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_image_of_the_day"
-                    tools:src="@tools:sample/avatars" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView_apod_date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            android:text="TextView"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_icon_home">
-
-            <TextView
-                android:id="@+id/textView_welcome_user_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/welcome_user"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView_username_account_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nome utente"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_welcome_user_home" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/imageView_image_of_the_day" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

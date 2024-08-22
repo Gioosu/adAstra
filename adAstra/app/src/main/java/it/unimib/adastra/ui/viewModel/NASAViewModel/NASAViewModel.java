@@ -1,14 +1,9 @@
 package it.unimib.adastra.ui.viewModel.NASAViewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.Date;
-
 import it.unimib.adastra.data.repository.NASA.INASARepository;
-import it.unimib.adastra.data.source.ISS.ISSPositionRemoteDataSource;
 import it.unimib.adastra.model.Result;
 
 public class NASAViewModel extends ViewModel {
@@ -20,10 +15,8 @@ public class NASAViewModel extends ViewModel {
         this.nasaRepository = nasaRepository;
     }
 
-    public MutableLiveData<Result> getNasaApod() {
-
-        Log.d(TAG, "ViewModel: " + nasaLiveData);
-        nasaLiveData = nasaRepository.fetchNasaApod();
+    public MutableLiveData<Result> getNASAApod(String query) {
+        nasaLiveData = nasaRepository.fetchNASAApod(query);
 
         return nasaLiveData;
     }

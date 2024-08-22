@@ -3,42 +3,40 @@ package it.unimib.adastra.model.NASA;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.SerializedName;
 
 @Entity
 public class NASAResponse implements Parcelable {
 
     @PrimaryKey
-    private int id;
-
-    private String apodTitle;
+    @NonNull
+    @SerializedName("date")
     private String apodDate;
+
+    @SerializedName("title")
+    private String apodTitle;
+
+    @SerializedName("explanation")
     private String apodExplanation;
+
+    @SerializedName("url")
     private String apodUrl;
 
+    @SerializedName("copyright")
+    private String apodCopyright;
+
     public NASAResponse() {}
-    //TODO: Aggiungere altri costruttori?
 
     protected NASAResponse(Parcel in) {
-        id = in.readInt();
+        apodDate = in.readString();
+        apodTitle = in.readString();
         apodExplanation = in.readString();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getApodTitle() {
-        return apodTitle;
-    }
-
-    public void setApodTitle(String apodTitle) {
-        this.apodTitle = apodTitle;
+        apodUrl = in.readString();
+        apodCopyright = in.readString();
     }
 
     public String getApodDate() {
@@ -47,6 +45,14 @@ public class NASAResponse implements Parcelable {
 
     public void setApodDate(String apodDate) {
         this.apodDate = apodDate;
+    }
+
+    public String getApodTitle() {
+        return apodTitle;
+    }
+
+    public void setApodTitle(String apodTitle) {
+        this.apodTitle = apodTitle;
     }
 
     public String getApodExplanation() {
@@ -65,6 +71,14 @@ public class NASAResponse implements Parcelable {
         this.apodUrl = apodUrl;
     }
 
+    public String getApodCopyright() {
+        return apodCopyright;
+    }
+
+    public void setApodCopyright(String apodCopyright) {
+        this.apodCopyright = apodCopyright;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -72,29 +86,29 @@ public class NASAResponse implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(apodTitle);
         dest.writeString(apodDate);
+        dest.writeString(apodTitle);
         dest.writeString(apodExplanation);
         dest.writeString(apodUrl);
+        dest.writeString(apodCopyright);
     }
 
     public void readFromParcel(Parcel source) {
-        id = source.readInt();
-        apodTitle = source.readString();
         apodDate = source.readString();
+        apodTitle = source.readString();
         apodExplanation = source.readString();
         apodUrl = source.readString();
+        apodCopyright = source.readString();
     }
 
     @Override
     public String toString() {
         return "NASAResponse{" +
-                "id=" + id +
-                ", apodTitle='" + apodTitle + '\'' +
                 ", apodDate='" + apodDate + '\'' +
+                ", apodTitle='" + apodTitle + '\'' +
                 ", apodExplanation='" + apodExplanation + '\'' +
                 ", apodUrl='" + apodUrl + '\'' +
+                ", apoCopyright='" + apodCopyright + '\'' +
                 '}';
     }
 

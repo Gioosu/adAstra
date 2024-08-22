@@ -20,26 +20,23 @@ public class NASARemoteDataSource extends BaseNASARemoteDataSource {
         this.nasaApiService = ServiceLocator.getInstance().getNASAApiService();
     }
 
-    //TODO: override di tutti i metodi
-
     @Override
-    public void getNASA(String query) {
+    public void getNASAData(String query) {
         Call<NASAResponse> nasaResponseCall;
         switch (query) {
-            case "apod": //TODO: hard-coded?
+            case "apod":
                 nasaResponseCall = nasaApiService.getNasaApod();
                 break;
-            // future implementations for more NASA apis
+            // Implementazioni future NASA API
             default:
                 nasaResponseCall = null;
                 break;
         }
+        getNASAData(nasaResponseCall);
+    }
 
-        Request request = nasaResponseCall.request();
-
-        Log.d(TAG, "getNASA(" + query + "): " + request.url()
-                + ", " + request.headers() + ", "
-                + request.method());
+    @Override
+    public void getNASAData(Call<NASAResponse> nasaResponseCall) {
         nasaResponseCall.enqueue(new Callback<NASAResponse>() {
             @Override
             public void onResponse(Call<NASAResponse> call, Response<NASAResponse> response) {

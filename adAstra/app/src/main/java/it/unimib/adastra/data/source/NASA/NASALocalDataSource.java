@@ -2,7 +2,9 @@ package it.unimib.adastra.data.source.NASA;
 
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
-import android.util.Log;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import it.unimib.adastra.data.database.AdAstraRoomDatabase;
 import it.unimib.adastra.data.database.NASADao;
@@ -17,38 +19,55 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
     }
 
     @Override
-    public void getNASA() {
+    public void getNASAData(String query)
+    {
+        switch(query) {
+            case "apod":
+                fetchNASAApod();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void fetchNASAApod() {
         AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
             NASAResponse nasaResponse = new NASAResponse();
-            nasaResponse.setApodTitle(nasaDao.getNASAResponseTitle());
-            nasaResponse.setApodDate(nasaDao.getNASAResponseDate());
-            nasaResponse.setApodExplanation(nasaDao.getNASAResponseExplanation());
-            nasaResponse.setApodUrl(nasaDao.getNASAResponseUrl());
 
-            nasaResponseCallback.onSuccessFromLocal(nasaResponse);
+            if (nasaDao.getNASAResponse() != null) {
+                nasaResponse.setApodDate(nasaDao.getNASAResponseDate());
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                Date date = new Date();
+                String currentDate = formatter.format(date);
+
+                // Data salvataggio locale uguale alla data corrente
+                if (nasaResponse.getApodDate().equals(currentDate)) {
+                    nasaResponse.setApodTitle(nasaDao.getNASAResponseTitle());
+                    nasaResponse.setApodExplanation(nasaDao.getNASAResponseExplanation());
+                    nasaResponse.setApodUrl(nasaDao.getNASAResponseUrl());
+                    nasaResponse.setApodCopyright(nasaDao.getNASAResponseCopyright());
+
+                    nasaResponseCallback.onSuccessFromLocal(nasaResponse);
+                } else {
+                    nasaDao.deleteNASA();
+                    nasaResponseCallback.onFailureFromLocal();
+                }
+            } else {
+                nasaResponseCallback.onFailureFromLocal();
+            }
+
         });
     }
 
     @Override
-    public void updateNASA(NASAResponse nasaResponse) {
+    public void updateNASAData(NASAResponse nasaResponse) {
         AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
            if (nasaResponse != null) {
-               int rowUpdatedCounter = nasaDao.updateNASA(nasaResponse);
-
-               if (rowUpdatedCounter == 0) {
-                   Log.e(TAG, "updateNASA: rowUpdatedCounter is 0");
-                   nasaDao.insertNASA(nasaResponse);
-                   nasaResponseCallback.onNASAStatusChanged(nasaResponse);
-               } else if (rowUpdatedCounter == 1){
-                   Log.d(TAG, "updateNASA: rowUpdatedCounter is 1");
-                   NASAResponse updatedNASAResponse = nasaDao.getNASAResponse();
-                   nasaResponseCallback.onNASAStatusChanged(updatedNASAResponse);
-               } else {
-                   Log.e(TAG, "updateNASA: rowUpdatedCounter is not 1");
-                   nasaResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
-               }
+               nasaDao.insertNASA(nasaResponse);
+               nasaResponseCallback.onSuccessFromLocal(nasaResponse);
            } else {
-               Log.e(TAG, "updateNASA: nasaResponse is null");
                nasaResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
            }
         });

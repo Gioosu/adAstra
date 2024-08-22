@@ -20,10 +20,14 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
     public void getISSPosition() {
         AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
             ISSPositionResponse issPositionResponse = new ISSPositionResponse();
-            issPositionResponse.setLatitude(issDao.getLatitude());
-            issPositionResponse.setLongitude(issDao.getLongitude());
 
-            issPositionResponseCallback.onSuccessFromLocal(issPositionResponse);
+            if(issDao.getISS() != null) {
+                issPositionResponse.setLatitude(issDao.getLatitude());
+                issPositionResponse.setLongitude(issDao.getLongitude());
+                issPositionResponseCallback.onSuccessFromLocal(issPositionResponse);
+            } else {
+                issPositionResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+            }
         });
     }
 

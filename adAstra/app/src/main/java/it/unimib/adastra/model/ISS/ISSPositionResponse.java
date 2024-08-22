@@ -30,29 +30,6 @@ public class ISSPositionResponse implements Parcelable {
 
     public ISSPositionResponse() {}
 
-    public ISSPositionResponse(int id, double latitude, double longitude, double altitude,
-                               double velocity, String visibility, double footprint, long timestamp,
-                               double daynum, double solar_lat, double solar_lon, String units) {
-        this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.altitude = altitude;
-        this.velocity = velocity;
-        this.visibility = visibility;
-        this.footprint = footprint;
-        this.timestamp = timestamp;
-        this.daynum = daynum;
-        this.solar_lat = solar_lat;
-        this.solar_lon = solar_lon;
-        this.units = units;
-    }
-
-    public ISSPositionResponse(long timestamp, double longitude, double latitude) {
-        this.timestamp = timestamp;
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
-
     protected ISSPositionResponse(Parcel in) {
        id = in.readInt();
        latitude = in.readDouble();

@@ -11,12 +11,6 @@ public interface ISSPositionResponseCallback {
     void onSuccessFromLocal(ISSPositionResponse issPositionResponse);
     void onFailureFromLocal(Exception exception);
 
-    void onSuccessFromCloudReading(List<ISSPositionResponse> issPositionResponses);
-    void onSuccessFromCloudWriting(ISSPositionResponse issPositionResponses);
-    void onFailureFromCloud(Exception exception);
-
-    void onSuccessSynchronization();
-
     void onISSPositionStatusChanged(ISSPositionResponse issPositionResponse);
 
     void onSuccessDeletion();

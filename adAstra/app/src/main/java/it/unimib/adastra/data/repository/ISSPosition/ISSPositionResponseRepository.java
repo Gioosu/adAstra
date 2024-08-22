@@ -33,7 +33,7 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     public MutableLiveData<Result> fetchISSPosition(long timestamp, boolean isKilometers) {
         long currentTime = System.currentTimeMillis();
 
-        if(currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
+        if (currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
             issPositionRemoteDataSource.getISSPosition(isKilometers);
         } else {
             issPositionLocalDataSource.getISSPosition();
@@ -65,33 +65,14 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
 
     @Override
     public void onSuccessFromLocal(ISSPositionResponse issPositionResponse) {
-
+        Result.ISSPositionResponseSuccess result = new Result.ISSPositionResponseSuccess(issPositionResponse);
+        issPositionMutableLiveData.postValue(result);
     }
 
     @Override
     public void onFailureFromLocal(Exception exception) {
         Result.Error result = new Result.Error(exception.getMessage());
         issPositionMutableLiveData.postValue(result);
-    }
-
-    @Override
-    public void onSuccessFromCloudReading(List<ISSPositionResponse> issPositionResponses) {
-
-    }
-
-    @Override
-    public void onSuccessFromCloudWriting(ISSPositionResponse issPositionResponses) {
-
-    }
-
-    @Override
-    public void onFailureFromCloud(Exception exception) {
-
-    }
-
-    @Override
-    public void onSuccessSynchronization() {
-
     }
 
     @Override
@@ -102,6 +83,6 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
 
     @Override
     public void onSuccessDeletion() {
-
+        // TODO Clear
     }
 }

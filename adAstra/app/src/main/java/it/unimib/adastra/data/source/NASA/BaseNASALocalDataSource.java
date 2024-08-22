@@ -10,9 +10,11 @@ public abstract class BaseNASALocalDataSource {
         this.nasaResponseCallback = nasaResponseCallback;
     }
 
-    public abstract void getNASA();
+    public abstract void getNASAData(String query);
 
-    public abstract void updateNASA(NASAResponse nasaResponse);
+    public abstract void fetchNASAApod();
+
+    public abstract void updateNASAData(NASAResponse nasaResponse);
 
     public abstract void delete();
 }

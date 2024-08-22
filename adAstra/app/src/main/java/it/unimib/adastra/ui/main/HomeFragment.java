@@ -1,14 +1,5 @@
 package it.unimib.adastra.ui.main;
 
-import static it.unimib.adastra.util.Constants.DARK_THEME;
-import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
-import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
-import static it.unimib.adastra.util.Constants.LANGUAGE;
-import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.adastra.util.Constants.TIME_FORMAT;
-import static it.unimib.adastra.util.Constants.USERNAME;
-
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -22,11 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import it.unimib.adastra.R;
+import com.bumptech.glide.Glide;
+
 import it.unimib.adastra.data.repository.NASA.INASARepository;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentHomeBinding;
-import it.unimib.adastra.databinding.FragmentISSBinding;
 import it.unimib.adastra.model.NASA.NASAResponse;
 import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.user.User;
@@ -83,7 +74,6 @@ public class HomeFragment extends Fragment {
         nasaViewModel = new ViewModelProvider(
                 requireActivity(),
                 new NASAViewModelFactory(nasaRepository)).get(NASAViewModel.class);
-        Log.d(TAG, "nasaViewModel dopo inizializzazione: " + nasaViewModel.getNasaApod().toString());
     }
 
     @Override
@@ -103,37 +93,45 @@ public class HomeFragment extends Fragment {
         user = null;
         idToken = userViewModel.getLoggedUser();
 
-
+        // Recupero dati dell'utente
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
                         user = ((Result.UserResponseSuccess) result).getUser();
-                        if (user != null)
-                            updateUI(user);
+
+                        if (user != null) {
+                            // Recupero dati NASA
+                            nasaViewModel.getNASAApod("apod").observe(
+                                    getViewLifecycleOwner(), task -> {
+                                        Log.d(TAG, "result in observer:" + task.toString());
+                                        if (task.isSuccess()) {
+                                            nasaApod = ((Result.NASAResponseSuccess) task).getData();
+
+                                            if (nasaApod != null)
+                                                updateUI();
+                                        }
+                                    });
+                        }
                     } else {
                         Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
                     }
                 });
 
-        nasaViewModel.getNasaApod().observe(
-                getViewLifecycleOwner(), result -> {
-                    Log.d(TAG, "result in observer:" + result.toString());
-                    if (result.isSuccess()) {
-                        Log.d(TAG, "result.isSucceful per nasaViewModel");
-                        Log.d(TAG, "nasaApod in observer:" + nasaApod.getApodExplanation());
-                        nasaApod = ((Result.NASAResponseSuccess) result).getData();
-                    }
-                });
+
     }
 
-    private void updateUI(User user) {
-        if (user != null) {
-            binding.textViewUsernameAccountHome.setText(user.getUsername());
-        } else {
-            Log.d(TAG, "Errore: Nessuno User trovato.");
-        }
-        if (nasaApod != null) {
-            binding.textViewApodExplanation.setText(nasaApod.getApodExplanation());
-        }
+    private void updateUI() {
+        // Aggiornamento username
+        binding.textViewUsernameAccountHome.setText(user.getUsername());
+
+        // Aggiornamento informazioni NASA
+        binding.textViewApodTitle.setText(nasaApod.getApodTitle());
+        binding.textViewApodExplanation.setText(nasaApod.getApodExplanation());
+        Glide.with(this)
+                .load(nasaApod.getApodUrl())
+                .into(binding.imageViewImageOfTheDay);
+        binding.textViewApodDate.setText(nasaApod.getApodDate());
+        binding.textViewCopyright.setText(nasaApod.getApodCopyright());
+
     }
 }

@@ -22,11 +22,11 @@ public interface NASADao {
     @Query("SELECT apodExplanation FROM NASAResponse")
     String getNASAResponseExplanation();
 
+    @Query("SELECT apodCopyright FROM NASAResponse")
+    String getNASAResponseCopyright();
+
     @Query("SELECT apodUrl FROM NASAResponse")
     String getNASAResponseUrl();
-
-    @Update
-    int updateNASA(NASAResponse nasa);
 
     @Insert
     void insertNASA(NASAResponse nasa);
