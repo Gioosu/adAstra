@@ -25,12 +25,20 @@ public class ISSUtil {
     }
 
     public static String formatRoundVelocity(double velocity, String unit) {
-        if (unit.equals("km")){
-            unit = "km/h";
-        } else if (unit.equals("mi")){
-            unit = "mph";
-        } else
+        if (unit == null) {
             return Constants.ERROR_PARAMETERS;
+        }
+
+        switch (unit) {
+            case "km":
+                unit = "km/h";
+                break;
+            case "mi":
+                unit = "mph";
+                break;
+            default:
+                return Constants.ERROR_PARAMETERS;
+        }
 
         return Math.round(velocity * 100.0) / 100.0 + " " + unit;
     }
@@ -44,6 +52,7 @@ public class ISSUtil {
         String pattern = isTimeFormat ? "hh:mm:ss a" : "HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
         Date netDate= new Date(timestamp * 1000);
+
         return sdf.format(netDate);
     }
 

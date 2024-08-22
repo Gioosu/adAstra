@@ -7,7 +7,6 @@ import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 import it.unimib.adastra.model.Result;
 
 public class ISSPositionViewModel extends ViewModel {
-
     private final IISSPositionRepository issPositionRepository;
     private MutableLiveData<Result> issPositionLiveData;
 

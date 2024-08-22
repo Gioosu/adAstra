@@ -22,10 +22,24 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
             ISSPositionResponse issPositionResponse = new ISSPositionResponse();
 
             if(issDao.getISS() != null) {
+                Log.d(TAG, "Recupero dati dell'ISS dal database avvenuto con successo.");
+
                 issPositionResponse.setLatitude(issDao.getLatitude());
                 issPositionResponse.setLongitude(issDao.getLongitude());
+                issPositionResponse.setAltitude(issDao.getAltitude());
+                issPositionResponse.setVelocity(issDao.getVelocity());
+                issPositionResponse.setVisibility(issDao.getVisibility());
+                issPositionResponse.setFootprint(issDao.getFootprint());
+                issPositionResponse.setTimestamp(issDao.getTimestamp());
+                issPositionResponse.setDaynum(issDao.getDaynum());
+                issPositionResponse.setSolar_lat(issDao.getSolarLat());
+                issPositionResponse.setSolar_lon(issDao.getSolarLon());
+                issPositionResponse.setUnits(issDao.getUnits());
+
                 issPositionResponseCallback.onSuccessFromLocal(issPositionResponse);
             } else {
+                Log.d(TAG, "ERRORE: Recupero dati dell'ISS dal database fallito.");
+
                 issPositionResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });

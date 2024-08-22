@@ -4,7 +4,6 @@
     <string name="signup">Registrazione</string>
     <string name="username">Nome utente</string>
     <string name="confirm_password">Conferma la password</string>
-    <string name="welcome">Benvenuti su adAstra!</string>
 
     <!-- Email verification -->
     <string name="verify_email">Verifica la tua email</string>
@@ -28,15 +27,6 @@
     <string name="confirm_reset">Conferma reimpostazione password</string>
     <string name="confirm_reset_message">Sei sicuro di voler reimpostare la tua password? \nTi invieremo un email per reimpostarla.</string>
     <string name="reset">Reimposta password</string>
-
-    <!-- CheckInbox -->
-    <string name="check_your_inbox">Controlla la tua casella di posta</string>
-    <string name="sent_a_password">Abbiamo inviato un link per la reimpostazione della password all\'email associata al tuo account</string>
-    <string name="didnt_get_an_email">Non hai ricevuto l\'email?</string>
-    <string name="resend">Invia di nuovo</string>
-    <string name="sending_email">Invio dell\'email in corso…</string>
-    <string name="email_resend">Email inviata nuovamente con successo</string>
-    <string name="back_to_login">Ritorna all\'accesso</string>
 
     <!-- Main -->
     <string name="encyclopedia">Enciclopedia</string>
@@ -92,31 +82,35 @@
     <string name="confirm_new_password">Conferma nuova password</string>
     <string name="password_changed">Password modificata con successo</string>
 
-    <!-- Iss -->
-    <string name="iss_refresh">Aggiorna posizione ISS</string>
+    <!-- ISS -->
+    <string name="iss_longitude">Longitudine</string>
+    <string name="iss_latitude">Latitudine</string>
     <string name="iss_filled">Icona ISS piena</string>
     <string name="more_info">Informazioni aggiuntive</string>
     <string name="altitude">Altitudine:</string>
     <string name="velocity">Velocità:</string>
     <string name="visibility">Visibilità:</string>
-    <string name="footprint">Traiettoria</string>
+    <string name="iss_eclipsed">Eclissata</string>
+    <string name="iss_daylight">Esposta</string>
+    <string name="footprint">Copertura</string>
     <string name="timestamp">Data</string>
     <string name="daynum">Giorno</string>
     <string name="solar_latitude">Latitudine solare</string>
     <string name="solar_longitude">Longitudine solare</string>
-    <string name="iss_altitude_description">Descrive l\'altezza della Stazione Spaziale Internazionale (ISS) sopra la superficie terrestre.</string>
-    <string name="iss_velocity_description">Indica la velocità a cui sta viaggiando la Stazione Spaziale Internazionale (ISS).</string>
-    <string name="iss_visibility_description">"Si riferisce al fatto che la Stazione Spaziale Internazionale (ISS) sia attualmente illuminata dalla luce solare (esposta) o all'ombra della Terra (eclissata). "</string>
-    <string name="iss_footprint_description">Indica la traiettoria dell\'ISS sulla mappa.</string>
-    <string name="iss_timestamp_description">Indica la data del posizionamento dell\'ISS.</string>
-    <string name="iss_daynum_description">Indica il giorno dell\'anno del posizionamento dell\'ISS.</string>
-    <string name="iss_solar_latitude_description">Indica la posizione della luce sulla superficie terrestre.</string>
-    <string name="iss_solar_longitude_description">Indica la posizione della luce sulla superficie terrestre.</string>
+    <string name="iss_refresh">Aggiorna posizione ISS</string>
+    <string name="iss_info">
+        Altitudine\nDescrive l\'altezza della Stazione Spaziale Internazionale (ISS) sopra la superficie terrestre.
+        \n\nVelocità\nIndica la velocità a cui sta viaggiando la Stazione Spaziale Internazionale (ISS).
+        \n\nVisibilità\nIndica se la Stazione Spaziale Internazionale (ISS) è attualmente illuminata dalla luce solare (esposta) o all\'ombra della Terra (eclissata).
+    </string>
+    <string name="close">Chiudi</string>
+    <string name="iss_last_update">Ultimo aggiornamento:</string>
 
     <!-- Home -->
-    <string name="welcome_user">"Benvenuto, "</string>
+    <string name="nasa_pod">Immagine del Giorno:</string>
+    <string name="nasa_by_nasa">da NASA</string>
 
-    <!-- Errors -->
+    <!-- Errori -->
     <string name="error_invalid_username">Il nome utente deve essere lunga tra 3 e 10 caratteri</string>
     <string name="error_invalid_email">Indirizzo email non valido</string>
     <string name="error_invalid_password">La password deve essere lunga almeno 6 caratteri</string>
@@ -142,11 +136,4 @@
     <string name="error_password_change_failed">Cambio password fallito</string>
     <string name="error_invalid_new_email">Scegli un nuovo indirizzo email diversa dalla precedente</string>
     <string name="error_unexpected">Errore inatteso</string>
-    <string name="iss_longitude">Longitudine</string>
-    <string name="iss_latitude">Latitudine</string>
-    <string name="close">Chiudi</string>
-    <string name="iss_last_update">Ultimo aggiornamento:</string>
-    <string name="iss_eclipsed">Eclissata</string>
-    <string name="iss_daylight">Esposta</string>
-    <string name="nasa_pod">Immagine del Giorno dalla NASA:</string>
 </resources>

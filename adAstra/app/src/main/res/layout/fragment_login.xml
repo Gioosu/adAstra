@@ -49,7 +49,7 @@
             <TextView
                 android:id="@+id/login"
                 android:layout_width="wrap_content"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/login"
                 android:textColor="?android:textColorPrimary"

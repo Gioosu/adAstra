@@ -1,18 +1,13 @@
 package it.unimib.adastra.model.ISS;
 
-//Class to represent the source of ISS information
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.google.gson.annotations.SerializedName;
-
 @Entity
 public class ISSPositionResponse implements Parcelable {
-
     @PrimaryKey
     private int id;
 
@@ -134,12 +129,15 @@ public class ISSPositionResponse implements Parcelable {
     }
 
     public String getUnits() {
-        if (units.equals("kilometers")) {
-            units = "km";
+        switch (units != null ? units : "") {
+            case "kilometers":
+                units = "km";
+                break;
+            case "miles":
+                units = "mi";
+                break;
         }
-        else if (units.equals("miles")) {
-            units = "mi";
-        }
+
         return units;
     }
 

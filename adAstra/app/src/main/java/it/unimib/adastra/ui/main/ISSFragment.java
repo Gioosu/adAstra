@@ -170,7 +170,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                                     });
                         }
                     } else {
-                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                        Log.d(TAG, "Errore: " + ((Result.Error) result).getMessage());
                     }
                 });
 
@@ -178,14 +178,10 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         binding.floatingActionButtonIssRefresh.setOnClickListener(v ->
                 issPositionViewModel.getISSPosition(timestamp, isImperial));
 
-        String info =  getString(R.string.altitude) + " " + getString(R.string.iss_altitude_description) + "\n\n" +
-                        getString(R.string.velocity) + " " + getString(R.string.iss_velocity_description) + "\n\n" +
-                        getString(R.string.visibility) + " " + getString(R.string.iss_visibility_description);
-
         // Bottone di Info
         binding.floatingActionButtonIssInfo.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.more_info)
-                .setMessage(info)
+                .setMessage(getString(R.string.iss_info))
                 .setPositiveButton(R.string.close, null)
                 .show());
     }
@@ -204,7 +200,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(velocity, units));
         binding.textViewVisibility.setText(visibility);
 
-        if (issPosition.getVisibility().equals("eclipsed"))
+        if (visibility.equals("eclipsed"))
             binding.textViewVisibility.setText(getString(R.string.iss_eclipsed));
         else
             binding.textViewVisibility.setText(getString(R.string.iss_daylight));

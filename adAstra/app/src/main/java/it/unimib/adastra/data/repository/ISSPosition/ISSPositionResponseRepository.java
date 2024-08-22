@@ -6,8 +6,6 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.List;
-
 import it.unimib.adastra.data.source.ISS.BaseISSPositionLocalDataSource;
 import it.unimib.adastra.data.source.ISS.BaseISSPositionRemoteDataSource;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
@@ -34,8 +32,12 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
+            Log.d(TAG, "Fetch da remoto");
+
             issPositionRemoteDataSource.getISSPosition(isKilometers);
         } else {
+            Log.d(TAG, "Fetch da locale");
+
             issPositionLocalDataSource.getISSPosition();
         }
 
