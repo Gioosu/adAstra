@@ -74,12 +74,18 @@
     <!-- UpdateEmail -->
     <string name="new_email_address">Nuovo indirizzo email</string>
     <string name="account_password">Password adAstra</string>
+    <string name="confirm_email_change_title">Conferma Modifica Email</string>
+    <string name="confirm_email_change_message">Sei sicuro di voler cambiare la tua email?\nSarà richiesto di riautenticarti.</string>
+    <string name="ok_update_email">Aggiorna email</string>
     <string name="email_updated">Email di verifica inviata al nuovo indirizzo</string>
 
     <!-- ChangePassword -->
     <string name="current_password">Password attuale</string>
     <string name="new_password">Nuova password</string>
     <string name="confirm_new_password">Conferma nuova password</string>
+    <string name="confirm_password_change_title">Conferma Modifica Password</string>
+    <string name="confirm_password_change_message">Sei sicuro di voler cambiare la tua password?\nSarà richiesto di riautenticarti.</string>
+    <string name="ok_update_password">Aggiorna password</string>
     <string name="password_changed">Password modificata con successo</string>
 
     <!-- ISS -->

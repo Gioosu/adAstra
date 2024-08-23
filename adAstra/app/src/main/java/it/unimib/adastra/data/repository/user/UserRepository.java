@@ -152,7 +152,12 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void onSuccessFromResetPassword() {
+    public void onSuccessFromUpdateUserCredentials() {
+        logout();
+    }
+
+    @Override
+    public void onSuccessFromDeleteAccount() {
         logout();
     }
 

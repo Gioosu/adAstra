@@ -130,24 +130,34 @@ public class ChangePasswordFragment extends Fragment {
             String newPassword = Objects.requireNonNull(binding.newPasswordInputEditText.getText()).toString();
             String confirmNewPassword = Objects.requireNonNull(binding.confirmNewPasswordInputEditText.getText()).toString();
 
-            if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)){
-                userViewModel.changePassword(user, newPassword).observe(
-                        getViewLifecycleOwner(), result -> {
-                            if (result.isSuccess()) {
-                                savePassword(newPassword);
-                                showSnackbar(v, getString(R.string.password_changed));
-                                Navigation.findNavController(v).navigate(R.id.action_changePasswordFragment_to_accountSettingsFragment);
-                            } else {
-                                showSnackbar(v, getString(R.string.error_password_change_failed));
-                            }
-                        });
-            }
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.confirm_password_change_title)
+                    .setMessage(R.string.confirm_password_change_message)
+                    .setPositiveButton(R.string.ok_update_password, (dialog, which) -> setPassword(v, newPassword, currentPassword, confirmNewPassword))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
         });
     }
 
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void setPassword(View view, String newPassword, String currentPassword, String confirmNewPassword) {
+        if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)) {
+            userViewModel.changePassword(user, newPassword).observe(
+                    getViewLifecycleOwner(), result -> {
+                        if (result.isSuccess()) {
+                            if (((Result.UserResponseSuccess) result).getUser() == null)
+                                backToLogin();
+                        } else {
+                            showSnackbar(view, getString(R.string.error_password_change_failed));
+                        }
+                    });
+        } else {
+            Log.d(TAG, "Errore: Aggiornamento della password fallito.");
+        }
     }
 
     // Controlla che la password coincida con quella corrente

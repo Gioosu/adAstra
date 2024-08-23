@@ -1,7 +1,6 @@
 package it.unimib.adastra.data.source.user;
 
 import static it.unimib.adastra.util.Constants.ACCOUNT_DELETION_FAILED;
-import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.INVALID_USERNAME;
@@ -15,8 +14,6 @@ import static it.unimib.adastra.util.Constants.VERIFIED;
 
 import android.util.Log;
 
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,10 +29,12 @@ import it.unimib.adastra.util.exception.InvalidUsernameException;
 public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     private static final String TAG = UserDataRemoteDataSource.class.getSimpleName();
     private final FirebaseAuth firebaseAuth;
+    private final FirebaseUser firebaseUser;
     private final FirebaseFirestore db;
 
     public UserDataRemoteDataSource (){
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
     }
 
@@ -150,38 +149,30 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     // Cambia l'email
     @Override
     public void setEmail(User user, String newEmail, String email, String password) {
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
-
-        currentUser.reauthenticate(credential)
+        firebaseUser.verifyBeforeUpdateEmail(newEmail)
                 .addOnCompleteListener(task -> {
-                    Log.d(TAG, "Utente ri-autenticato.");
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Aggiornamento dell'email avvenuto con successo.");
 
-                    currentUser.verifyBeforeUpdateEmail(newEmail)
-                            .addOnCompleteListener(task1 -> {
-                                if (task1.isSuccessful()) {
-                                    Log.d(TAG, "Aggiornamento dell'email avvenuto con successo");
+                        userResponseCallback.onSuccessFromUpdateUserCredentials();
+                    } else {
+                        Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
 
-                                    userResponseCallback.onSuccessFromRemoteDatabase(user);
-                                } else {
-                                    Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
-
-                                    userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
-                                }
-                            });
+                        userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
+                    }
                 });
+
     }
 
     // Cambia la password
     @Override
     public void changePassword(User user, String newPassword) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        currentUser.updatePassword(newPassword)
+        firebaseUser.updatePassword(newPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Aggiornamento della password avvenuto con successo.");
 
-                        userResponseCallback.onSuccessFromRemoteDatabase(user);
+                        userResponseCallback.onSuccessFromUpdateUserCredentials();
                     }
                     else {
                         Log.d(TAG, "Errore: Aggiornamento della password fallito.");
@@ -194,12 +185,12 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     // Invia l'email per reimpostare la password
     @Override
     public void resetPassword(String email) {
-        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+        firebaseAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Email di reimpostazione inviata.");
 
-                        userResponseCallback.onSuccessFromResetPassword();
+                        userResponseCallback.onSuccessFromUpdateUserCredentials();
                     } else {
                         Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
 
@@ -211,41 +202,31 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     // Elimina l'account
     @Override
     public void deleteAccount(User user, String email, String password) {
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+       firebaseUser.delete().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Eliminazione da Firebase avvenuta con successo.");
 
-        // Si elimina l'account da Firebase.
-            AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+                    // Si elimina l'account da Firestore.
+                    db.collection(USERS_COLLECTION).document(user.getId()).delete()
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d(TAG, "Eliminazione da Firestore avvenuta con successo.");
 
-            currentUser.reauthenticate(credential)
-                    .addOnCompleteListener(task -> {
-                        Log.d(TAG, "Utente ri-autenticato.");
-
-                        currentUser.delete().addOnCompleteListener(newTask -> {
-                            if (newTask.isSuccessful()) {
-                                Log.d(TAG, "Eliminazione da Firebase avvenuta con successo.");
-
-                                // Si elimina l'account da Firestore.
-                                db.collection(USERS_COLLECTION).document(user.getId()).delete()
-                                        .addOnSuccessListener(aVoid -> {
-                                            Log.d(TAG, "Eliminazione da Firestore avvenuta con successo.");
-
-                                            FirebaseAuth.getInstance().signOut();
-                                            userResponseCallback.onSuccessFromLogout();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Log.d(TAG, "Errore: Eliminazione da Firestore fallita.");
-
-                                            userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
-                                        });
-                            } else {
-                                Log.d(TAG, "Errore: Eliminazione da Firebase fallita.");
+                                userResponseCallback.onSuccessFromDeleteAccount();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "Errore: Eliminazione da Firestore fallita.");
 
                                 userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
-                            }
-                        });
-                    });
+                            });
+                } else {
+                    Log.d(TAG, "Errore: Eliminazione da Firebase fallita.");
+
+                    userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
+                }
+            });
     }
 
+    // Ottiene il messaggio di errore in base all'eccezione
     private String getErrorMessage(Exception exception) {
         if (exception instanceof InvalidUsernameException) {
             return INVALID_USERNAME;

@@ -106,7 +106,7 @@ public class UpdateEmailFragment extends Fragment {
                         user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null)
-                            updateUI(user);
+                            updateUI();
                     } else {
                         Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
                     }
@@ -133,18 +133,12 @@ public class UpdateEmailFragment extends Fragment {
             String newEmail = Objects.requireNonNull(binding.emailTextInputEditTextUpdateEmail.getText()).toString();
             String currentPassword = Objects.requireNonNull(binding.passwordInputEditTextUpdateEmail.getText()).toString();
 
-            if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
-                userViewModel.setEmail(user, newEmail, email, currentPassword).observe(
-                        getViewLifecycleOwner(), result -> {
-                            if (result.isSuccess()) {
-                                saveEmail(newEmail);
-                                showSnackbarWithAction(v, getString(R.string.email_updated));
-                                Navigation.findNavController(v).navigate(R.id.action_updateEmailFragment_to_accountSettingsFragment);
-                            } else {
-                                showSnackbar(v, getString(R.string.error_email_update_failed));
-                            }
-                        });
-            }
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.confirm_email_change_title)
+                    .setMessage(R.string.confirm_email_change_message)
+                    .setPositiveButton(R.string.ok_update_email, (dialog, which) -> setEmail(v, newEmail, currentPassword))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
         });
     }
 
@@ -160,11 +154,9 @@ public class UpdateEmailFragment extends Fragment {
     }
 
     // Aggiorna l'interfaccia con i dati dell'utente
-    private void updateUI(User user) {
-        if (user != null) {
-            if (email != null) {
-                binding.textViewEmailUpdateEmail.setText(email);
-            }
+    private void updateUI() {
+        if (email != null) {
+            binding.textViewEmailUpdateEmail.setText(email);
         } else {
             Log.d(TAG, "Errore: Nessun documento trovato.");
         }
@@ -194,6 +186,22 @@ public class UpdateEmailFragment extends Fragment {
         }
 
         return password;
+    }
+
+    private void setEmail(View view, String newEmail, String currentPassword) {
+        if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
+            userViewModel.setEmail(user, newEmail, email, currentPassword).observe(
+                    getViewLifecycleOwner(), result -> {
+                        if (result.isSuccess()) {
+                            if (((Result.UserResponseSuccess) result).getUser() == null)
+                                backToLogin();
+                        } else {
+                            showSnackbar(view, getString(R.string.error_email_update_failed));
+                        }
+                    });
+        } else {
+            Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
+        }
     }
 
     // Controlla che l'email sia valida

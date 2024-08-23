@@ -3,6 +3,7 @@ package it.unimib.adastra.ui.main.settings;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
+import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.ServiceLocator;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +46,7 @@ public class AccountSettingsFragment extends Fragment {
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
+    private SharedPreferencesUtil sharedPreferencesUtil;
     private Activity activity;
     private User user;
     private String idToken;
@@ -88,6 +91,7 @@ public class AccountSettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
+        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         activity = getActivity();
         user = null;
         idToken = userViewModel.getLoggedUser();
@@ -179,6 +183,7 @@ public class AccountSettingsFragment extends Fragment {
     private void clearEncryptedData() {
         try {
             dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+            sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
