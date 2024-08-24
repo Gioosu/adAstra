@@ -94,6 +94,6 @@ public class HomeFragment extends Fragment {
                 .transform(new RoundedCorners(20))
                 .into(binding.imageViewImageOfTheDay);
         binding.textViewApodDate.setText(nasaApod.getApodDate());
-        binding.textViewCopyright.setText(nasaApod.getApodCopyright());
+        binding.textViewCopyright.setText(nasaApod.getApodCopyright()); 
     }
 }

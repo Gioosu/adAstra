@@ -52,7 +52,7 @@ public class ISSPositionRemoteDataSource extends BaseISSPositionRemoteDataSource
 
             @Override
             public void onFailure(Call<ISSPositionResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure call" + t.getMessage());
+                Log.d(TAG, "onFailure call " + t.getMessage());
                 issPositionResponseCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }
         });

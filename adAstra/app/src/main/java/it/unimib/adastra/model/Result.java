@@ -1,5 +1,8 @@
 package it.unimib.adastra.model;
 
+import java.util.List;
+
+import it.unimib.adastra.model.Encyclopedia.Planet;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.NASA.NASAResponse;
 import it.unimib.adastra.model.user.User;
@@ -10,7 +13,8 @@ public abstract class Result {
     public boolean isSuccess() {
         if (this instanceof ISSPositionResponseSuccess ||
                 this instanceof UserResponseSuccess ||
-                this instanceof NASAResponseSuccess) {
+                this instanceof NASAResponseSuccess ||
+                this instanceof EncyclopediaResponseSuccess) {
             return true;
         } else {
             return false;
@@ -44,6 +48,18 @@ public abstract class Result {
         }
         public User getUser() {
             return user;
+        }
+    }
+
+    public static final class EncyclopediaResponseSuccess extends Result {
+        private final List<Planet> planets;
+
+        public EncyclopediaResponseSuccess(List<Planet> planets) {
+            this.planets = planets;
+        }
+
+        public List<Planet> getPlanets() {
+            return planets;
         }
     }
 

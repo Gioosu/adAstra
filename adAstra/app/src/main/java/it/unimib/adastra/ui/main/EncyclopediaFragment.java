@@ -6,11 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import it.unimib.adastra.R;
+import it.unimib.adastra.databinding.FragmentEncyclopediaBinding;
+import it.unimib.adastra.databinding.FragmentISSBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +21,8 @@ import it.unimib.adastra.R;
  * create an instance of this fragment.
  */
 public class EncyclopediaFragment extends Fragment {
+    private FragmentEncyclopediaBinding binding;
+
     public EncyclopediaFragment() {
         // Required empty public constructor
     }
@@ -40,12 +45,36 @@ public class EncyclopediaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_encyclopedia, container, false);
+        binding = FragmentEncyclopediaBinding.inflate(inflater, container, false);
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // cardView Sistema Solare
+        binding.solarSystem.setOnClickListener(v ->
+              Log.d("TAG", "Solar System cardView Clicked")
+        );
+
+        // cardView Stelle
+        binding.stars.setOnClickListener(v ->
+                Log.d("TAG", "Stelle cardView Clicked")
+        );
+
+        // cardView Other
+        binding.stars.setOnClickListener(v ->
+                Log.d("TAG", "Stelle cardView Clicked")
+        );
+
+    }
+
+
+    public void updateUI(){
+
     }
 }

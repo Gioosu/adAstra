@@ -11,13 +11,15 @@ import androidx.room.Room;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import it.unimib.adastra.model.Encyclopedia.Planet;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.NASA.NASAResponse;
 
-@Database(entities = {ISSPositionResponse.class, NASAResponse.class}, version = DATABASE_VERSION, exportSchema = false)
+@Database(entities = {ISSPositionResponse.class, NASAResponse.class, Planet.class}, version = DATABASE_VERSION, exportSchema = false)
 public abstract class AdAstraRoomDatabase extends androidx.room.RoomDatabase {
     public abstract ISSDao issDao();
     public abstract NASADao nasaDao();
+    public abstract PlanetsDao planetsDao();
     private static volatile AdAstraRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
     public static final ExecutorService databaseWriteExecutor =
