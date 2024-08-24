@@ -148,7 +148,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
     // Cambia l'email
     @Override
-    public void setEmail(User user, String newEmail, String email, String password) {
+    public void setEmail(String newEmail) {
         firebaseUser.verifyBeforeUpdateEmail(newEmail)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -166,7 +166,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
     // Cambia la password
     @Override
-    public void changePassword(User user, String newPassword) {
+    public void changePassword(String newPassword) {
         firebaseUser.updatePassword(newPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

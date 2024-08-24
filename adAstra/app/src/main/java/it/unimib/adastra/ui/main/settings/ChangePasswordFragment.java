@@ -29,7 +29,6 @@ import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentChangePasswordBinding;
 import it.unimib.adastra.model.Result;
-import it.unimib.adastra.model.user.User;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.ui.welcome.WelcomeActivity;
@@ -47,11 +46,9 @@ public class ChangePasswordFragment extends Fragment {
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
     private DataEncryptionUtil dataEncryptionUtil;
-    private String idToken;
     private String password;
     private Activity activity;
     private String email;
-    private User user;
 
 
     public ChangePasswordFragment() {
@@ -93,20 +90,8 @@ public class ChangePasswordFragment extends Fragment {
 
         dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
-        user = null;
-        idToken = userViewModel.getLoggedUser();
         email = getEmail();
         password = getPassword();
-
-        // Aggiornamento dinamico
-        userViewModel.getUserInfoMutableLiveData(idToken).observe(
-                getViewLifecycleOwner(), result -> {
-                    if (result.isSuccess()) {
-                        user = ((Result.UserResponseSuccess) result).getUser();
-                    } else {
-                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
-                    }
-                });
 
         // Bottone di Back to settings
         binding.floatingActionButtonBack.setOnClickListener(v ->
@@ -144,19 +129,26 @@ public class ChangePasswordFragment extends Fragment {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
+    // Cambia la password
     private void setPassword(View view, String newPassword, String currentPassword, String confirmNewPassword) {
         if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)) {
-            userViewModel.changePassword(user, newPassword).observe(
+            Log.d(TAG, "Dati inseriti validi.");
+
+            userViewModel.changePassword(newPassword).observe(
                     getViewLifecycleOwner(), result -> {
                         if (result.isSuccess()) {
+                            Log.d(TAG, "Password cambiata con successo.");
+
                             if (((Result.UserResponseSuccess) result).getUser() == null)
                                 backToLogin();
                         } else {
+                            Log.d(TAG, "Errore: Cambiare password fallita.");
+
                             showSnackbar(view, getString(R.string.error_password_change_failed));
                         }
                     });
         } else {
-            Log.d(TAG, "Errore: Aggiornamento della password fallito.");
+            Log.d(TAG, "Errore: Dati inseriti non validi.");
         }
     }
 
@@ -205,6 +197,8 @@ public class ChangePasswordFragment extends Fragment {
 
                         backToLogin();
                     } else {
+                        Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
+
                         showSnackbar(view, getString(R.string.error_email_send_failed));
                     }
                 });
@@ -245,14 +239,6 @@ public class ChangePasswordFragment extends Fragment {
         }
 
         return password;
-    }
-
-    private void savePassword(String password) {
-        try {
-            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD, password);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     // Cancella i dati crittografati

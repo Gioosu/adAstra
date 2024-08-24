@@ -147,12 +147,6 @@ public class UpdateEmailFragment extends Fragment {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
-    // Mostra una Snackbar con un'azione integrata
-    private void showSnackbarWithAction(View view, String message) {
-        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.ok, v -> snackbar.dismiss()).show();
-    }
-
     // Aggiorna l'interfaccia con i dati dell'utente
     private void updateUI() {
         if (email != null) {
@@ -188,19 +182,26 @@ public class UpdateEmailFragment extends Fragment {
         return password;
     }
 
+    // Aggiorna l'email dell'utente
     private void setEmail(View view, String newEmail, String currentPassword) {
         if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
-            userViewModel.setEmail(user, newEmail, email, currentPassword).observe(
+            Log.d(TAG, "Dati inseriti validi.");
+
+            userViewModel.setEmail(newEmail).observe(
                     getViewLifecycleOwner(), result -> {
                         if (result.isSuccess()) {
+                            Log.d(TAG, "Email aggiornata con successo.");
+
                             if (((Result.UserResponseSuccess) result).getUser() == null)
                                 backToLogin();
                         } else {
+                            Log.d(TAG, "Errore: Aggiornamento email fallito.");
+
                             showSnackbar(view, getString(R.string.error_email_update_failed));
                         }
                     });
         } else {
-            Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
+            Log.d(TAG, "Errore: Dati inseriti non validi.");
         }
     }
 
@@ -234,8 +235,12 @@ public class UpdateEmailFragment extends Fragment {
         userViewModel.resetPassword(email)
                 .observe(requireActivity(), result -> {
                     if (result.isSuccess()) {
+                        Log.d(TAG, "Email di reimpostazione inviata.");
+
                         backToLogin();
                     } else {
+                        Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
+
                         showSnackbar(view, getString(R.string.error_email_send_failed));
                     }
                 });
@@ -250,14 +255,6 @@ public class UpdateEmailFragment extends Fragment {
 
         startActivity(intent);
         activity.finish();
-    }
-
-    private void saveEmail(String email) {
-        try {
-            dataEncryptionUtil.writeSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS, email);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     // Cancella i dati crittografati

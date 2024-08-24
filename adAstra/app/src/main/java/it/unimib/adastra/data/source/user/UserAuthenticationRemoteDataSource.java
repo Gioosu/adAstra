@@ -26,9 +26,11 @@ import it.unimib.adastra.util.exception.UnverifiedEmailException;
 public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRemoteDataSource {
     private static final String TAG = UserAuthenticationRemoteDataSource.class.getSimpleName();
     private final FirebaseAuth firebaseAuth;
+    private final FirebaseUser firebaseUser;
 
     public UserAuthenticationRemoteDataSource() {
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -97,8 +99,6 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
     @Override
     public String getLoggedUser() {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
         if (firebaseUser == null) {
             Log.d(TAG, "Errore: Nessun utente loggato trovato.");
 
