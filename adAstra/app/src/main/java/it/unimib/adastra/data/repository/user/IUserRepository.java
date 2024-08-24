@@ -32,7 +32,7 @@ public interface IUserRepository {
 
     void signIn(String email, String password);
 
-    void setEmail(String newEmail);
+    void updateEmail(String newEmail, String email, String password);
 
-    void changePassword(String newPassword);
+    void changePassword(String newPassword, String email, String password);
 }

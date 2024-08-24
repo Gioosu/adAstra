@@ -57,4 +57,9 @@ public class Constants {
 
     // Constants for Firestore
     public static final String USERS_COLLECTION = "users";
+
+    // Messages
+    public static final String SHOW_LOGIN_NEW_EMAIL = "show_login_new_email";
+    public static final String SHOW_LOGIN_NEW_PASSWORD = "show_login_new_password";
+    public static final String SHOW_NEW_AUTHENTICATION = "show_new_authentication";
 }

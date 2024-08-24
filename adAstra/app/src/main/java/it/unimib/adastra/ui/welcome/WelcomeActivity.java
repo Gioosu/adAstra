@@ -3,6 +3,9 @@ package it.unimib.adastra.ui.welcome;
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.SHOW_LOGIN_NEW_EMAIL;
+import static it.unimib.adastra.util.Constants.SHOW_LOGIN_NEW_PASSWORD;
+import static it.unimib.adastra.util.Constants.SHOW_NEW_AUTHENTICATION;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -137,11 +140,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void checkIntentAndShowSnackbar() {
         Intent intent = getIntent();
-        if (intent.getBooleanExtra("SHOW_LOGIN_NEW_EMAIL", false)) {
+        if (intent.getBooleanExtra(SHOW_LOGIN_NEW_EMAIL, false)) {
             showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_after_verification));
-        } else if (intent.getBooleanExtra("SHOW_LOGIN_NEW_PASSWORD", false)) {
+        } else if (intent.getBooleanExtra(SHOW_LOGIN_NEW_PASSWORD, false)) {
             showSnackbarWithAction(binding.getRoot(), getString(R.string.log_in_new_password));
-        } else if (intent.getBooleanExtra("SHOW_NEW_AUTHENTICATION", false)) {
+        } else if (intent.getBooleanExtra(SHOW_NEW_AUTHENTICATION, false)) {
             showSnackbarWithAction(binding.getRoot(), getString(R.string.new_authentication));
         }
     }

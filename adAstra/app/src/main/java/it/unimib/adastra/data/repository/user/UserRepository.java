@@ -112,13 +112,13 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public void setEmail(String newEmail) {
-        userDataRemoteDataSource.setEmail(newEmail);
+    public void updateEmail(String newEmail, String email, String password) {
+        userDataRemoteDataSource.updateEmail(newEmail, email, password);
     }
 
     @Override
-    public void changePassword(String newPassword) {
-        userDataRemoteDataSource.changePassword(newPassword);
+    public void changePassword(String newPassword, String email, String password) {
+        userDataRemoteDataSource.changePassword(newPassword, email, password);
     }
 
     @Override

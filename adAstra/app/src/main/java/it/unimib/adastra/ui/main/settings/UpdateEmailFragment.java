@@ -3,6 +3,8 @@ package it.unimib.adastra.ui.main.settings;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
+import static it.unimib.adastra.util.Constants.SHOW_LOGIN_NEW_EMAIL;
+import static it.unimib.adastra.util.Constants.SHOW_LOGIN_NEW_PASSWORD;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -136,7 +138,7 @@ public class UpdateEmailFragment extends Fragment {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.confirm_email_change_title)
                     .setMessage(R.string.confirm_email_change_message)
-                    .setPositiveButton(R.string.ok_update_email, (dialog, which) -> setEmail(v, newEmail, currentPassword))
+                    .setPositiveButton(R.string.ok_update_email, (dialog, which) -> updateEmail(v, newEmail, currentPassword))
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         });
@@ -183,17 +185,20 @@ public class UpdateEmailFragment extends Fragment {
     }
 
     // Aggiorna l'email dell'utente
-    private void setEmail(View view, String newEmail, String currentPassword) {
+    private void updateEmail(View view, String newEmail, String currentPassword) {
         if (isEmailValid(newEmail) && isCurrentPasswordValid(currentPassword)) {
             Log.d(TAG, "Dati inseriti validi.");
 
-            userViewModel.setEmail(newEmail).observe(
+            userViewModel.updateEmail(newEmail, email, password).observe(
                     getViewLifecycleOwner(), result -> {
                         if (result.isSuccess()) {
-                            Log.d(TAG, "Email aggiornata con successo.");
+                            if (((Result.UserResponseSuccess) result).getUser() == null) {
+                                Log.d(TAG, "Email aggiornata con successo.");
 
-                            if (((Result.UserResponseSuccess) result).getUser() == null)
-                                backToLogin();
+                                backToLogin(SHOW_LOGIN_NEW_EMAIL);
+                            } else {
+                                Log.d(TAG, "Errore [user != null]: Aggiornamento email fallito.");
+                            }
                         } else {
                             Log.d(TAG, "Errore: Aggiornamento email fallito.");
 
@@ -237,7 +242,7 @@ public class UpdateEmailFragment extends Fragment {
                     if (result.isSuccess()) {
                         Log.d(TAG, "Email di reimpostazione inviata.");
 
-                        backToLogin();
+                        backToLogin(SHOW_LOGIN_NEW_PASSWORD);
                     } else {
                         Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
 
@@ -247,9 +252,9 @@ public class UpdateEmailFragment extends Fragment {
     }
 
     // Torna a Login
-    private void backToLogin() {
+    private void backToLogin(String message) {
         Intent intent = new Intent(getContext(), WelcomeActivity.class);
-        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+        intent.putExtra(message, true);
 
         clearEncryptedData();
 

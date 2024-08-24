@@ -3,6 +3,7 @@ package it.unimib.adastra.ui.main.settings;
 import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.PASSWORD;
+import static it.unimib.adastra.util.Constants.SHOW_LOGIN_NEW_PASSWORD;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -134,7 +135,7 @@ public class ChangePasswordFragment extends Fragment {
         if (isCurrentPasswordValid(currentPassword) && isNewPasswordValid(newPassword) && isConfirmPasswordValid(newPassword, confirmNewPassword)) {
             Log.d(TAG, "Dati inseriti validi.");
 
-            userViewModel.changePassword(newPassword).observe(
+            userViewModel.changePassword(newPassword, email, password).observe(
                     getViewLifecycleOwner(), result -> {
                         if (result.isSuccess()) {
                             Log.d(TAG, "Password cambiata con successo.");
@@ -207,7 +208,7 @@ public class ChangePasswordFragment extends Fragment {
     // Torna a Login
     private void backToLogin() {
         Intent intent = new Intent(getContext(), WelcomeActivity.class);
-        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+        intent.putExtra(SHOW_LOGIN_NEW_PASSWORD, true);
 
         clearEncryptedData();
 

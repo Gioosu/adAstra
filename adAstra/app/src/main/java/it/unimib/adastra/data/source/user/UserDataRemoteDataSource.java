@@ -14,6 +14,8 @@ import static it.unimib.adastra.util.Constants.VERIFIED;
 
 import android.util.Log;
 
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -148,37 +150,64 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
     // Cambia l'email
     @Override
-    public void setEmail(String newEmail) {
-        firebaseUser.verifyBeforeUpdateEmail(newEmail)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "Aggiornamento dell'email avvenuto con successo.");
+    public void updateEmail(String newEmail, String email, String password) {
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
 
-                        userResponseCallback.onSuccessFromUpdateUserCredentials();
+        firebaseUser.reauthenticate(credential)
+                .addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        Log.d(TAG, "Reauthorizzazione avvenuta con successo.");
+
+                        firebaseUser.verifyBeforeUpdateEmail(newEmail)
+                                .addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful()) {
+                                        Log.d(TAG, "Aggiornamento dell'email avvenuto con successo.");
+
+                                        userResponseCallback.onSuccessFromUpdateUserCredentials();
+                                    } else {
+                                        Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
+
+                                        userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
+                                    }
+                                });
                     } else {
-                        Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
+                        Log.d(TAG, "Errore: Reauthorizzazione fallita.");
 
                         userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
                     }
-                });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "Errore: Reauthorizzazione fallita.");
 
+                    userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
+                });
     }
 
     // Cambia la password
     @Override
-    public void changePassword(String newPassword) {
-        firebaseUser.updatePassword(newPassword)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "Aggiornamento della password avvenuto con successo.");
+    public void changePassword(String newPassword, String email, String password) {
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
 
-                        userResponseCallback.onSuccessFromUpdateUserCredentials();
-                    }
-                    else {
-                        Log.d(TAG, "Errore: Aggiornamento della password fallito.");
+        firebaseUser.reauthenticate(credential).addOnCompleteListener(task1 -> {
+            Log.d(TAG, "Reauthorizzazione avvenuta con successo.");
 
-                        userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
-                    }
+            firebaseUser.updatePassword(newPassword)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Aggiornamento della password avvenuto con successo.");
+
+                            userResponseCallback.onSuccessFromUpdateUserCredentials();
+                        } else {
+                            Log.d(TAG, "Errore: Aggiornamento della password fallito.");
+
+                            userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d(TAG, "Errore: Reauthorizzazione fallita.");
+
+                        userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
+                    });
         });
     }
 

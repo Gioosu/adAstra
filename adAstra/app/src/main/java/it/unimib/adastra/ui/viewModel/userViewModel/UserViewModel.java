@@ -72,14 +72,14 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> setEmail(String newEmail) {
-        userRepository.setEmail(newEmail);
+    public MutableLiveData<Result> updateEmail(String newEmail, String email, String password) {
+        userRepository.updateEmail(newEmail, email, password);
 
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> changePassword(String newPassword) {
-        userRepository.changePassword(newPassword);
+    public MutableLiveData<Result> changePassword(String newPassword, String email, String password) {
+        userRepository.changePassword(newPassword, email, password);
 
         return userMutableLiveData;
     }
