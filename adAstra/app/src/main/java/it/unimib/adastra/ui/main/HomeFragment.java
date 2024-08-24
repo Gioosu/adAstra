@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import it.unimib.adastra.data.repository.NASA.INASARepository;
 import it.unimib.adastra.databinding.FragmentHomeBinding;
@@ -88,6 +91,7 @@ public class HomeFragment extends Fragment {
         binding.textViewApodDescription.setText(nasaApod.getApodExplanation());
         Glide.with(this)
                 .load(nasaApod.getApodUrl())
+                .transform(new RoundedCorners(20))
                 .into(binding.imageViewImageOfTheDay);
         binding.textViewApodDate.setText(nasaApod.getApodDate());
         binding.textViewCopyright.setText(nasaApod.getApodCopyright());

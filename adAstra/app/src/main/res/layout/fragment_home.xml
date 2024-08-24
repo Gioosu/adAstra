@@ -42,10 +42,9 @@
             app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_home" />
 
         <TextView
-            android:id="@+id/textView_welcome_user_home"
+            android:id="@+id/textView_per_aspera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="@string/per_aspera_ad_astra"
             android:textColor="?android:textColorPrimary"
             android:textSize="32sp"
@@ -54,54 +53,80 @@
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
             app:layout_constraintTop_toBottomOf="@+id/imageView_icon_home" />
 
-        <TextView
-            android:id="@+id/textView_apod_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
-            app:layout_constraintTop_toBottomOf="@+id/textView_welcome_user_home" />
-
-        <ImageView
-            android:id="@+id/imageView_image_of_the_day"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardView_apod_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
             app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
-            app:layout_constraintTop_toBottomOf="@+id/textView_apod_title"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_per_aspera">
 
-        <TextView
-            android:id="@+id/textView_apod_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?android:textColorPrimary"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_image_of_the_day" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView_copyright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?android:textColorPrimary"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_image_of_the_day" />
+                <TextView
+                    android:id="@+id/textView_apod_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView_by_nasa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/nasa_by_nasa"
-            android:textColor="?android:textColorPrimary"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
-            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_image_of_the_day" />
+                <ImageView
+                    android:id="@+id/imageView_image_of_the_day"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/textView_by_nasa"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_apod_title"
+                    tools:src="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/textView_apod_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:textColor="?android:textColorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView_copyright"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:textColor="?android:textColorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView_by_nasa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/nasa_by_nasa"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
 
         <View
             android:id="@+id/divider_home"
@@ -113,37 +138,47 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
-            app:layout_constraintTop_toBottomOf="@+id/textView_by_nasa" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView_apod_container" />
 
-        <ScrollView
-            android:id="@+id/scrollView_home"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider_home">
+            app:layout_constraintEnd_toStartOf="@+id/guideline_dx_home"
+            app:layout_constraintStart_toStartOf="@+id/guideline_sx_home"
+            app:layout_constraintTop_toTopOf="@+id/divider_home">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ScrollView
+                android:id="@+id/scrollView_home"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp">
 
-                <TextView
-                    android:id="@+id/textView_apod_description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:textColor="?android:textColorPrimary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                    <TextView
+                        android:id="@+id/textView_apod_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="?android:textColorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
