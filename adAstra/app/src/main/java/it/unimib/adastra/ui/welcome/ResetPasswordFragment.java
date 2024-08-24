@@ -1,10 +1,11 @@
 package it.unimib.adastra.ui.welcome;
 
-import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.SHOW_LOGIN_NEW_PASSWORD;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +17,18 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentResetPasswordBinding;
+import it.unimib.adastra.model.Result;
+import it.unimib.adastra.ui.main.settings.AccountSettingsFragment;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
-import it.unimib.adastra.util.DataEncryptionUtil;
 import it.unimib.adastra.util.ServiceLocator;
 
 /**
@@ -38,12 +37,11 @@ import it.unimib.adastra.util.ServiceLocator;
  * create an instance of this fragment.
  */
 public class ResetPasswordFragment extends Fragment {
+    private static final String TAG = ResetPasswordFragment.class.getSimpleName();
     private FragmentResetPasswordBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
-    private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
-    private String idToken;
     private String email;
 
     public ResetPasswordFragment() {
@@ -83,9 +81,7 @@ public class ResetPasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
-        String idToken = null;
 
         // Bottone di Reset Password
         binding.buttonResetPassword.setOnClickListener(v -> {
@@ -112,9 +108,23 @@ public class ResetPasswordFragment extends Fragment {
         userViewModel.resetPassword(email)
                 .observe(requireActivity(), result -> {
                     if (result.isSuccess()) {
-                        backToLogin();
+                        if (userViewModel.isAsyncHandled()) {
+                            Log.d(TAG, "Email di reimpostazione inviata.");
+
+                            userViewModel.setAsyncHandled(false);
+                            backToLogin();
+                        } else {
+                            userViewModel.setAsyncHandled(true);
+                        }
                     } else {
-                        showSnackbar(view, getString(R.string.error_email_send_failed));
+                        if (userViewModel.isAsyncHandled()) {
+                            Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
+
+                            userViewModel.setAsyncHandled(false);
+                            showSnackbar(view, getString(R.string.error_email_send_failed));
+                        } else {
+                            userViewModel.setAsyncHandled(true);
+                        }
                     }
                 });
     }
@@ -122,7 +132,7 @@ public class ResetPasswordFragment extends Fragment {
     // Torna a Login
     private void backToLogin() {
         Intent intent = new Intent(getContext(), WelcomeActivity.class);
-        intent.putExtra("SHOW_LOGIN_NEW_PASSWORD", true);
+        intent.putExtra(SHOW_LOGIN_NEW_PASSWORD, true);
 
         startActivity(intent);
         activity.finish();

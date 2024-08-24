@@ -12,12 +12,12 @@ public class UserViewModel extends ViewModel {
     private final IUserRepository userRepository;
     private MutableLiveData<Result> userMutableLiveData;
     private boolean authenticationError;
-    private boolean flag;
+    private boolean isAsyncHandled;
 
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;
         authenticationError = false;
-        flag = true;
+        isAsyncHandled = true;
     }
 
     public boolean isAuthenticationError() {
@@ -28,12 +28,12 @@ public class UserViewModel extends ViewModel {
         this.authenticationError = authenticationError;
     }
 
-    public boolean getFlag() {
-        return flag;
+    public boolean isAsyncHandled() {
+        return isAsyncHandled;
     }
 
-    public void setFlag(boolean flag) {
-        this.flag = flag;
+    public void setAsyncHandled(boolean isAsyncHandled) {
+        this.isAsyncHandled = isAsyncHandled;
     }
 
     public String getLoggedUser() {

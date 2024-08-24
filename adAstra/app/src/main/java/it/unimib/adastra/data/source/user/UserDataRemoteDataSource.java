@@ -50,7 +50,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                     userResponseCallback.onSuccessFromRemoteDatabase(user);
                 })
                 .addOnFailureListener(e -> {
-                    Log.d(TAG, "Errore: Salvataggio dell'utente fallito.");
+                    Log.e(TAG, "Errore: Salvataggio dell'utente fallito.");
 
                     userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(e));
                 });
@@ -100,7 +100,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 getUserInfo(idToken);
             }
             else {
-                Log.d(TAG, "Errore: Verifica dell'email fallita.");
+                Log.e(TAG, "Errore: Verifica dell'email fallita.");
 
                 userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
             }
@@ -121,7 +121,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 userResponseCallback.onSuccessFromRemoteDatabase(user);
             }
             else {
-                Log.d(TAG, "Errore: Aggiornamento dello switch fallito.");
+                Log.e(TAG, "Errore: Aggiornamento dello switch fallito.");
 
                 userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
             }
@@ -141,7 +141,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                 user.setUsername(username);
                 userResponseCallback.onSuccessFromRemoteDatabase(user);
             } else {
-                Log.w(TAG, "Errore: Aggiornamento del nome utente fallito.");
+                Log.e(TAG, "Errore: Aggiornamento del nome utente fallito.");
 
                 userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
             }
@@ -165,13 +165,13 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
                                         userResponseCallback.onSuccessFromUpdateUserCredentials();
                                     } else {
-                                        Log.d(TAG, "Errore: Aggiornamento dell'email fallito.");
+                                        Log.e(TAG, "Errore: Aggiornamento dell'email fallito.");
 
                                         userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
                                     }
                                 });
                     } else {
-                        Log.d(TAG, "Errore: Reauthorizzazione fallita.");
+                        Log.e(TAG, "Errore: Reauthorizzazione fallita.");
 
                         userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
                     }
@@ -198,13 +198,13 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
                             userResponseCallback.onSuccessFromUpdateUserCredentials();
                         } else {
-                            Log.d(TAG, "Errore: Aggiornamento della password fallito.");
+                            Log.e(TAG, "Errore: Aggiornamento della password fallito.");
 
                             userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Log.d(TAG, "Errore: Reauthorizzazione fallita.");
+                        Log.e(TAG, "Errore: Reauthorizzazione fallita.");
 
                         userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
                     });
@@ -221,7 +221,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
 
                         userResponseCallback.onSuccessFromUpdateUserCredentials();
                     } else {
-                        Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
+                        Log.e(TAG, "Errore: Email di reimpostazione non inviata.");
 
                         userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
                     }
@@ -231,8 +231,13 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
     // Elimina l'account
     @Override
     public void deleteAccount(User user, String email, String password) {
-       firebaseUser.delete().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        firebaseUser.reauthenticate(credential).addOnCompleteListener(task1 -> {
+            Log.d(TAG, "Reauthorizzazione avvenuta con successo.");
+
+            firebaseUser.delete().addOnCompleteListener(task2 -> {
+                if (task2.isSuccessful()) {
                     Log.d(TAG, "Eliminazione da Firebase avvenuta con successo.");
 
                     // Si elimina l'account da Firestore.
@@ -243,16 +248,21 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                                 userResponseCallback.onSuccessFromDeleteAccount();
                             })
                             .addOnFailureListener(e -> {
-                                Log.d(TAG, "Errore: Eliminazione da Firestore fallita.");
+                                Log.e(TAG, "Errore: Eliminazione da Firestore fallita.");
 
                                 userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
                             });
                 } else {
-                    Log.d(TAG, "Errore: Eliminazione da Firebase fallita.");
+                    Log.e(TAG, "Errore: Eliminazione da Firebase fallita.");
 
                     userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new DeleteAccountException(ACCOUNT_DELETION_FAILED)));
                 }
             });
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Errore: Reauthorizzazione fallita.");
+
+            userResponseCallback.onFailureFromRemoteDatabase(UNEXPECTED_ERROR);
+        });
     }
 
     // Ottiene il messaggio di errore in base all'eccezione

@@ -23,15 +23,16 @@ public class NASARemoteDataSource extends BaseNASARemoteDataSource {
     @Override
     public void getNASAData(String query) {
         Call<NASAResponse> nasaResponseCall;
+
         switch (query) {
             case "apod":
                 nasaResponseCall = nasaApiService.getNasaApod();
                 break;
-            // Implementazioni future NASA API
             default:
                 nasaResponseCall = null;
                 break;
         }
+
         getNASAData(nasaResponseCall);
     }
 
@@ -41,21 +42,23 @@ public class NASARemoteDataSource extends BaseNASARemoteDataSource {
             @Override
             public void onResponse(Call<NASAResponse> call, Response<NASAResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d(TAG, "onResponse succesful");
+                    Log.d(TAG, "onResponse successful.");
                     Log.d(TAG, "response.body: " + response.body().toString());
+
                     nasaResponseCallback.onSuccessFromRemote(response.body());
                 } else {
-                    Log.d(TAG, "onResponse failure");
+                    Log.e(TAG, "onResponse failure.");
+
                     nasaResponseCallback.onFailureFromRemote(new Exception());
                 }
             }
 
             @Override
             public void onFailure(Call<NASAResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure call" + t.getMessage());
+                Log.e(TAG, "onFailure call" + t.getMessage());
+
                 nasaResponseCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }
         });
     }
-    
 }

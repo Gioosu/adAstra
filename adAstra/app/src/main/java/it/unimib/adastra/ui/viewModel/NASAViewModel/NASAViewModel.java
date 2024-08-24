@@ -10,9 +10,19 @@ public class NASAViewModel extends ViewModel {
     private static final String TAG = NASAViewModel.class.getSimpleName();
     private final INASARepository nasaRepository;
     private MutableLiveData<Result> nasaLiveData;
+    private boolean isAsyncHandled;
 
     public NASAViewModel(INASARepository nasaRepository) {
         this.nasaRepository = nasaRepository;
+        isAsyncHandled = true;
+    }
+
+    public boolean isAsyncHandled() {
+        return isAsyncHandled;
+    }
+
+    public void setAsyncHandled(boolean isAsyncHandled) {
+        this.isAsyncHandled = isAsyncHandled;
     }
 
     public MutableLiveData<Result> getNASAApod(String query) {

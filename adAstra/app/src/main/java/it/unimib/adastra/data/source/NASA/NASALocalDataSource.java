@@ -2,6 +2,8 @@ package it.unimib.adastra.data.source.NASA;
 
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -19,8 +21,7 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
     }
 
     @Override
-    public void getNASAData(String query)
-    {
+    public void getNASAData(String query) {
         switch(query) {
             case "apod":
                 fetchNASAApod();
@@ -65,6 +66,7 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
     public void updateNASAData(NASAResponse nasaResponse) {
         AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
            if (nasaResponse != null) {
+
                nasaDao.insertNASA(nasaResponse);
                nasaResponseCallback.onSuccessFromLocal(nasaResponse);
            } else {

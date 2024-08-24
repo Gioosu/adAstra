@@ -21,6 +21,7 @@ import java.util.Objects;
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.databinding.FragmentSignupBinding;
+import it.unimib.adastra.model.Result;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
 import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
@@ -95,33 +96,33 @@ public class SignupFragment extends Fragment {
                     userViewModel.getUserMutableLiveData(username, email, password, false).observe(
                             getViewLifecycleOwner(), result -> {
                                 if (result.isSuccess()) {
-                                    if (userViewModel.getFlag()) {
+                                    if (userViewModel.isAsyncHandled()) {
 
                                         Log.d(TAG, "Registrazione avvenuta con successo.");
 
                                         userViewModel.setAuthenticationError(false);
-                                        userViewModel.setFlag(false);
+                                        userViewModel.setAsyncHandled(false);
                                         showSnackbarWithAction(v, getString(R.string.log_in_after_verification));
                                         Navigation.findNavController(v).navigate(R.id.action_signupFragment_to_loginFragment);
                                     } else {
-                                        userViewModel.setFlag(true);
+                                        userViewModel.setAsyncHandled(true);
                                     }
                                 } else {
-                                    if (userViewModel.getFlag()) {
-                                        Log.d(TAG, "Errore: Registrazione fallita.");
+                                    if (userViewModel.isAsyncHandled()) {
+                                        Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
                                         userViewModel.setAuthenticationError(true);
-                                        userViewModel.setFlag(false);
+                                        userViewModel.setAsyncHandled(false);
                                         showSnackbar(v, getString(R.string.error_signup_failure));
                                     } else {
-                                        userViewModel.setFlag(true);
+                                        userViewModel.setAsyncHandled(true);
                                     }
                                 }
                             });
                 } else {
-                    Log.d(TAG, "Ci sono errori.");
+                    Log.e(TAG, "Ci sono errori.");
 
-                    userViewModel.setFlag(true);
+                    userViewModel.setAsyncHandled(true);
                     userViewModel.getUser(username, email, password, false);
                 }
             } else {

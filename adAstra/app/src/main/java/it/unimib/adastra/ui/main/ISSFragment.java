@@ -136,6 +136,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
                         Log.d(TAG, "Recupero dati dell'utente avvenuto con successo.");
+
                         user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null) {
@@ -146,6 +147,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                                     getViewLifecycleOwner(), task -> {
                                         if (task.isSuccess()) {
                                             Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
+
                                             issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
 
                                             if (issPosition != null) {
@@ -162,15 +164,17 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
                                                 updateUI();
                                             } else {
-                                                Log.d(TAG, "Errore: Recupero dati dell'ISS fallito.");
+                                                Log.e(TAG, "Errore: Recupero dati dell'ISS fallito.");
                                             }
                                         } else {
-                                            Log.d(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                                            Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
                                         }
                                     });
-                        }
+                            } else {
+                                Log.e(TAG, "Errore: Recupero dati dell'utente fallito.");
+                            }
                     } else {
-                        Log.d(TAG, "Errore: " + ((Result.Error) result).getMessage());
+                        Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
                     }
                 });
 
@@ -186,6 +190,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                 .show());
     }
 
+    // Aggiorna l'interfaccia utente
     public void updateUI() {
         String newLatitude = ISSUtil.decimalToDMS(lat);
         String newLongitude = ISSUtil.decimalToDMS(lng);
@@ -193,7 +198,9 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         newLatitude = ISSUtil.formatDMS(newLatitude, "N");
         newLongitude = ISSUtil.formatDMS(newLongitude, "E");
 
-        binding.textViewCoordinates.setText(newLatitude + "   " + newLongitude);
+        String coordinates = newLatitude + "   " + newLongitude;
+
+        binding.textViewCoordinates.setText(coordinates);
 
         binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(timestamp, is12Format));
         binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(altitude, units));
@@ -228,7 +235,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
         } else {
-            Log.d(TAG, "Errore: Impossibile visualizzare la mappa.");
+            Log.e(TAG, "Errore: Impossibile visualizzare la mappa.");
         }
     }
 
@@ -258,6 +265,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         binding.mapViewIss.onLowMemory();
     }
 
+    // Imposta le opzioni della mappa
     private void setGoogleMapOptions(GoogleMap googleMap) {
         googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
@@ -266,6 +274,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    // Disegna il marker
     private Marker drawMarker() {
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(iss)
@@ -275,6 +284,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
        return googleMap.addMarker(markerOptions);
     }
 
+    // Disegna il cerchio
     private Circle drawFootprint() {
         // Conversione in km
         if (isImperial){

@@ -39,12 +39,12 @@ public class ISSPositionRemoteDataSource extends BaseISSPositionRemoteDataSource
             @Override
             public void onResponse(Call<ISSPositionResponse> call, Response<ISSPositionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d(TAG, "onResponse succesful");
+                    Log.d(TAG, "onResponse succesful.");
                     Log.d(TAG, "response.body: " + response.body().toString());
 
                     issPositionResponseCallback.onSuccessFromRemote(response.body());
                 } else {
-                    Log.d(TAG, "onResponse failure");
+                    Log.e(TAG, "onResponse failure");
 
                     issPositionResponseCallback.onFailureFromRemote(new Exception());
                 }
@@ -52,7 +52,7 @@ public class ISSPositionRemoteDataSource extends BaseISSPositionRemoteDataSource
 
             @Override
             public void onFailure(Call<ISSPositionResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure call " + t.getMessage());
+                Log.e(TAG, "onFailure call " + t.getMessage());
                 issPositionResponseCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }
         });

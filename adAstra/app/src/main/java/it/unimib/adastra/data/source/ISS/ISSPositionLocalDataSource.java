@@ -38,7 +38,7 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
 
                 issPositionResponseCallback.onSuccessFromLocal(issPositionResponse);
             } else {
-                Log.d(TAG, "ERRORE: Recupero dati dell'ISS dal database fallito.");
+                Log.e(TAG, "Errore: Recupero dati dell'ISS dal database fallito.");
 
                 issPositionResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
             }

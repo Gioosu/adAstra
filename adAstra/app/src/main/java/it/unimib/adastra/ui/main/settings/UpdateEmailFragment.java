@@ -105,12 +105,14 @@ public class UpdateEmailFragment extends Fragment {
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
+                        Log.d(TAG, "Recupero dei dati dell'utente è avvenuto con successo.");
+
                         user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null)
                             updateUI();
                     } else {
-                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                        Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
                     }
                 });
 
@@ -154,7 +156,7 @@ public class UpdateEmailFragment extends Fragment {
         if (email != null) {
             binding.textViewEmailUpdateEmail.setText(email);
         } else {
-            Log.d(TAG, "Errore: Nessun documento trovato.");
+            Log.e(TAG, "Errore: Nessun documento trovato.");
         }
     }
 
@@ -192,21 +194,27 @@ public class UpdateEmailFragment extends Fragment {
             userViewModel.updateEmail(newEmail, email, password).observe(
                     getViewLifecycleOwner(), result -> {
                         if (result.isSuccess()) {
-                            if (((Result.UserResponseSuccess) result).getUser() == null) {
+                            if (userViewModel.isAsyncHandled()) {
                                 Log.d(TAG, "Email aggiornata con successo.");
 
+                                userViewModel.setAsyncHandled(false);
                                 backToLogin(SHOW_LOGIN_NEW_EMAIL);
                             } else {
-                                Log.d(TAG, "Errore [user != null]: Aggiornamento email fallito.");
+                                userViewModel.setAsyncHandled(true);
                             }
                         } else {
-                            Log.d(TAG, "Errore: Aggiornamento email fallito.");
+                            if (userViewModel.isAsyncHandled()) {
+                                Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
-                            showSnackbar(view, getString(R.string.error_email_update_failed));
+                                userViewModel.setAsyncHandled(false);
+                                showSnackbar(view, getString(R.string.error_email_update_failed));
+                            } else {
+                                userViewModel.setAsyncHandled(true);
+                            }
                         }
                     });
         } else {
-            Log.d(TAG, "Errore: Dati inseriti non validi.");
+            Log.e(TAG, "Errore: Dati inseriti non validi.");
         }
     }
 
@@ -240,13 +248,23 @@ public class UpdateEmailFragment extends Fragment {
         userViewModel.resetPassword(email)
                 .observe(requireActivity(), result -> {
                     if (result.isSuccess()) {
-                        Log.d(TAG, "Email di reimpostazione inviata.");
+                        if (userViewModel.isAsyncHandled()) {
+                            Log.d(TAG, "Email di reimpostazione inviata.");
 
-                        backToLogin(SHOW_LOGIN_NEW_PASSWORD);
+                            userViewModel.setAsyncHandled(false);
+                            backToLogin(SHOW_LOGIN_NEW_PASSWORD);
+                        } else {
+                            userViewModel.setAsyncHandled(true);
+                        }
                     } else {
-                        Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
+                        if (userViewModel.isAsyncHandled()) {
+                            Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
-                        showSnackbar(view, getString(R.string.error_email_send_failed));
+                            userViewModel.setAsyncHandled(false);
+                            showSnackbar(view, getString(R.string.error_email_send_failed));
+                        } else {
+                            userViewModel.setAsyncHandled(true);
+                        }
                     }
                 });
     }

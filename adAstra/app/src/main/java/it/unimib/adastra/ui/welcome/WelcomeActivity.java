@@ -84,7 +84,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-    // Imposta la lingua
+    // Sceglie la lingua
     private void setLocaleBasedOnSetting(int setting) {
         switch (setting) {
             case 0:
@@ -96,6 +96,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
+    // Imposta la lingua
     private void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
@@ -138,6 +139,7 @@ public class WelcomeActivity extends AppCompatActivity {
         sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
     }
 
+    // Controlla l'intent e mostra una Snackbar
     private void checkIntentAndShowSnackbar() {
         Intent intent = getIntent();
         if (intent.getBooleanExtra(SHOW_LOGIN_NEW_EMAIL, false)) {

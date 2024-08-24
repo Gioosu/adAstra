@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setThemeBasedOnSetting(themeID);
     }
 
-    // Imposta la lingua
+    // Sceglie la lingua
     private void setLocaleBasedOnSetting(int setting) {
         switch (setting) {
             case 0:
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Imposta la lingua
     private void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
+    // Imposta il tema
     private void setThemeBasedOnSetting(int setting) {
         switch (setting) {
             case 0:

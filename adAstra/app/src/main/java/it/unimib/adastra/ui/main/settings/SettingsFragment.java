@@ -111,12 +111,15 @@ public class SettingsFragment extends Fragment {
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
             if (result.isSuccess()) {
+                Log.d(TAG, "L'operazione di recupero dati utente è avvenuta con successo.");
+
+                userViewModel.setAsyncHandled(false);
                 user = ((Result.UserResponseSuccess) result).getUser();
 
                 if (user != null)
                     updateUI(user);
             } else {
-                Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
             }
         });
 
@@ -131,7 +134,6 @@ public class SettingsFragment extends Fragment {
                 .setPositiveButton(R.string.log_out, (dialog, which) -> logout(v))
                 .setNegativeButton(R.string.cancel, null)
                 .show());
-
 
         // Switch di IMPERIAL_FORMAT
         binding.switchImperialSystem.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -254,6 +256,7 @@ public class SettingsFragment extends Fragment {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
+    // Aggiorna l'interfaccia utente
     private void updateUI(User user) {
         if (user != null) {
             updateSetting(USERNAME, user.getUsername());
@@ -283,12 +286,14 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    // Aggiorna le impostazioni di tipo stringa
     private void updateStringSetting(String key, String value) {
         if (USERNAME.equals(key)) {
             binding.username.setText(value);
         }
     }
 
+    // Aggiorna le impostazioni di tipo numero
     private void updateNumberSetting(String key, int value) {
         if (LANGUAGE.equals(key)) {
             binding.spinnerLanguage.setSelection(value);
@@ -297,6 +302,7 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    // Aggiorna le impostazioni di tipo booleano
     private void updateBooleanSetting(String key, boolean value) {
         switch (key) {
             case IMPERIAL_SYSTEM:
@@ -331,6 +337,7 @@ public class SettingsFragment extends Fragment {
         });
     }
 
+    // Cancella i dati crittografati
     private void clearEncryptedData() {
         try {
             dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
@@ -339,6 +346,7 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    // Invia un email
     private void sendEmail() {
         // the report will be sent to adAstra developers email.
         String[] TO = {"Adiutoriumadastra@gmail.com"};

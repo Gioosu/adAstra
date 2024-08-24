@@ -13,9 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 
 import it.unimib.adastra.data.repository.NASA.INASARepository;
 import it.unimib.adastra.databinding.FragmentHomeBinding;
@@ -74,19 +72,21 @@ public class HomeFragment extends Fragment {
         // Recupero dati NASA
         nasaViewModel.getNASAApod("apod").observe(
                 getViewLifecycleOwner(), task -> {
-                    Log.d(TAG, "result in observer:" + task.toString());
                     if (task.isSuccess()) {
+                        Log.d(TAG, "Recupero dati NASA avvenuto con successo.");
+
                         nasaApod = ((Result.NASAResponseSuccess) task).getData();
 
                         if (nasaApod != null)
                             updateUI();
                     } else {
-                        Log.d(TAG, "Errore: Recupero dati NASA fallito.");
+                        Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
                     }
                 });
     }
 
-    private void updateUI() {// Aggiornamento informazioni NASA
+    // Aggiorna l'interfaccia utente
+    private void updateUI() {
         binding.textViewApodTitle.setText(nasaApod.getApodTitle());
         binding.textViewApodDescription.setText(nasaApod.getApodExplanation());
         Glide.with(this)

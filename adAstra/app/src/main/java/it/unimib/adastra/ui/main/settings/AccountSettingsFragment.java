@@ -102,12 +102,14 @@ public class AccountSettingsFragment extends Fragment {
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
                     if (result.isSuccess()) {
+                        Log.d(TAG, "L'operazione di recupero dei dati dell'utente è avvenuta con successo.");
+
                         user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null)
                             updateUI(user);
                     } else {
-                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                        Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
                     }
                 });
 
@@ -141,6 +143,7 @@ public class AccountSettingsFragment extends Fragment {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
+    // Aggiorna l'interfaccia utente
     private void updateUI(User user) {
         if (user != null) {
             String username = user.getUsername();
@@ -152,10 +155,11 @@ public class AccountSettingsFragment extends Fragment {
                 binding.textViewEmailAccountSettings.setText(email);
             }
         } else {
-            Log.d(TAG, "Errore: Nessun documento trovato.");
+            Log.e(TAG, "Errore: Nessun documento trovato.");
         }
     }
 
+    // Ottiene l'email
     private String getEmail() {
         String email;
 
@@ -168,6 +172,7 @@ public class AccountSettingsFragment extends Fragment {
         return email;
     }
 
+    // Ottiene la password
     private String getPassword() {
         String password;
 
@@ -180,6 +185,7 @@ public class AccountSettingsFragment extends Fragment {
         return password;
     }
 
+    // Elimina i dati crittografati
     private void clearEncryptedData() {
         try {
             dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
@@ -189,25 +195,31 @@ public class AccountSettingsFragment extends Fragment {
         }
     }
 
-    // Elimina l'account dell'utente
+    // Elimina l'account
     private void deleteUserAccount(View view) {
         userViewModel.deleteAccount(user, email, password).observe(
                 getViewLifecycleOwner(), result -> {
                     if(result.isSuccess()) {
-                        User resultUser = ((Result.UserResponseSuccess) result).getUser();
-
-                        if(resultUser == null){
+                        if (userViewModel.isAsyncHandled()) {
                             Log.d(TAG, "Eliminazione dell'account avvenuta con successo.");
 
+                            userViewModel.setAsyncHandled(false);
                             clearEncryptedData();
+
                             Navigation.findNavController(view).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
                             activity.finish();
+                        } else {
+                            userViewModel.setAsyncHandled(true);
                         }
-                    }
-                    else {
-                        Log.d(TAG, "Errore: Eliminazione dell'account fallita.");
+                    } else {
+                        if (userViewModel.isAsyncHandled()) {
+                            Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
-                        showSnackbar(view, ((Result.Error) result).getMessage());
+                            userViewModel.setAsyncHandled(false);
+                            showSnackbar(view, getString(R.string.error_deleting_account));
+                        } else {
+                            userViewModel.setAsyncHandled(true);
+                        }
                     }
                 });
     }

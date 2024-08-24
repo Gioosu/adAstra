@@ -46,12 +46,12 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                             firebaseUser.sendEmailVerification();
                             userResponseCallback.onSuccessFromAuthentication(new User(firebaseUser.getUid(), username));
                         } else {
-                            Log.d(TAG, "Errore: L'oggetto FirebaseUser è nullo. [SignUp]");
+                            Log.e(TAG, "Errore: L'oggetto FirebaseUser è nullo. [SignUp]");
 
                             userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                         }
                     } else {
-                        Log.d(TAG, "Errore: Registrazione fallita.");
+                        Log.e(TAG, "Errore: Registrazione fallita.");
 
                         userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                     }
@@ -80,12 +80,12 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                                 userResponseCallback.onFailureFromAuthentication(getErrorMessage(new UnverifiedEmailException(EMAIL_NOT_VERIFIED)));
                             }
                         } else {
-                            Log.d(TAG, "Errore: L'oggetto FirebaseUser è nullo. [SignIn]");
+                            Log.e(TAG, "Errore: L'oggetto FirebaseUser è nullo. [SignIn]");
 
                             userResponseCallback.onFailureFromAuthentication(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
                         }
                     } else {
-                        Log.d(TAG, "Errore: Accesso fallito.");
+                        Log.e(TAG, "Errore: Accesso fallito.");
 
                         userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                     }
@@ -99,14 +99,14 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
 
     @Override
     public String getLoggedUser() {
-        if (firebaseUser == null) {
-            Log.d(TAG, "Errore: Nessun utente loggato trovato.");
-
-            return null;
-        } else {
+        if (firebaseUser != null) {
             Log.d(TAG, "Utente loggato trovato.");
 
             return firebaseUser.getUid();
+        } else {
+            Log.e(TAG, "Errore: Nessun utente loggato trovato.");
+
+            return null;
         }
     }
 
@@ -121,7 +121,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
                     firebaseAuth.removeAuthStateListener(this);
                     userResponseCallback.onSuccessFromLogout();
                 } else {
-                    Log.d(TAG, "Errore: Logout fallito.");
+                    Log.e(TAG, "Errore: Logout fallito.");
 
                     firebaseAuth.removeAuthStateListener(this);
                     userResponseCallback.onFailureFromRemoteDatabase(getErrorMessage(new NullException(NULL_FIREBASE_OBJECT)));
@@ -133,6 +133,7 @@ public class UserAuthenticationRemoteDataSource extends BaseUserAuthenticationRe
         firebaseAuth.signOut();
     }
 
+    // Ottiene il messaggio di errore in base all'eccezione
     private String getErrorMessage(Exception exception) {
         if (exception instanceof FirebaseAuthWeakPasswordException) {
             return WEAK_PASSWORD_ERROR;

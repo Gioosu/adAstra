@@ -138,14 +138,23 @@ public class ChangePasswordFragment extends Fragment {
             userViewModel.changePassword(newPassword, email, password).observe(
                     getViewLifecycleOwner(), result -> {
                         if (result.isSuccess()) {
-                            Log.d(TAG, "Password cambiata con successo.");
+                            if (userViewModel.isAsyncHandled()) {
+                                Log.d(TAG, "Password cambiata con successo.");
 
-                            if (((Result.UserResponseSuccess) result).getUser() == null)
+                                userViewModel.setAsyncHandled(false);
                                 backToLogin();
+                            } else {
+                                userViewModel.setAsyncHandled(true);
+                            }
                         } else {
-                            Log.d(TAG, "Errore: Cambiare password fallita.");
+                            if (userViewModel.isAsyncHandled()) {
+                                Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
-                            showSnackbar(view, getString(R.string.error_password_change_failed));
+                                userViewModel.setAsyncHandled(false);
+                                showSnackbar(view, getString(R.string.error_password_change_failed));
+                            } else {
+                                userViewModel.setAsyncHandled(true);
+                            }
                         }
                     });
         } else {
@@ -194,13 +203,23 @@ public class ChangePasswordFragment extends Fragment {
         userViewModel.resetPassword(email)
                 .observe(requireActivity(), result -> {
                     if (result.isSuccess()) {
-                        Log.d(TAG, "Email di reimpostazione inviata.");
+                        if (userViewModel.isAsyncHandled()) {
+                            Log.d(TAG, "Email di reimpostazione inviata.");
 
-                        backToLogin();
+                            userViewModel.setAsyncHandled(false);
+                            backToLogin();
+                        } else {
+                            userViewModel.setAsyncHandled(true);
+                        }
                     } else {
-                        Log.d(TAG, "Errore: Email di reimpostazione non inviata.");
+                        if (userViewModel.isAsyncHandled()) {
+                            Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
-                        showSnackbar(view, getString(R.string.error_email_send_failed));
+                            userViewModel.setAsyncHandled(false);
+                            showSnackbar(view, getString(R.string.error_email_send_failed));
+                        } else {
+                            userViewModel.setAsyncHandled(true);
+                        }
                     }
                 });
     }
@@ -216,7 +235,7 @@ public class ChangePasswordFragment extends Fragment {
         activity.finish();
     }
 
-    // Ottiene l'email dell'utente
+    // Ottiene l'email
     private String getEmail() {
         String email;
 
@@ -229,7 +248,7 @@ public class ChangePasswordFragment extends Fragment {
         return email;
     }
 
-    // Ottiene la password dal file di secret
+    // Ottiene la password
     private String getPassword() {
         String password;
 

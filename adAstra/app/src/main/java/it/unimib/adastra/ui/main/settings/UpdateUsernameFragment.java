@@ -1,6 +1,5 @@
 package it.unimib.adastra.ui.main.settings;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +35,6 @@ public class UpdateUsernameFragment extends Fragment {
     private FragmentUpdateUsernameBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
-    private Activity activity;
     private User user;
     private String idToken;
 
@@ -77,20 +75,20 @@ public class UpdateUsernameFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        activity = getActivity();
         user = null;
         idToken = userViewModel.getLoggedUser();
 
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
-                    if (result.isSuccess()) {
+                    if (result.isSuccess()) {Log.d(TAG, "L'operazione di recupero dei dati dell'utente è avvenuta con successo.");
+
                         user = ((Result.UserResponseSuccess) result).getUser();
 
                         if (user != null)
                             updateUI(user);
                     } else {
-                        Log.d(TAG, "Errore: Recupero dei dati dell'utente fallito.");
+                        Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
                     }
                 });
 
@@ -110,10 +108,24 @@ public class UpdateUsernameFragment extends Fragment {
                 userViewModel.setUsername(user, newUsername).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
-                                showSnackbar(v, getString(R.string.username_updated));
-                                Navigation.findNavController(v).navigate(R.id.action_updateUsernameFragment_to_accountSettingsFragment);
+                                if (userViewModel.isAsyncHandled()) {
+                                    Log.d(TAG, "Nome utente aggiornato con successo.");
+
+                                    userViewModel.setAsyncHandled(false);
+                                    showSnackbar(v, getString(R.string.username_updated));
+                                    Navigation.findNavController(v).navigate(R.id.action_updateUsernameFragment_to_accountSettingsFragment);
+                                } else {
+                                    userViewModel.setAsyncHandled(true);
+                                }
                             } else {
-                                showSnackbar(v, getString(R.string.error_username_update_failed));
+                                if (userViewModel.isAsyncHandled()) {
+                                    Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
+
+                                    userViewModel.setAsyncHandled(false);
+                                    showSnackbar(v, getString(R.string.error_username_update_failed));
+                                } else {
+                                    userViewModel.setAsyncHandled(true);
+                                }
                             }
                 });
             }
@@ -125,6 +137,7 @@ public class UpdateUsernameFragment extends Fragment {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
+    // Aggiorna l'interfaccia utente
     private void updateUI(User user) {
         if (user != null) {
             String username = user.getUsername();
@@ -133,7 +146,7 @@ public class UpdateUsernameFragment extends Fragment {
                 binding.textViewUsernameUpdateUsername.setText(username);
             }
         } else {
-            Log.d(TAG, "Errore: Nessun documento trovato.");
+            Log.e(TAG, "Errore: Nessun documento trovato.");
         }
     }
 

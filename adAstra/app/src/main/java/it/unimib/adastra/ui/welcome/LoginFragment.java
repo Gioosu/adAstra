@@ -105,8 +105,8 @@ public class LoginFragment extends Fragment {
                     userViewModel.getUserMutableLiveData("", email, password, true).observe(
                         getViewLifecycleOwner(), result -> {
                             if (result.isSuccess()) {
-                                if (userViewModel.getFlag()) {
-                                    userViewModel.setFlag(false);
+                                if (userViewModel.isAsyncHandled()) {
+                                    userViewModel.setAsyncHandled(false);
                                     user = ((Result.UserResponseSuccess) result).getUser();
 
                                     if (user != null && user.isVerified()) {
@@ -118,25 +118,25 @@ public class LoginFragment extends Fragment {
                                         activity.finish();
                                     }
                                 } else {
-                                    userViewModel.setFlag(true);
+                                    userViewModel.setAsyncHandled(true);
                                 }
                             } else {
-                                if (userViewModel.getFlag()) {
-                                    Log.d(TAG, "Errore: Accesso fallito.");
+                                if (userViewModel.isAsyncHandled()) {
+                                    Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
                                     userViewModel.setAuthenticationError(true);
-                                    userViewModel.setFlag(false);
+                                    userViewModel.setAsyncHandled(false);
                                     showSnackbar(v, getErrorMessage(((Result.Error) result).getMessage()));
                                 } else {
-                                    userViewModel.setFlag(true);
+                                    userViewModel.setAsyncHandled(true);
                                 }
                             }
                         }
                     );
                 } else {
-                    Log.d(TAG, "Errore: Trovati errori.");
+                    Log.e(TAG, "Errore: Trovati errori.");
 
-                    userViewModel.setFlag(true);
+                    userViewModel.setAsyncHandled(true);
                     userViewModel.getUser("",email, password, true);
                 }
             } else {
