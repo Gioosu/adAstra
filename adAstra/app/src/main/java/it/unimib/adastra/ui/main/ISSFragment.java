@@ -231,8 +231,6 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         googleMap = map;
         MapsInitializer.initialize(getContext());
 
-        if (googleMap != null)
-            setGoogleMapOptions(googleMap);
         setGoogleMapOptions(googleMap);
     }
 
