@@ -108,7 +108,6 @@ public class UpdateEmailFragment extends Fragment {
                         Log.d(TAG, "Recupero dei dati dell'utente è avvenuto con successo.");
 
                         user = ((Result.UserResponseSuccess) result).getUser();
-
                         if (user != null)
                             updateUI();
                     } else {

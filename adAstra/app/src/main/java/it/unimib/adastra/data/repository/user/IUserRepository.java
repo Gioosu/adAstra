@@ -16,23 +16,17 @@ public interface IUserRepository {
 
     MutableLiveData<Result> setUsername(User user, String username);
 
+    MutableLiveData<Result> updateEmail(String newEmail, String email, String password);
+
+    MutableLiveData<Result> changePassword(String newPassword, String email, String password);
+
+    MutableLiveData<Result> resetPassword(String email);
+
     MutableLiveData<Result> logout();
 
     MutableLiveData<Result> deleteAccount(User user, String email, String password);
 
-    MutableLiveData<Result> resetPassword(String email);
-
     String getLoggedUser();
 
     void getInfo(String idToken);
-
-    void getAllData(String idToken);
-
-    void signUp(String username, String email, String password);
-
-    void signIn(String email, String password);
-
-    void updateEmail(String newEmail, String email, String password);
-
-    void changePassword(String newPassword, String email, String password);
 }

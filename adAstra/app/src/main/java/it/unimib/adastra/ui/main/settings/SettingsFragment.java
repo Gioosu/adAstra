@@ -1,5 +1,6 @@
 package it.unimib.adastra.ui.main.settings;
 
+import static it.unimib.adastra.util.Constants.AD_ASTRA_EMAIL;
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
@@ -349,7 +350,7 @@ public class SettingsFragment extends Fragment {
     // Invia un email
     private void sendEmail() {
         // the report will be sent to adAstra developers email.
-        String[] TO = {"Adiutoriumadastra@gmail.com"};
+        String[] TO = {AD_ASTRA_EMAIL};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("message/rfc822");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);

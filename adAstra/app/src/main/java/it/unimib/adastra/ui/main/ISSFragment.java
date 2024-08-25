@@ -147,9 +147,9 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                                     getViewLifecycleOwner(), task -> {
                                         if (task.isSuccess()) {
                                             if (issPositionViewModel.isAsyncHandled()) {
-                                                issPositionViewModel.setAsyncHandled(false);
                                                 Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
 
+                                                issPositionViewModel.setAsyncHandled(false);
                                                 issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
 
                                                 if (issPosition != null) {
@@ -173,8 +173,9 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                                             }
                                         } else {
                                             if (issPositionViewModel.isAsyncHandled()) {
-                                                issPositionViewModel.setAsyncHandled(false);
                                                 Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
+
+                                                issPositionViewModel.setAsyncHandled(false);
                                             } else {
                                                 issPositionViewModel.setAsyncHandled(true);
                                             }
@@ -212,6 +213,8 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
         binding.textViewCoordinates.setText(coordinates);
 
+        updateMap();
+
         binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(timestamp, is12Format));
         binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(altitude, units));
         binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(velocity, units));
@@ -221,8 +224,6 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
             binding.textViewVisibility.setText(getString(R.string.iss_eclipsed));
         else
             binding.textViewVisibility.setText(getString(R.string.iss_daylight));
-
-        onMapReady(googleMap);
     }
 
     @Override
@@ -232,21 +233,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
         if (googleMap != null)
             setGoogleMapOptions(googleMap);
-
-        if (marker != null)
-            marker.remove();
-
-        if (circle != null)
-            circle.remove();
-
-        if (googleMap != null && issPosition != null) {
-            marker = drawMarker();
-            circle = drawFootprint();
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
-        } else {
-            Log.e(TAG, "Errore: Impossibile visualizzare la mappa.");
-        }
+        setGoogleMapOptions(googleMap);
     }
 
     @Override
@@ -273,6 +260,23 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     public void onLowMemory() {
         super.onLowMemory();
         binding.mapViewIss.onLowMemory();
+    }
+
+    private void updateMap() {
+        if (marker != null)
+            marker.remove();
+
+        if (circle != null)
+            circle.remove();
+
+        if (googleMap != null) {
+            marker = drawMarker();
+            circle = drawFootprint();
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
+        } else {
+            Log.e(TAG, "Errore: Impossibile visualizzare la mappa.");
+        }
     }
 
     // Imposta le opzioni della mappa

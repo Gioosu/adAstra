@@ -1,5 +1,6 @@
 package it.unimib.adastra.data.source.NASA;
 
+import static it.unimib.adastra.util.Constants.APOD;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
 import android.util.Log;
@@ -23,11 +24,11 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
     @Override
     public void getNASAData(String query) {
         switch(query) {
-            case "apod":
+            case APOD:
                 fetchNASAApod();
                 break;
             default:
-                break;
+                Log.e(TAG, "Query non supportata: " + query);
         }
     }
 
@@ -53,10 +54,11 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
                     nasaResponseCallback.onSuccessFromLocal(nasaResponse);
                 } else {
                     nasaDao.deleteNASA();
-                    nasaResponseCallback.onFailureFromLocal("apod");
+
+                    nasaResponseCallback.onFailureFromLocal(APOD);
                 }
             } else {
-                nasaResponseCallback.onFailureFromLocal("apod");
+                nasaResponseCallback.onFailureFromLocal(APOD);
             }
 
         });
@@ -66,8 +68,8 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
     public void updateNASAData(NASAResponse nasaResponse) {
         AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
            if (nasaResponse != null) {
-
                nasaDao.insertNASA(nasaResponse);
+
                nasaResponseCallback.onSuccessFromLocal(nasaResponse);
            } else {
                nasaResponseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
@@ -77,8 +79,7 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
 
     @Override
     public void delete() {
-        AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
-           nasaResponseCallback.onSuccessDeletion();
-        });
+        AdAstraRoomDatabase.databaseWriteExecutor.execute(() ->
+                nasaResponseCallback.onSuccessDeletion());
     }
 }

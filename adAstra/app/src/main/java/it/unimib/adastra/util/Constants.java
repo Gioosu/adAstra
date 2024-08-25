@@ -17,9 +17,10 @@ public class Constants {
     public static final String LANGUAGE = "language";
     public static final String DARK_THEME = "dark_theme";
     public static final String VERIFIED = "verified";
+    public static final String AD_ASTRA_EMAIL = "Adiutoriumadastra@gmail.com";
 
     // Constants for Encyclopedia
-
+    public static final String PLANETS = "planets";
     public static final String ID = "id";
     public static final String IT_NAME = "itName";
     public static final String EN_NAME = "enName";
@@ -27,6 +28,10 @@ public class Constants {
     public static final String EN_DESCRIPTION = "enDescription";
     public static final String NUMBER_OF_MOONS = "moons";
     public static final String DISTANCE_FROM_EARTH = "distanceFromEarth";
+    public static final String STARS = "stars";
+    // Attributi di Starts
+    public static final String CONSTELATIONS = "constellations";
+    // Attributi di Constellations
 
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.encrypted_preferences";
@@ -40,9 +45,10 @@ public class Constants {
     public static final String ISS_ENDPOINT_MILES = "v1/satellites/25544?units=miles";
 
     // Constants for NASA API (https://api.nasa.gov/)
-    public static final String NASA_API_BASE_URL = "https://api.nasa.gov/";
-    public static final String NASA_ENDPOINT_APOD = "planetary/apod";
     public static final String NASA_API_KEY = "Zb5Gb0UFIQPvrmkC6H1tvigH5It4PHVBiTKwOa07";
+    public static final String NASA_API_BASE_URL = "https://api.nasa.gov/";
+    public static final String APOD = "astronomical_picture_of_the_day";
+    public static final String NASA_ENDPOINT_APOD = "planetary/apod";
 
     // Constants for Room
     public static final String DATABASE_NAME = "adAstraDatabase";

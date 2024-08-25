@@ -1,6 +1,7 @@
 package it.unimib.adastra.ui.main.encyclopedia;
 
 import static it.unimib.adastra.util.Constants.LANGUAGE;
+import static it.unimib.adastra.util.Constants.PLANETS;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 
 import android.os.Bundle;
@@ -68,7 +69,6 @@ public class DinamicEncyclopediaFragment extends Fragment {
 
         // Inflate the layout for this fragment
         binding = FragmentDinamicEncyclopediaBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
     }
 
@@ -77,32 +77,36 @@ public class DinamicEncyclopediaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
+        language = setLanguage();
 
-        int nLanguage = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE);
-
-        if(nLanguage == 0) {
-            language = "English";
-        } else if(nLanguage == 1) {
-            language = "Italiano";
-        }
-
-        encyclopediaViewModel.getEncyclopedia("planets", language).observe(
+        encyclopediaViewModel.getEncyclopedia(PLANETS, language).observe(
             getViewLifecycleOwner(), result -> {
                 if (result.isSuccess()) {
                     if (encyclopediaViewModel.isAsyncHandled()) {
-                        encyclopediaViewModel.setAsyncHandled(false);
                         Log.d(TAG, "Recupero dati dell'encyclopedia avvenuto con successo: " + ((Result.EncyclopediaResponseSuccess) result).getPlanets());
+
+                        encyclopediaViewModel.setAsyncHandled(false);
                     } else {
                         encyclopediaViewModel.setAsyncHandled(true);
                     }
                 } else {
                     if (encyclopediaViewModel.isAsyncHandled()) {
-                        encyclopediaViewModel.setAsyncHandled(false);
                         Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
+
+                        encyclopediaViewModel.setAsyncHandled(false);
                     } else {
                         encyclopediaViewModel.setAsyncHandled(true);
                     }
                 }
             });
+    }
+
+    private String setLanguage() {
+        int nLanguage = sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE);
+
+        if (nLanguage == 1)
+            return "it";
+        else
+            return "en";
     }
 }

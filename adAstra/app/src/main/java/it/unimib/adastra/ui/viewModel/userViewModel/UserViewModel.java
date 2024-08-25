@@ -1,5 +1,7 @@
 package it.unimib.adastra.ui.viewModel.userViewModel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -48,6 +50,7 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<Result> getUserInfoMutableLiveData(String idToken) {
         if (userMutableLiveData == null) {
+            setAsyncHandled(false);
             getUserInfo(idToken);
         }
 
@@ -73,13 +76,21 @@ public class UserViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> updateEmail(String newEmail, String email, String password) {
-        userRepository.updateEmail(newEmail, email, password);
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.updateEmail(newEmail, email, password);
+        } else {
+            userRepository.updateEmail(newEmail, email, password);
+        }
 
         return userMutableLiveData;
     }
 
     public MutableLiveData<Result> changePassword(String newPassword, String email, String password) {
-        userRepository.changePassword(newPassword, email, password);
+        if (userMutableLiveData == null) {
+            userMutableLiveData = userRepository.changePassword(newPassword, email, password);
+        } else {
+            userRepository.changePassword(newPassword, email, password);
+        }
 
         return userMutableLiveData;
     }

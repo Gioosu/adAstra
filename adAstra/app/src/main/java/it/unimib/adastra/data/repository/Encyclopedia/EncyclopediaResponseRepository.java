@@ -26,6 +26,7 @@ public class EncyclopediaResponseRepository implements IEncyclopediaRepository, 
     @Override
     public MutableLiveData<Result> fetchEncyclopediaData(String query, String language) {
         encyclopediaLocalDataSource.getEncyclopediaData(query, language);
+
         return encyclopediaMutableLiveData;
     }
 

@@ -184,18 +184,18 @@ public class ISSPositionResponse implements Parcelable {
     @Override
     public String toString() {
         return "ISSPositionResponse{" +
-                "id=" + id +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", altitude=" + altitude +
-                ", velocity=" + velocity +
-                ", visibility='" + visibility + '\'' +
-                ", footprint=" + footprint +
-                ", timestamp=" + timestamp +
-                ", daynum=" + daynum +
-                ", solar_lat=" + solar_lat +
-                ", solar_lon=" + solar_lon +
-                ", units='" + units + '\'' +
+                "id = " + id +
+                ", latitude = " + latitude +
+                ", longitude = " + longitude +
+                ", altitude = " + altitude +
+                ", velocity = " + velocity +
+                ", visibility = '" + visibility + '\'' +
+                ", footprint = " + footprint +
+                ", timestamp = " + timestamp +
+                ", daynum = " + daynum +
+                ", solar_lat = " + solar_lat +
+                ", solar_lon = " + solar_lon +
+                ", units = '" + units + '\'' +
                 '}';
     }
 

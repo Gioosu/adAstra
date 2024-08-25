@@ -25,6 +25,7 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
     @Override
     public MutableLiveData<Result> fetchNASAApod(String query) {
         nasaLocalDataSource.getNASAData(query);
+
         return nasaMutableLiveData;
     }
 

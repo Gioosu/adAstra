@@ -104,11 +104,11 @@ public class NASAResponse implements Parcelable {
     @Override
     public String toString() {
         return "NASAResponse{" +
-                ", apodDate='" + apodDate + '\'' +
-                ", apodTitle='" + apodTitle + '\'' +
-                ", apodExplanation='" + apodExplanation + '\'' +
-                ", apodUrl='" + apodUrl + '\'' +
-                ", apoCopyright='" + apodCopyright + '\'' +
+                ", apodDate = '" + apodDate + '\'' +
+                ", apodTitle = '" + apodTitle + '\'' +
+                ", apodExplanation = '" + apodExplanation + '\'' +
+                ", apodUrl = '" + apodUrl + '\'' +
+                ", apoCopyright = '" + apodCopyright + '\'' +
                 '}';
     }
 

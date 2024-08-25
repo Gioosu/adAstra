@@ -1,5 +1,7 @@
 package it.unimib.adastra.ui.main;
 
+import static it.unimib.adastra.util.Constants.APOD;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -70,13 +72,13 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Recupero dati NASA
-        nasaViewModel.getNASAApod("apod").observe(
+        nasaViewModel.getNASAApod(APOD).observe(
                 getViewLifecycleOwner(), task -> {
                     if (task.isSuccess()) {
                         if (nasaViewModel.isAsyncHandled()) {
-                            nasaViewModel.setAsyncHandled(false);
                             Log.d(TAG, "Recupero dati NASA avvenuto con successo.");
 
+                            nasaViewModel.setAsyncHandled(false);
                             nasaApod = ((Result.NASAResponseSuccess) task).getData();
 
                             if (nasaApod != null)
@@ -86,8 +88,9 @@ public class HomeFragment extends Fragment {
                         }
                     } else {
                         if (nasaViewModel.isAsyncHandled()) {
-                            nasaViewModel.setAsyncHandled(false);
                             Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
+
+                            nasaViewModel.setAsyncHandled(false);
                         } else {
                             nasaViewModel.setAsyncHandled(true);
                         }

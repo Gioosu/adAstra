@@ -1,5 +1,6 @@
 package it.unimib.adastra.data.source.Encyclopedia;
 
+import static it.unimib.adastra.util.Constants.PLANETS;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
 import android.util.Log;
@@ -22,7 +23,7 @@ public class EncyclopediaLocalDataSource extends BaseEncyclopediaLocalDataSource
     @Override
     public void getEncyclopediaData(String query, String language) {
         switch (query) {
-            case "planets":
+            case PLANETS:
                 fetchPlanets(language);
                 break;
             default:
@@ -39,17 +40,18 @@ public class EncyclopediaLocalDataSource extends BaseEncyclopediaLocalDataSource
                // I dati sono già presenti nel database
                if (planetsDao.getCurrentLanguage().equals(language)) {
                    Log.d(TAG, "lingua corrente: " + planetsDao.getCurrentLanguage() + ", nessuna modifica");
+
                    planets = planetsDao.getAllPlanets();
                    encyclopediaResponseCallback.onSuccessFromLocal(planets);
                } else {
                    // La lingua richiesta è diversa da quella corrente
-                   Log.d(TAG, "lingua corrente: " + planetsDao.getCurrentLanguage() +
-                           ", lingua richiesta: " + language);
+                   Log.d(TAG, "lingua corrente: " + planetsDao.getCurrentLanguage() + ", lingua richiesta: " + language);
+
                    encyclopediaResponseCallback.onFailureFromLocal("planets", language, false);
                }
 
            } else {
-               encyclopediaResponseCallback.onFailureFromLocal("planets", language, true);
+               encyclopediaResponseCallback.onFailureFromLocal(PLANETS, language, true);
            }
         });
     }
@@ -59,7 +61,9 @@ public class EncyclopediaLocalDataSource extends BaseEncyclopediaLocalDataSource
         if (isDBEmpty) {
             AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
                 planetsDao.insertAll(planets);
+
                 Log.d(TAG, "updateEncyclopedia: planets inserted: " + planets.size());
+
                 encyclopediaResponseCallback.onSuccessFromLocal(planets);
             });
 
@@ -68,11 +72,14 @@ public class EncyclopediaLocalDataSource extends BaseEncyclopediaLocalDataSource
                 int rows = planetsDao.updateAll(planets);
 
                 Log.d(TAG, "righe aggiornate e numero Pianeti: " + rows + ", " + planets.size());
+
                 if (rows == planets.size()) {
                     Log.d(TAG, "updateEncyclopedia: rows is " + rows);
+
                     encyclopediaResponseCallback.onSuccessFromLocal(planets);
                 } else {
                     Log.e(TAG, "updateEncyclopedia: rows is not " + rows);
+
                     encyclopediaResponseCallback.onFailureFromLocal(UNEXPECTED_ERROR);
                 }
             });

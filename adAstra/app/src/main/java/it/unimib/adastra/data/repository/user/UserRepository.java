@@ -1,7 +1,5 @@
 package it.unimib.adastra.data.repository.user;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import it.unimib.adastra.data.source.user.BaseUserAuthenticationRemoteDataSource;
@@ -27,13 +25,9 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     @Override
     public MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered) {
         if (isUserRegistered) {
-            Log.d(TAG, "Fase di Login.");
-
-            signIn(email, password);
+            userRemoteDataSource.signIn(email, password);
         } else {
-            Log.d(TAG, "Fase di Signup.");
-
-            signUp(username, email, password);
+            userRemoteDataSource.signUp(username, email, password);
         }
 
         return userMutableLiveData;
@@ -66,6 +60,27 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
+    public MutableLiveData<Result> updateEmail(String newEmail, String email, String password) {
+        userDataRemoteDataSource.updateEmail(newEmail, email, password);
+
+        return userMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Result> changePassword(String newPassword, String email, String password) {
+        userDataRemoteDataSource.changePassword(newPassword, email, password);
+
+        return userMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Result> resetPassword(String email) {
+        userDataRemoteDataSource.resetPassword(email);
+
+        return userMutableLiveData;
+    }
+
+    @Override
     public MutableLiveData<Result> logout() {
         userRemoteDataSource.logout();
 
@@ -80,45 +95,13 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
     }
 
     @Override
-    public MutableLiveData<Result> resetPassword(String email) {
-        userDataRemoteDataSource.resetPassword(email);
-
-        return userMutableLiveData;
-    }
-
-    @Override
     public String getLoggedUser() {
         return userRemoteDataSource.getLoggedUser();
     }
 
     @Override
-    public void signUp(String username, String email, String password) {
-        userRemoteDataSource.signUp(username, email, password);
-    }
-
-    @Override
-    public void signIn(String email, String password) {
-        userRemoteDataSource.signIn(email, password);
-    }
-
-    @Override
     public void getInfo(String idToken) {
         userDataRemoteDataSource.getUserInfo(idToken);
-    }
-
-    @Override
-    public void getAllData(String idToken) {
-
-    }
-
-    @Override
-    public void updateEmail(String newEmail, String email, String password) {
-        userDataRemoteDataSource.updateEmail(newEmail, email, password);
-    }
-
-    @Override
-    public void changePassword(String newPassword, String email, String password) {
-        userDataRemoteDataSource.changePassword(newPassword, email, password);
     }
 
     @Override

@@ -13,19 +13,20 @@ public class Planet {
     @PrimaryKey
     int id;
 
-    private String language;
-
     private String name;
     private String description;
     private String earthDistance;
     private int moons;
-    public Planet(int id, String language, String name, String description, String earthDistance, int moons) {
+
+    private String language;
+
+    public Planet(int id, String name, String description, String earthDistance, int moons, String language) {
         this.id = id;
-        this.language = language;
         this.name = name;
         this.description = description;
         this.earthDistance = earthDistance;
         this.moons = moons;
+        this.language = language;
     }
 
     public int getId() {
@@ -79,12 +80,12 @@ public class Planet {
     @Override
     public String toString() {
         return "Planet{" +
-                "id=" + id +
-                ", language='" + language + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", earthDistance='" + earthDistance + '\'' +
-                ", moons=" + moons +
+                "id = " + id +
+                ", name = '" + name + '\'' +
+                ", description = '" + description + '\'' +
+                ", earthDistance = '" + earthDistance + '\'' +
+                ", moons =" + moons +
+                ", language = '" + language + '\'' +
                 '}';
     }
 }

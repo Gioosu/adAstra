@@ -1,5 +1,6 @@
 package it.unimib.adastra.data.source.NASA;
 
+import static it.unimib.adastra.util.Constants.APOD;
 import static it.unimib.adastra.util.Constants.RETROFIT_ERROR;
 
 import android.util.Log;
@@ -7,7 +8,6 @@ import android.util.Log;
 import it.unimib.adastra.data.service.NASAApiService;
 import it.unimib.adastra.model.NASA.NASAResponse;
 import it.unimib.adastra.util.ServiceLocator;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,12 +25,13 @@ public class NASARemoteDataSource extends BaseNASARemoteDataSource {
         Call<NASAResponse> nasaResponseCall;
 
         switch (query) {
-            case "apod":
+            case APOD:
                 nasaResponseCall = nasaApiService.getNasaApod();
                 break;
             default:
+                Log.e(TAG, "Query non supportata: " + query);
+
                 nasaResponseCall = null;
-                break;
         }
 
         getNASAData(nasaResponseCall);

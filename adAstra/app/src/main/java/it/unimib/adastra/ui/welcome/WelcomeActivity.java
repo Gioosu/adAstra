@@ -87,12 +87,11 @@ public class WelcomeActivity extends AppCompatActivity {
     // Sceglie la lingua
     private void setLocaleBasedOnSetting(int setting) {
         switch (setting) {
-            case 0:
-                setLocale("en");
-                break;
             case 1:
                 setLocale("it");
                 break;
+            default:
+                setLocale("en");
         }
     }
 
