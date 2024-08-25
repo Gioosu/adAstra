@@ -2,8 +2,11 @@ package it.unimib.adastra.data.repository.Encyclopedia;
 
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.List;
+
 import it.unimib.adastra.data.source.Encyclopedia.BaseEncyclopediaLocalDataSource;
 import it.unimib.adastra.data.source.Encyclopedia.BaseEncyclopediaRemoteDataSource;
+import it.unimib.adastra.model.Encyclopedia.Planet;
 import it.unimib.adastra.model.Result;
 
 public class EncyclopediaResponseRepository implements IEncyclopediaRepository, EncyclopediaResponseCallback {
@@ -16,11 +19,24 @@ public class EncyclopediaResponseRepository implements IEncyclopediaRepository, 
         this.encyclopediaLocalDataSource = BaseEncyclopediaLocalDataSource;
         this.encyclopediaRemoteDataSource = BaseEncyclopediaRemoteDataSource;
         this.encyclopediaMutableLiveData = new MutableLiveData<>();
+        this.encyclopediaRemoteDataSource.setEncyclopediaCallback(this);
+        this.encyclopediaLocalDataSource.setEncyclopediaCallback(this);
     }
 
     @Override
-    public MutableLiveData<Result> fetchEncyclopediaData(String query) {
-        encyclopediaLocalDataSource.getEncyclopediaData(query);
+    public MutableLiveData<Result> fetchEncyclopediaData(String query, String language) {
+        encyclopediaLocalDataSource.getEncyclopediaData(query, language);
         return encyclopediaMutableLiveData;
+    }
+
+    @Override
+    public void onSuccessFromLocal(List<Planet> planets) {
+        Result.EncyclopediaResponseSuccess result = new Result.EncyclopediaResponseSuccess(planets);
+        encyclopediaMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onFailureFromLocal(String query, String language) {
+        encyclopediaRemoteDataSource.getEncyclopediaData(query, language);
     }
 }

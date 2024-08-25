@@ -7,5 +7,5 @@ import it.unimib.adastra.model.Result;
 
 public interface IEncyclopediaRepository {
 
-    MutableLiveData<Result> fetchEncyclopediaData(String query);
+    MutableLiveData<Result> fetchEncyclopediaData(String query, String language);
 }

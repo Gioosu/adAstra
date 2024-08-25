@@ -18,6 +18,14 @@ public class Constants {
     public static final String DARK_THEME = "dark_theme";
     public static final String VERIFIED = "verified";
 
+    // Constants for Encyclopedia
+    public static final String IT_NAME = "itName";
+    public static final String EN_NAME = "enName";
+    public static final String IT_DESCRIPTION = "itDescription";
+    public static final String EN_DESCRIPTION = "enDescription";
+    public static final String NUMBER_OF_MOONS = "moons";
+    public static final String DISTANCE_FROM_EARTH = "distanceFromEarth";
+
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.encrypted_preferences";
 

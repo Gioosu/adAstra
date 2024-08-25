@@ -53,10 +53,10 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
                     nasaResponseCallback.onSuccessFromLocal(nasaResponse);
                 } else {
                     nasaDao.deleteNASA();
-                    nasaResponseCallback.onFailureFromLocal();
+                    nasaResponseCallback.onFailureFromLocal("apod");
                 }
             } else {
-                nasaResponseCallback.onFailureFromLocal();
+                nasaResponseCallback.onFailureFromLocal("apod");
             }
 
         });

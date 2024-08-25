@@ -15,12 +15,6 @@ public interface PlanetsDao {
     @Query("SELECT * FROM Planet")
     List<Planet> getAll();
 
-    @Query("SELECT * FROM Planet WHERE id = :id")
-    Planet getById(int id);
-
-    @Query("SELECT * FROM Planet WHERE enName = :name")
-    Planet getByName(String name);
-
     @Insert
     void insert(Planet planet);
 
@@ -32,4 +26,7 @@ public interface PlanetsDao {
 
     @Query("DELETE FROM Planet")
     void deleteAll();
+
+    @Query("SELECT language FROM Planet WHERE id = 1")
+    String getCurrentLanguage();
 }

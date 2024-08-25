@@ -113,7 +113,6 @@ public class SettingsFragment extends Fragment {
             if (result.isSuccess()) {
                 Log.d(TAG, "L'operazione di recupero dati utente è avvenuta con successo.");
 
-                userViewModel.setAsyncHandled(false);
                 user = ((Result.UserResponseSuccess) result).getUser();
 
                 if (user != null)

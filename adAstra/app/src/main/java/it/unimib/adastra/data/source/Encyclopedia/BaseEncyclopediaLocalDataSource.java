@@ -1,9 +1,15 @@
 package it.unimib.adastra.data.source.Encyclopedia;
 
-import androidx.lifecycle.MutableLiveData;
-
-import it.unimib.adastra.model.Result;
+import it.unimib.adastra.data.repository.Encyclopedia.EncyclopediaResponseCallback;
 
 public abstract class BaseEncyclopediaLocalDataSource {
-    public abstract void getEncyclopediaData(String query);
+    protected EncyclopediaResponseCallback encyclopediaResponseCallback;
+
+    public void setEncyclopediaCallback(EncyclopediaResponseCallback encyclopediaResponseCallback) {
+        this.encyclopediaResponseCallback = encyclopediaResponseCallback;
+    }
+
+    public abstract void getEncyclopediaData(String query, String language);
+
+    public abstract void fetchPlanets(String language);
 }

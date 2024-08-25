@@ -57,8 +57,8 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
     }
 
     @Override
-    public void onFailureFromLocal() {
-        nasaRemoteDataSource.getNASAData("apod");
+    public void onFailureFromLocal(String query) {
+        nasaRemoteDataSource.getNASAData(query);
     }
 
     @Override

@@ -13,32 +13,19 @@ public class Planet {
     @PrimaryKey
     int id;
 
-    private String itName;
-    private String enName;
-    private String itDescription;
-    private String enDescription;
-    private double earthDistance;
-    private String moons;
+    private String language;
+    private String name;
+    private String description;
+    private String earthDistance;
+    private int moons;
 
-    public Planet(int id, String itName, String enName, String itDescription, String enDescription, double earthDistance, String moons) {
+    public Planet(int id, String language, String name, String description, String earthDistance, int moons) {
         this.id = id;
-        this.itName = itName;
-        this.enName = enName;
-        this.itDescription = itDescription;
-        this.enDescription = enDescription;
+        this.language = language;
+        this.name = name;
+        this.description = description;
         this.earthDistance = earthDistance;
         this.moons = moons;
-    }
-
-    @Ignore
-    public Planet(int id, String itName, String enName, String itDescription, String enDescription) {
-        this.id = id;
-        this.itName = itName;
-        this.enName = enName;
-        this.itDescription = itDescription;
-        this.enDescription = enDescription;
-        this.earthDistance = 0;
-        this.moons = "";
     }
 
     public int getId() {
@@ -49,51 +36,43 @@ public class Planet {
         this.id = id;
     }
 
-    public String getItName() {
-        return itName;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setItName(String itName) {
-        this.itName = itName;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
-    public String getEnName() {
-        return enName;
+    public String getName() {
+        return name;
     }
 
-    public void setEnName(String enName) {
-        this.enName = enName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getItDescription() {
-        return itDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setItDescription(String itDescription) {
-        this.itDescription = itDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getEnDescription() {
-        return enDescription;
-    }
-
-    public void setEnDescription(String enDescription) {
-        this.enDescription = enDescription;
-    }
-
-    public double getEarthDistance() {
+    public String getEarthDistance() {
         return earthDistance;
     }
 
-    public void setEarthDistance(double earthDistance) {
+    public void setEarthDistance(String earthDistance) {
         this.earthDistance = earthDistance;
     }
 
-    public String getMoons() {
+    public int getMoons() {
         return moons;
     }
 
-    public void setMoons(String moons) {
+    public void setMoons(int moons) {
         this.moons = moons;
     }
 }
