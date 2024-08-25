@@ -146,28 +146,38 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                             issPositionViewModel.getISSPosition(timestamp, isImperial).observe(
                                     getViewLifecycleOwner(), task -> {
                                         if (task.isSuccess()) {
-                                            Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
+                                            if (issPositionViewModel.isAsyncHandled()) {
+                                                issPositionViewModel.setAsyncHandled(false);
+                                                Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
 
-                                            issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
+                                                issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
 
-                                            if (issPosition != null) {
-                                                lat = issPosition.getLatitude();
-                                                lng = issPosition.getLongitude();
-                                                altitude = issPosition.getAltitude();
-                                                velocity = issPosition.getVelocity();
-                                                visibility = issPosition.getVisibility();
-                                                footprint = issPosition.getFootprint();
-                                                timestamp = issPosition.getTimestamp();
-                                                units = issPosition.getUnits();
+                                                if (issPosition != null) {
+                                                    lat = issPosition.getLatitude();
+                                                    lng = issPosition.getLongitude();
+                                                    altitude = issPosition.getAltitude();
+                                                    velocity = issPosition.getVelocity();
+                                                    visibility = issPosition.getVisibility();
+                                                    footprint = issPosition.getFootprint();
+                                                    timestamp = issPosition.getTimestamp();
+                                                    units = issPosition.getUnits();
 
-                                                iss = new LatLng(lat, lng);
+                                                    iss = new LatLng(lat, lng);
 
-                                                updateUI();
+                                                    updateUI();
+                                                } else {
+                                                    Log.e(TAG, "Errore: Recupero dati dell'ISS fallito.");
+                                                }
                                             } else {
-                                                Log.e(TAG, "Errore: Recupero dati dell'ISS fallito.");
+                                                issPositionViewModel.setAsyncHandled(true);
                                             }
                                         } else {
-                                            Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                                            if (issPositionViewModel.isAsyncHandled()) {
+                                                issPositionViewModel.setAsyncHandled(false);
+                                                Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                                            } else {
+                                                issPositionViewModel.setAsyncHandled(true);
+                                            }
                                         }
                                     });
                             } else {

@@ -36,7 +36,24 @@ public class EncyclopediaResponseRepository implements IEncyclopediaRepository, 
     }
 
     @Override
-    public void onFailureFromLocal(String query, String language) {
-        encyclopediaRemoteDataSource.getEncyclopediaData(query, language);
+    public void onFailureFromLocal(String query, String language, boolean isDBEmpty) {
+        encyclopediaRemoteDataSource.getEncyclopediaData(query, language, isDBEmpty);
+    }
+
+    @Override
+    public void onFailureFromLocal(String message) {
+        Result.Error result = new Result.Error(message);
+        encyclopediaMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessFromRemote(List<Planet> planets, boolean isDBEmpty) {
+        encyclopediaLocalDataSource.updateEncyclopedia(planets, isDBEmpty);
+    }
+
+    @Override
+    public void onFailureFromRemote(String message) {
+        Result.Error result = new Result.Error(message);
+        encyclopediaMutableLiveData.postValue(result);
     }
 }

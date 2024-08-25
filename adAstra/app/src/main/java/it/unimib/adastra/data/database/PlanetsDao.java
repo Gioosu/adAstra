@@ -8,15 +8,13 @@ import it.unimib.adastra.model.Encyclopedia.Planet;
 
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 @Dao
 public interface PlanetsDao {
 
     @Query("SELECT * FROM Planet")
     List<Planet> getAll();
-
-    @Insert
-    void insert(Planet planet);
 
     @Insert
     void insertAll(List<Planet> planets);
@@ -27,6 +25,9 @@ public interface PlanetsDao {
     @Query("DELETE FROM Planet")
     void deleteAll();
 
-    @Query("SELECT language FROM Planet WHERE id = 1")
+    @Query("SELECT language FROM Planet LIMIT 1")
     String getCurrentLanguage();
+
+    @Update
+    int updateAll(List<Planet> planets);
 }

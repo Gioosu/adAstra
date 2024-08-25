@@ -29,7 +29,7 @@ import it.unimib.adastra.util.ServiceLocator;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    public static final String TAG = ISSFragment.class.getSimpleName();
+    public static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding binding;
 
     // NASA
@@ -73,14 +73,24 @@ public class HomeFragment extends Fragment {
         nasaViewModel.getNASAApod("apod").observe(
                 getViewLifecycleOwner(), task -> {
                     if (task.isSuccess()) {
-                        Log.d(TAG, "Recupero dati NASA avvenuto con successo.");
+                        if (nasaViewModel.isAsyncHandled()) {
+                            nasaViewModel.setAsyncHandled(false);
+                            Log.d(TAG, "Recupero dati NASA avvenuto con successo.");
 
-                        nasaApod = ((Result.NASAResponseSuccess) task).getData();
+                            nasaApod = ((Result.NASAResponseSuccess) task).getData();
 
-                        if (nasaApod != null)
-                            updateUI();
+                            if (nasaApod != null)
+                                updateUI();
+                        } else {
+                            nasaViewModel.setAsyncHandled(true);
+                        }
                     } else {
-                        Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                        if (nasaViewModel.isAsyncHandled()) {
+                            nasaViewModel.setAsyncHandled(false);
+                            Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
+                        } else {
+                            nasaViewModel.setAsyncHandled(true);
+                        }
                     }
                 });
     }

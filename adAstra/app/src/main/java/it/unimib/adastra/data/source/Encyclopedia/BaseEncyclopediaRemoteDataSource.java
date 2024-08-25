@@ -9,7 +9,7 @@ public abstract class BaseEncyclopediaRemoteDataSource {
         this.encyclopediaResponseCallback = encyclopediaResponseCallback;
     }
 
-    public abstract void getEncyclopediaData(String query, String language);
+    public abstract void getEncyclopediaData(String query, String language, boolean isDBEmpty);
 
-    public abstract void getPlanetsInfo(String language);
+    public abstract void getPlanetsInfo(String language, boolean isDBEmpty);
 }

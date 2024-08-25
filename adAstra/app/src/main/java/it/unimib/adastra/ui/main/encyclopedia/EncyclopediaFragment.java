@@ -1,10 +1,11 @@
-package it.unimib.adastra.ui.main;
+package it.unimib.adastra.ui.main.encyclopedia;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentEncyclopediaBinding;
-import it.unimib.adastra.databinding.FragmentISSBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,8 +58,7 @@ public class EncyclopediaFragment extends Fragment {
 
         // cardView Sistema Solare
         binding.solarSystem.setOnClickListener(v ->
-              Log.d("TAG", "Solar System cardView Clicked")
-        );
+                Navigation.findNavController(v).navigate(R.id.action_encyclopediaFragment_to_dinamicEncyclopediaFragment));
 
         // cardView Stelle
         binding.stars.setOnClickListener(v ->
@@ -70,11 +69,6 @@ public class EncyclopediaFragment extends Fragment {
         binding.stars.setOnClickListener(v ->
                 Log.d("TAG", "Stelle cardView Clicked")
         );
-
-    }
-
-
-    public void updateUI(){
 
     }
 }

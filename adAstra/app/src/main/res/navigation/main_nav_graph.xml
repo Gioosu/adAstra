@@ -6,12 +6,6 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/encyclopediaFragment"
-        android:name="it.unimib.adastra.ui.main.EncyclopediaFragment"
-        android:label="@string/encyclopedia"
-        tools:layout="@layout/fragment_encyclopedia" />
-
-    <fragment
         android:id="@+id/ISSFragment"
         android:name="it.unimib.adastra.ui.main.ISSFragment"
         android:label="@string/iss"
@@ -95,6 +89,24 @@
             <action
                 android:id="@+id/action_updateUsernameFragment_to_accountSettingsFragment"
                 app:destination="@id/accountSettingsFragment" />
+        </fragment>
+    </navigation>
+    <navigation
+        android:id="@+id/encyclopediaGraph"
+        app:startDestination="@id/encyclopediaFragment">
+        <fragment
+            android:id="@+id/dinamicEncyclopediaFragment"
+            android:name="it.unimib.adastra.ui.main.encyclopedia.DinamicEncyclopediaFragment"
+            android:label="fragment_dinamic_encyclopedia"
+            tools:layout="@layout/fragment_dinamic_encyclopedia" />
+        <fragment
+            android:id="@+id/encyclopediaFragment"
+            android:name="it.unimib.adastra.ui.main.encyclopedia.EncyclopediaFragment"
+            android:label="@string/encyclopedia"
+            tools:layout="@layout/fragment_encyclopedia" >
+            <action
+                android:id="@+id/action_encyclopediaFragment_to_dinamicEncyclopediaFragment"
+                app:destination="@id/dinamicEncyclopediaFragment" />
         </fragment>
     </navigation>
 

@@ -19,6 +19,8 @@ public class Constants {
     public static final String VERIFIED = "verified";
 
     // Constants for Encyclopedia
+
+    public static final String ID = "id";
     public static final String IT_NAME = "itName";
     public static final String EN_NAME = "enName";
     public static final String IT_DESCRIPTION = "itDescription";

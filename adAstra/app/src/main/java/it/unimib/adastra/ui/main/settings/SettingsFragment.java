@@ -108,6 +108,7 @@ public class SettingsFragment extends Fragment {
         user = null;
         idToken = userViewModel.getLoggedUser();
 
+        // Recupero dati utente
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
                 getViewLifecycleOwner(), result -> {
             if (result.isSuccess()) {

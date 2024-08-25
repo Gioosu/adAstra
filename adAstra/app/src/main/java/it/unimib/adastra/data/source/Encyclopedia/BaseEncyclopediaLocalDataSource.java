@@ -1,6 +1,9 @@
 package it.unimib.adastra.data.source.Encyclopedia;
 
+import java.util.List;
+
 import it.unimib.adastra.data.repository.Encyclopedia.EncyclopediaResponseCallback;
+import it.unimib.adastra.model.Encyclopedia.Planet;
 
 public abstract class BaseEncyclopediaLocalDataSource {
     protected EncyclopediaResponseCallback encyclopediaResponseCallback;
@@ -12,4 +15,6 @@ public abstract class BaseEncyclopediaLocalDataSource {
     public abstract void getEncyclopediaData(String query, String language);
 
     public abstract void fetchPlanets(String language);
+
+    public abstract void updateEncyclopedia(List<Planet> planets, boolean isDBEmpty);
 }

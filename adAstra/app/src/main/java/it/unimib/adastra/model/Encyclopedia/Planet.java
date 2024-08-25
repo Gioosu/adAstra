@@ -14,11 +14,11 @@ public class Planet {
     int id;
 
     private String language;
+
     private String name;
     private String description;
     private String earthDistance;
     private int moons;
-
     public Planet(int id, String language, String name, String description, String earthDistance, int moons) {
         this.id = id;
         this.language = language;
@@ -74,5 +74,17 @@ public class Planet {
 
     public void setMoons(int moons) {
         this.moons = moons;
+    }
+
+    @Override
+    public String toString() {
+        return "Planet{" +
+                "id=" + id +
+                ", language='" + language + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", earthDistance='" + earthDistance + '\'' +
+                ", moons=" + moons +
+                '}';
     }
 }

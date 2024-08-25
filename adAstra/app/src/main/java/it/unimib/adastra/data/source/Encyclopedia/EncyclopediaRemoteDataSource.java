@@ -1,7 +1,13 @@
 package it.unimib.adastra.data.source.Encyclopedia;
 
+import static it.unimib.adastra.util.Constants.DISTANCE_FROM_EARTH;
 import static it.unimib.adastra.util.Constants.EN_DESCRIPTION;
 import static it.unimib.adastra.util.Constants.EN_NAME;
+import static it.unimib.adastra.util.Constants.ID;
+import static it.unimib.adastra.util.Constants.IT_DESCRIPTION;
+import static it.unimib.adastra.util.Constants.IT_NAME;
+import static it.unimib.adastra.util.Constants.NUMBER_OF_MOONS;
+import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
 import android.util.Log;
 
@@ -13,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unimib.adastra.data.repository.Encyclopedia.EncyclopediaResponseCallback;
 import it.unimib.adastra.model.Encyclopedia.Planet;
 
 public class EncyclopediaRemoteDataSource extends BaseEncyclopediaRemoteDataSource {
@@ -24,10 +31,10 @@ public class EncyclopediaRemoteDataSource extends BaseEncyclopediaRemoteDataSour
     }
 
     @Override
-    public void getEncyclopediaData(String query, String language) {
+    public void getEncyclopediaData(String query, String language, boolean isDBEmpty) {
         switch (query) {
             case "planets":
-                getPlanetsInfo(language);
+                getPlanetsInfo(language, isDBEmpty);
                 break;
             default:
                 Log.e(TAG, "Query non supportata: " + query);
@@ -35,7 +42,7 @@ public class EncyclopediaRemoteDataSource extends BaseEncyclopediaRemoteDataSour
     }
 
     @Override
-    public void getPlanetsInfo(String language) {
+    public void getPlanetsInfo(String language, boolean isDBEmpty) {
         // Ottieni un riferimento alla raccolta "planets"
         CollectionReference planetsRef = db.collection("planets");
 
@@ -45,17 +52,46 @@ public class EncyclopediaRemoteDataSource extends BaseEncyclopediaRemoteDataSour
                 List<Planet> planets = new ArrayList<>();
                 QuerySnapshot querySnapshot = task.getResult();
 
-                if (querySnapshot != null) {
-                    for (QueryDocumentSnapshot document : querySnapshot) {
-//                        Planet planet = new Planet(
-//                                document.getString(EN_NAME),
-//                                document.getString(EN_NAME),
-//                                document.getString(EN_DESCRIPTION)
-//                        );
-                    }
+                switch (language) {
+                    case "English":
+                        if (querySnapshot != null) {
+                            for (QueryDocumentSnapshot document : querySnapshot) {
+                                Planet planet = new Planet(
+                                        document.getLong(ID).intValue(),
+                                        "English",
+                                        document.getString(EN_NAME),
+                                        document.getString(EN_DESCRIPTION),
+                                        document.getString(DISTANCE_FROM_EARTH),
+                                        document.getLong(NUMBER_OF_MOONS).intValue()
+                                );
+                                planets.add(planet);
+                            }
+                            encyclopediaResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
+                        }
+                        break;
+
+                    case "Italiano":
+                        if (querySnapshot != null) {
+                            for (QueryDocumentSnapshot document : querySnapshot) {
+                                Planet planet = new Planet(
+                                        document.getLong(ID).intValue(),
+                                        "Italiano",
+                                        document.getString(IT_NAME),
+                                        document.getString(IT_DESCRIPTION),
+                                        document.getString(DISTANCE_FROM_EARTH),
+                                        document.getLong(NUMBER_OF_MOONS).intValue()
+                                );
+                                planets.add(planet);
+                            }
+                            encyclopediaResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
+                        }
+                        break;
+
+                    default:
+                        Log.e(TAG, "Lingua non supportata: " + language);
                 }
             } else {
-
+                encyclopediaResponseCallback.onFailureFromRemote(task.getException().getLocalizedMessage());
             }
         });
     }

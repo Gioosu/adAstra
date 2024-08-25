@@ -6,6 +6,8 @@ import static it.unimib.adastra.util.Constants.NASA_API_BASE_URL;
 import android.app.Application;
 
 import it.unimib.adastra.data.database.AdAstraRoomDatabase;
+import it.unimib.adastra.data.repository.Encyclopedia.EncyclopediaResponseRepository;
+import it.unimib.adastra.data.repository.Encyclopedia.IEncyclopediaRepository;
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 import it.unimib.adastra.data.repository.ISSPosition.ISSPositionResponseRepository;
 import it.unimib.adastra.data.repository.NASA.INASARepository;
@@ -13,6 +15,10 @@ import it.unimib.adastra.data.repository.NASA.NASAResponseRepository;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.data.service.ISSApiService;
 import it.unimib.adastra.data.service.NASAApiService;
+import it.unimib.adastra.data.source.Encyclopedia.BaseEncyclopediaLocalDataSource;
+import it.unimib.adastra.data.source.Encyclopedia.BaseEncyclopediaRemoteDataSource;
+import it.unimib.adastra.data.source.Encyclopedia.EncyclopediaLocalDataSource;
+import it.unimib.adastra.data.source.Encyclopedia.EncyclopediaRemoteDataSource;
 import it.unimib.adastra.data.source.ISS.BaseISSPositionLocalDataSource;
 import it.unimib.adastra.data.source.ISS.BaseISSPositionRemoteDataSource;
 import it.unimib.adastra.data.source.ISS.ISSPositionLocalDataSource;
@@ -35,6 +41,7 @@ public class ServiceLocator {
     private static volatile ServiceLocator INSTANCE = null;
     private static Retrofit issRetrofit = null;
     private static Retrofit nasaRetrofit = null;
+    private static Retrofit encyclopediaRetrofit = null;
 
     private ServiceLocator() {}
 
@@ -80,6 +87,10 @@ public class ServiceLocator {
         return AdAstraRoomDatabase.getDatabase(application);
     }
 
+    public AdAstraRoomDatabase getPlanetsDao(Application application) {
+        return AdAstraRoomDatabase.getDatabase(application);
+    }
+
     public IISSPositionRepository getISSRepository(Application application) {
         BaseISSPositionRemoteDataSource issPositionRemoteDataSource =
                 new ISSPositionRemoteDataSource();
@@ -110,5 +121,15 @@ public class ServiceLocator {
 
         return new UserRepository(userRemoteAuthenticationDataSource,
                 userDataRemoteDataSource);
+    }
+
+    public IEncyclopediaRepository getEncyclopediaRepository(Application application) {
+        BaseEncyclopediaRemoteDataSource encyclopediaRemoteDataSource =
+                new EncyclopediaRemoteDataSource();
+
+        BaseEncyclopediaLocalDataSource encyclopediaLocalDataSource =
+                new EncyclopediaLocalDataSource(getPlanetsDao(application));
+
+        return new EncyclopediaResponseRepository(encyclopediaLocalDataSource, encyclopediaRemoteDataSource);
     }
 }
