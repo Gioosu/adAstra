@@ -57,7 +57,7 @@ public class EncyclopediaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // cardView Sistema Solare
-        binding.solarSystem.setOnClickListener(v ->
+        binding.planets.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_encyclopediaFragment_to_dinamicEncyclopediaFragment));
 
         // cardView Stelle

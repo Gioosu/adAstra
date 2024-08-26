@@ -96,7 +96,7 @@
         app:startDestination="@id/encyclopediaFragment">
         <fragment
             android:id="@+id/dinamicEncyclopediaFragment"
-            android:name="it.unimib.adastra.ui.main.encyclopedia.DinamicEncyclopediaFragment"
+            android:name="it.unimib.adastra.ui.main.encyclopedia.DynamicEncyclopediaFragment"
             android:label="fragment_dinamic_encyclopedia"
             tools:layout="@layout/fragment_dinamic_encyclopedia" />
         <fragment

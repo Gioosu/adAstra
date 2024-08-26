@@ -88,6 +88,12 @@
     <string name="ok_update_password">Aggiorna password</string>
     <string name="password_changed">Password modificata con successo</string>
 
+    <!-- Encyclopedia -->
+    <string name="solar_system">Sistema Solare</string>
+    <string name="planets">Pianeti</string>
+    <string name="stars">Stelle</string>
+    <string name="constellations">Costellazioni</string>
+
     <!-- ISS -->
     <string name="iss_longitude">Longitudine</string>
     <string name="iss_latitude">Latitudine</string>

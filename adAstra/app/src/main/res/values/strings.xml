@@ -98,6 +98,13 @@
     <string name="ok_update_password">Update password</string>
     <string name="password_changed">Password changed successfully</string>
 
+    <!-- Encyclopedia -->
+    <string name="solar_system">Solar System</string>
+    <string name="planets">Planets</string>
+    <string name="stars">Stars</string>
+    <string name="constellations">Constellations</string>
+
+
     <!-- ISS -->
     <string name="iss_longitude">Longitude</string>
     <string name="iss_latitude">Latitude</string>

@@ -29,7 +29,7 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
  * Use the {@link EncyclopediaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DinamicEncyclopediaFragment extends Fragment {
+public class DynamicEncyclopediaFragment extends Fragment {
     private static final String TAG = EncyclopediaFragment.class.getSimpleName();
     private FragmentDinamicEncyclopediaBinding binding;
     private IEncyclopediaRepository encyclopediaRepository;
@@ -37,7 +37,7 @@ public class DinamicEncyclopediaFragment extends Fragment {
     private String language;
     private SharedPreferencesUtil sharedPreferencesUtil;
 
-    public DinamicEncyclopediaFragment() {
+    public DynamicEncyclopediaFragment() {
         // Required empty public constructor
     }
 
