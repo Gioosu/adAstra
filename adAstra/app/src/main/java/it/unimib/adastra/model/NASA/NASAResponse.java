@@ -23,6 +23,12 @@ public class NASAResponse implements Parcelable {
     @SerializedName("explanation")
     private String apodExplanation;
 
+    @SerializedName("media_type")
+    private String apodMediaType;
+
+    @SerializedName("thumbnail_url")
+    private String apodThumbnailUrl;
+
     @SerializedName("url")
     private String apodUrl;
 
@@ -35,6 +41,8 @@ public class NASAResponse implements Parcelable {
         apodDate = in.readString();
         apodTitle = in.readString();
         apodExplanation = in.readString();
+        apodMediaType = in.readString();
+        apodThumbnailUrl = in.readString();
         apodUrl = in.readString();
         apodCopyright = in.readString();
     }
@@ -63,6 +71,22 @@ public class NASAResponse implements Parcelable {
         this.apodExplanation = apodExplanation;
     }
 
+    public String getApodMediaType() {
+        return apodMediaType;
+    }
+
+    public void setApodMediaType(String apodMediaType) {
+        this.apodMediaType = apodMediaType;
+    }
+
+    public String getApodThumbnailUrl() {
+        return apodThumbnailUrl;
+    }
+
+    public void setApodThumbnailUrl(String apodThumbnailUrl) {
+        this.apodThumbnailUrl = apodThumbnailUrl;
+    }
+
     public String getApodUrl() {
         return apodUrl;
     }
@@ -89,6 +113,8 @@ public class NASAResponse implements Parcelable {
         dest.writeString(apodDate);
         dest.writeString(apodTitle);
         dest.writeString(apodExplanation);
+        dest.writeString(apodMediaType);
+        dest.writeString(apodThumbnailUrl);
         dest.writeString(apodUrl);
         dest.writeString(apodCopyright);
     }
@@ -106,9 +132,11 @@ public class NASAResponse implements Parcelable {
         return "NASAResponse{" +
                 ", apodDate = '" + apodDate + '\'' +
                 ", apodTitle = '" + apodTitle + '\'' +
-                ", apodExplanation = '" + apodExplanation + '\'' +
+                ", apodMediaType = '" + apodMediaType + '\'' +
+                ", apodThumbnailUrl = '" + apodThumbnailUrl + '\'' +
                 ", apodUrl = '" + apodUrl + '\'' +
                 ", apoCopyright = '" + apodCopyright + '\'' +
+                ", apodExplanation = '" + apodExplanation + '\'' +
                 '}';
     }
 

@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 
 public interface NASAApiService {
 
-    @GET(NASA_ENDPOINT_APOD +  "?api_key=" + NASA_API_KEY)
+    @GET(NASA_ENDPOINT_APOD +  "?api_key=" + NASA_API_KEY + "&thumbs=true")
     Call<NASAResponse> getNasaApod();
 }
 
