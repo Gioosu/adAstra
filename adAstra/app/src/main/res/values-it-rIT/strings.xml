@@ -115,6 +115,10 @@
     <!-- Home -->
     <string name="nasa_pod">Immagine del Giorno:</string>
     <string name="nasa_by_nasa">da NASA</string>
+    <string name="apod_type_not_supported">Il contenuto del giorno è un formato non supportato.</string>
+    <string name="click_to_view_it">Clicca qui per visualizzarlo comunque</string>
+    <string name="today_video">Oggi la NASA propone un video</string>
+    <string name="click_to_watch_it">Premi qui per guardarlo</string>">
 
     <!-- Errori -->
     <string name="error_invalid_username">Il nome utente deve essere lunga tra 3 e 10 caratteri</string>

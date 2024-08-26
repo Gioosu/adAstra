@@ -36,8 +36,6 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
 
     @Override
     public void onSuccessFromRemote(NASAResponse nasaResponse) {
-        if (nasaResponse.getApodMediaType() != "image")
-            nasaResponse.setApodUrl(nasaResponse.getApodThumbnailUrl());
         nasaLocalDataSource.updateNASAData(nasaResponse);
     }
 

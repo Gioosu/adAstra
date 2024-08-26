@@ -22,6 +22,12 @@ public interface NASADao {
     @Query("SELECT apodExplanation FROM NASAResponse")
     String getNASAResponseExplanation();
 
+    @Query("SELECT apodMediaType FROM NASAResponse")
+    String getNASAResponseMediaType();
+
+    @Query("SELECT apodThumbnailUrl FROM NASAResponse")
+    String getNASAResponseThumbnailUrl();
+
     @Query("SELECT apodCopyright FROM NASAResponse")
     String getNASAResponseCopyright();
 

@@ -48,6 +48,8 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
                 if (nasaResponse.getApodDate().equals(currentDate)) {
                     nasaResponse.setApodTitle(nasaDao.getNASAResponseTitle());
                     nasaResponse.setApodExplanation(nasaDao.getNASAResponseExplanation());
+                    nasaResponse.setApodMediaType(nasaDao.getNASAResponseMediaType());
+                    nasaResponse.setApodThumbnailUrl(nasaDao.getNASAResponseThumbnailUrl());
                     nasaResponse.setApodUrl(nasaDao.getNASAResponseUrl());
                     nasaResponse.setApodCopyright(nasaDao.getNASAResponseCopyright());
 

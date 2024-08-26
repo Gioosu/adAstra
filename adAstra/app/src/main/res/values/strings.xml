@@ -126,6 +126,10 @@
     <string name="per_aspera_ad_astra" translatable="false">Per Aspera Ad Astra</string>
     <string name="nasa_pod">Picture of the Day:</string>
     <string name="nasa_by_nasa">by NASA</string>
+    <string name="apod_type_not_supported">The content of the day is an unsupported format.</string>
+    <string name="click_to_view_it">Click here to view it anyway</string>
+    <string name="today_video">Today NASA offers a video.</string>
+    <string name="click_to_watch_it">Click here to watch it</string>">
 
     <!-- Errors -->
     <string name="error_invalid_email">Invalid email address</string>
@@ -153,6 +157,4 @@
     <string name="error_password_change_failed">Password change failed</string>
     <string name="error_invalid_new_email">Choose a new email address different from the previous one</string>
     <string name="error_unexpected">Unexpected error</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
