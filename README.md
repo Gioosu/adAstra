@@ -1,4 +1,4 @@
-**WHAT'S ADASTRA?**
+**What's adAstra?**
 
 This application is designed for astronomy and space enthusiasts. It allows users to track the International Space Station (ISS), explore the NASA Picture of the Day, dive into an astronomical encyclopedia.
 
