@@ -29,7 +29,6 @@
     <string name="reset">Reimposta password</string>
 
     <!-- Main -->
-    <string name="encyclopedia">Enciclopedia</string>
     <string name="events">Eventi</string>
     <string name="profile">Profilo</string>
     <string name="settings">Opzioni</string>
@@ -88,7 +87,7 @@
     <string name="ok_update_password">Aggiorna password</string>
     <string name="password_changed">Password modificata con successo</string>
 
-    <!-- Encyclopedia -->
+    <!-- Wiki -->
     <string name="solar_system">Sistema Solare</string>
     <string name="planets">Pianeti</string>
     <string name="stars">Stelle</string>

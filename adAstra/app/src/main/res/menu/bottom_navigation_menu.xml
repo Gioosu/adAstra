@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/encyclopediaGraph"
+        android:id="@+id/wikiGraph"
         android:enabled="true"
         android:icon="@drawable/warp_galaxy"
-        android:title="@string/encyclopedia" />
+        android:title="@string/wiki" />
 
     <item
         android:id="@+id/ISSFragment"
@@ -18,12 +18,6 @@
         android:enabled="true"
         android:icon="@drawable/earth"
         android:title="@string/home" />
-
-    <item
-        android:id="@+id/eventsFragment"
-        android:enabled="true"
-        android:icon="@drawable/meteorite_comet"
-        android:title="@string/events" />
 
     <item
         android:id="@+id/settingsGraph"

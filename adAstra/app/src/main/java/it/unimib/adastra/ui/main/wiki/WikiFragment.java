@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.main.encyclopedia;
+package it.unimib.adastra.ui.main.wiki;
 
 import android.os.Bundle;
 
@@ -13,17 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import it.unimib.adastra.R;
-import it.unimib.adastra.databinding.FragmentEncyclopediaBinding;
+import it.unimib.adastra.databinding.FragmentWikiBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EncyclopediaFragment#newInstance} factory method to
+ * Use the {@link WikiFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EncyclopediaFragment extends Fragment {
-    private FragmentEncyclopediaBinding binding;
+public class WikiFragment extends Fragment {
+    private FragmentWikiBinding binding;
 
-    public EncyclopediaFragment() {
+    public WikiFragment() {
         // Required empty public constructor
     }
 
@@ -31,10 +31,10 @@ public class EncyclopediaFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment EncyclopediaFragment.
+     * @return A new instance of fragment WikiFragment.
      */
-    public static EncyclopediaFragment newInstance() {
-        return new EncyclopediaFragment();
+    public static WikiFragment newInstance() {
+        return new WikiFragment();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EncyclopediaFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        binding = FragmentEncyclopediaBinding.inflate(inflater, container, false);
+        binding = FragmentWikiBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
     }
@@ -58,7 +58,7 @@ public class EncyclopediaFragment extends Fragment {
 
         // cardView Sistema Solare
         binding.planets.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_encyclopediaFragment_to_dinamicEncyclopediaFragment));
+                Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment));
 
         // cardView Stelle
         binding.stars.setOnClickListener(v ->

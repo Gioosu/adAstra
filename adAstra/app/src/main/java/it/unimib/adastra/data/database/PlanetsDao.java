@@ -4,7 +4,7 @@ import androidx.room.Dao;
 
 import java.util.List;
 
-import it.unimib.adastra.model.Encyclopedia.Planet;
+import it.unimib.adastra.model.wiki.Planet;
 
 import androidx.room.Insert;
 import androidx.room.Query;

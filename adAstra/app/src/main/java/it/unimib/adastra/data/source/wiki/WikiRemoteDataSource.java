@@ -1,4 +1,4 @@
-package it.unimib.adastra.data.source.Encyclopedia;
+package it.unimib.adastra.data.source.wiki;
 
 import static it.unimib.adastra.util.Constants.DISTANCE_FROM_EARTH;
 import static it.unimib.adastra.util.Constants.EN_DESCRIPTION;
@@ -8,7 +8,6 @@ import static it.unimib.adastra.util.Constants.IT_DESCRIPTION;
 import static it.unimib.adastra.util.Constants.IT_NAME;
 import static it.unimib.adastra.util.Constants.NUMBER_OF_MOONS;
 import static it.unimib.adastra.util.Constants.PLANETS;
-import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 
 import android.util.Log;
 
@@ -20,19 +19,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unimib.adastra.data.repository.Encyclopedia.EncyclopediaResponseCallback;
-import it.unimib.adastra.model.Encyclopedia.Planet;
+import it.unimib.adastra.model.wiki.Planet;
 
-public class EncyclopediaRemoteDataSource extends BaseEncyclopediaRemoteDataSource {
-    private static final String TAG = EncyclopediaRemoteDataSource.class.getSimpleName();
+public class WikiRemoteDataSource extends BaseWikiRemoteDataSource {
+    private static final String TAG = WikiRemoteDataSource.class.getSimpleName();
     private final FirebaseFirestore db;
 
-    public EncyclopediaRemoteDataSource() {
+    public WikiRemoteDataSource() {
         db = FirebaseFirestore.getInstance();
     }
 
     @Override
-    public void getEncyclopediaData(String query, String language, boolean isDBEmpty) {
+    public void getWikiData(String query, String language, boolean isDBEmpty) {
         switch (query) {
             case PLANETS:
                 getPlanetsInfo(language, isDBEmpty);
@@ -67,7 +65,7 @@ public class EncyclopediaRemoteDataSource extends BaseEncyclopediaRemoteDataSour
                                 );
                                 planets.add(planet);
                             }
-                            encyclopediaResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
+                            wikiResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
                         }
                         break;
                     default:
@@ -83,11 +81,11 @@ public class EncyclopediaRemoteDataSource extends BaseEncyclopediaRemoteDataSour
                                 );
                                 planets.add(planet);
                             }
-                            encyclopediaResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
+                            wikiResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
                         }
                 }
             } else {
-                encyclopediaResponseCallback.onFailureFromRemote(task.getException().getLocalizedMessage());
+                wikiResponseCallback.onFailureFromRemote(task.getException().getLocalizedMessage());
             }
         });
     }

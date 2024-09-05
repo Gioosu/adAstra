@@ -6,8 +6,8 @@ import static it.unimib.adastra.util.Constants.NASA_API_BASE_URL;
 import android.app.Application;
 
 import it.unimib.adastra.data.database.AdAstraRoomDatabase;
-import it.unimib.adastra.data.repository.Encyclopedia.EncyclopediaResponseRepository;
-import it.unimib.adastra.data.repository.Encyclopedia.IEncyclopediaRepository;
+import it.unimib.adastra.data.repository.wiki.WikiResponseRepository;
+import it.unimib.adastra.data.repository.wiki.IWikiRepository;
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
 import it.unimib.adastra.data.repository.ISSPosition.ISSPositionResponseRepository;
 import it.unimib.adastra.data.repository.NASA.INASARepository;
@@ -15,10 +15,10 @@ import it.unimib.adastra.data.repository.NASA.NASAResponseRepository;
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.data.service.ISSApiService;
 import it.unimib.adastra.data.service.NASAApiService;
-import it.unimib.adastra.data.source.Encyclopedia.BaseEncyclopediaLocalDataSource;
-import it.unimib.adastra.data.source.Encyclopedia.BaseEncyclopediaRemoteDataSource;
-import it.unimib.adastra.data.source.Encyclopedia.EncyclopediaLocalDataSource;
-import it.unimib.adastra.data.source.Encyclopedia.EncyclopediaRemoteDataSource;
+import it.unimib.adastra.data.source.wiki.BaseWikiLocalDataSource;
+import it.unimib.adastra.data.source.wiki.BaseWikiRemoteDataSource;
+import it.unimib.adastra.data.source.wiki.WikiLocalDataSource;
+import it.unimib.adastra.data.source.wiki.WikiRemoteDataSource;
 import it.unimib.adastra.data.source.ISS.BaseISSPositionLocalDataSource;
 import it.unimib.adastra.data.source.ISS.BaseISSPositionRemoteDataSource;
 import it.unimib.adastra.data.source.ISS.ISSPositionLocalDataSource;
@@ -41,7 +41,7 @@ public class ServiceLocator {
     private static volatile ServiceLocator INSTANCE = null;
     private static Retrofit issRetrofit = null;
     private static Retrofit nasaRetrofit = null;
-    private static Retrofit encyclopediaRetrofit = null;
+    private static Retrofit wikiRetrofit = null;
 
     private ServiceLocator() {}
 
@@ -123,13 +123,13 @@ public class ServiceLocator {
                 userDataRemoteDataSource);
     }
 
-    public IEncyclopediaRepository getEncyclopediaRepository(Application application) {
-        BaseEncyclopediaRemoteDataSource encyclopediaRemoteDataSource =
-                new EncyclopediaRemoteDataSource();
+    public IWikiRepository getWikiRepository(Application application) {
+        BaseWikiRemoteDataSource wikiRemoteDataSource =
+                new WikiRemoteDataSource();
 
-        BaseEncyclopediaLocalDataSource encyclopediaLocalDataSource =
-                new EncyclopediaLocalDataSource(getPlanetsDao(application));
+        BaseWikiLocalDataSource wikiLocalDataSource =
+                new WikiLocalDataSource(getPlanetsDao(application));
 
-        return new EncyclopediaResponseRepository(encyclopediaLocalDataSource, encyclopediaRemoteDataSource);
+        return new WikiResponseRepository(wikiLocalDataSource, wikiRemoteDataSource);
     }
 }

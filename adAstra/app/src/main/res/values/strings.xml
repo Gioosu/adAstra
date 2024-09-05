@@ -32,7 +32,7 @@
     <string name="reset">Reset password</string>
 
     <!-- Main -->
-    <string name="encyclopedia">Encyclopedia</string>
+    <string name="wiki" translatable="false">Wiki</string>
     <string name="iss" translatable="false">ISS</string>
     <string name="home" translatable="false">Home</string>
     <string name="events">Events</string>
@@ -98,7 +98,7 @@
     <string name="ok_update_password">Update password</string>
     <string name="password_changed">Password changed successfully</string>
 
-    <!-- Encyclopedia -->
+    <!-- Wiki -->
     <string name="solar_system">Solar System</string>
     <string name="planets">Planets</string>
     <string name="stars">Stars</string>

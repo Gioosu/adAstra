@@ -1,10 +1,10 @@
-package it.unimib.adastra.data.repository.Encyclopedia;
+package it.unimib.adastra.data.repository.wiki;
 
 import java.util.List;
 
-import it.unimib.adastra.model.Encyclopedia.Planet;
+import it.unimib.adastra.model.wiki.Planet;
 
-public interface EncyclopediaResponseCallback {
+public interface WikiResponseCallback {
 
     void onSuccessFromRemote(List<Planet> planets, boolean isDBEmpty);
 

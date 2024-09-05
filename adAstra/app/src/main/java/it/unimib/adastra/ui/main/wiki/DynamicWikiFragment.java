@@ -1,4 +1,4 @@
-package it.unimib.adastra.ui.main.encyclopedia;
+package it.unimib.adastra.ui.main.wiki;
 
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.PLANETS;
@@ -16,28 +16,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import it.unimib.adastra.data.repository.Encyclopedia.IEncyclopediaRepository;
-import it.unimib.adastra.databinding.FragmentDinamicEncyclopediaBinding;
+import it.unimib.adastra.data.repository.wiki.IWikiRepository;
+import it.unimib.adastra.databinding.FragmentDinamicWikiBinding;
 import it.unimib.adastra.model.Result;
-import it.unimib.adastra.ui.viewModel.EncyclopediaViewModel.EncyclopediaViewModel;
-import it.unimib.adastra.ui.viewModel.EncyclopediaViewModel.EncyclopediaViewModelFactory;
+import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModel;
+import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EncyclopediaFragment#newInstance} factory method to
+ * Use the {@link WikiFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DynamicEncyclopediaFragment extends Fragment {
-    private static final String TAG = EncyclopediaFragment.class.getSimpleName();
-    private FragmentDinamicEncyclopediaBinding binding;
-    private IEncyclopediaRepository encyclopediaRepository;
-    private EncyclopediaViewModel encyclopediaViewModel;
+public class DynamicWikiFragment extends Fragment {
+    private static final String TAG = WikiFragment.class.getSimpleName();
+    private FragmentDinamicWikiBinding binding;
+    private IWikiRepository wikiRepository;
+    private WikiViewModel wikiViewModel;
     private String language;
     private SharedPreferencesUtil sharedPreferencesUtil;
 
-    public DynamicEncyclopediaFragment() {
+    public DynamicWikiFragment() {
         // Required empty public constructor
     }
 
@@ -45,22 +45,22 @@ public class DynamicEncyclopediaFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment EncyclopediaFragment.
+     * @return A new instance of fragment WikiFragment.
      */
-    public static EncyclopediaFragment newInstance() {
-        return new EncyclopediaFragment();
+    public static WikiFragment newInstance() {
+        return new WikiFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Inizializzazione dei ViewModel per Encyclopedia
-        encyclopediaRepository = ServiceLocator.getInstance().
-                getEncyclopediaRepository(requireActivity().getApplication());
-        encyclopediaViewModel = new ViewModelProvider(
+        // Inizializzazione dei ViewModel per Wiki
+        wikiRepository = ServiceLocator.getInstance().
+                getWikiRepository(requireActivity().getApplication());
+        wikiViewModel = new ViewModelProvider(
                 requireActivity(),
-                new EncyclopediaViewModelFactory(encyclopediaRepository)).get(EncyclopediaViewModel.class);
+                new WikiViewModelFactory(wikiRepository)).get(WikiViewModel.class);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class DynamicEncyclopediaFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        binding = FragmentDinamicEncyclopediaBinding.inflate(inflater, container, false);
+        binding = FragmentDinamicWikiBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -79,23 +79,23 @@ public class DynamicEncyclopediaFragment extends Fragment {
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         language = setLanguage();
 
-        encyclopediaViewModel.getEncyclopedia(PLANETS, language).observe(
+        wikiViewModel.getWikiData(PLANETS, language).observe(
             getViewLifecycleOwner(), result -> {
                 if (result.isSuccess()) {
-                    if (encyclopediaViewModel.isAsyncHandled()) {
-                        Log.d(TAG, "Recupero dati dell'encyclopedia avvenuto con successo: " + ((Result.EncyclopediaResponseSuccess) result).getPlanets());
+                    if (wikiViewModel.isAsyncHandled()) {
+                        Log.d(TAG, "Recupero dati della wiki avvenuto con successo: " + ((Result.WikiResponseSuccess) result).getPlanets());
 
-                        encyclopediaViewModel.setAsyncHandled(false);
+                        wikiViewModel.setAsyncHandled(false);
                     } else {
-                        encyclopediaViewModel.setAsyncHandled(true);
+                        wikiViewModel.setAsyncHandled(true);
                     }
                 } else {
-                    if (encyclopediaViewModel.isAsyncHandled()) {
+                    if (wikiViewModel.isAsyncHandled()) {
                         Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
 
-                        encyclopediaViewModel.setAsyncHandled(false);
+                        wikiViewModel.setAsyncHandled(false);
                     } else {
-                        encyclopediaViewModel.setAsyncHandled(true);
+                        wikiViewModel.setAsyncHandled(true);
                     }
                 }
             });

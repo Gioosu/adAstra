@@ -19,7 +19,7 @@ public class Constants {
     public static final String VERIFIED = "verified";
     public static final String AD_ASTRA_EMAIL = "Adiutoriumadastra@gmail.com";
 
-    // Constants for Encyclopedia
+    // Constants for Wiki
     public static final String PLANETS = "planets";
     public static final String ID = "id";
     public static final String IT_NAME = "itName";

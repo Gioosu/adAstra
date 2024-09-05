@@ -17,12 +17,6 @@
         android:label="@string/home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/eventsFragment"
-        android:name="it.unimib.adastra.ui.main.EventsFragment"
-        android:label="@string/events"
-        tools:layout="@layout/fragment_events" />
-
     <activity
         android:id="@+id/welcomeActivity"
         android:name="it.unimib.adastra.ui.welcome.WelcomeActivity"
@@ -92,21 +86,21 @@
         </fragment>
     </navigation>
     <navigation
-        android:id="@+id/encyclopediaGraph"
-        app:startDestination="@id/encyclopediaFragment">
+        android:id="@+id/wikiGraph"
+        app:startDestination="@id/wikiFragment">
         <fragment
-            android:id="@+id/dinamicEncyclopediaFragment"
-            android:name="it.unimib.adastra.ui.main.encyclopedia.DynamicEncyclopediaFragment"
-            android:label="fragment_dinamic_encyclopedia"
-            tools:layout="@layout/fragment_dinamic_encyclopedia" />
+            android:id="@+id/dinamicWikiFragment"
+            android:name="it.unimib.adastra.ui.main.wiki.DynamicWikiFragment"
+            android:label="fragment_dinamic_wiki"
+            tools:layout="@layout/fragment_dinamic_wiki" />
         <fragment
-            android:id="@+id/encyclopediaFragment"
-            android:name="it.unimib.adastra.ui.main.encyclopedia.EncyclopediaFragment"
-            android:label="@string/encyclopedia"
-            tools:layout="@layout/fragment_encyclopedia" >
+            android:id="@+id/wikiFragment"
+            android:name="it.unimib.adastra.ui.main.wiki.WikiFragment"
+            android:label="@string/wiki"
+            tools:layout="@layout/fragment_wiki" >
             <action
-                android:id="@+id/action_encyclopediaFragment_to_dinamicEncyclopediaFragment"
-                app:destination="@id/dinamicEncyclopediaFragment" />
+                android:id="@+id/action_wikiFragment_to_dinamicWikiFragment"
+                app:destination="@id/dinamicWikiFragment" />
         </fragment>
     </navigation>
 
