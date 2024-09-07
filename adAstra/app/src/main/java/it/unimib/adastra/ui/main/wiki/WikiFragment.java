@@ -1,5 +1,9 @@
 package it.unimib.adastra.ui.main.wiki;
 
+import static it.unimib.adastra.util.Constants.CONSTELLATIONS;
+import static it.unimib.adastra.util.Constants.PLANETS;
+import static it.unimib.adastra.util.Constants.STARS;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -55,20 +59,26 @@ public class WikiFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Bundle bundle = new Bundle();
 
-        // cardView Sistema Solare
-        binding.planets.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment));
+        // cardView Pianeti
+        binding.planets.setOnClickListener(v -> {
+            bundle.putString("wikiType", PLANETS);
+            Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment, bundle);
+
+        });
 
         // cardView Stelle
-        binding.stars.setOnClickListener(v ->
-                Log.d("TAG", "Stelle cardView Clicked")
-        );
+        binding.stars.setOnClickListener(v -> {
+            bundle.putString("wikiType", CONSTELLATIONS);
+            Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment, bundle);
+        });
 
-        // cardView Other
-        binding.stars.setOnClickListener(v ->
-                Log.d("TAG", "Stelle cardView Clicked")
-        );
+        // cardView Costellazioni
+        binding.stars.setOnClickListener(v -> {
+            bundle.putString("wikiType", STARS);
+            Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment, bundle);
+        });
 
     }
 }

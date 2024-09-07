@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import it.unimib.adastra.R;
 import it.unimib.adastra.data.repository.ISSPosition.IISSPositionRepository;
@@ -147,6 +148,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                                     getViewLifecycleOwner(), task -> {
                                         if (task.isSuccess()) {
                                             if (issPositionViewModel.isAsyncHandled()) {
+                                                showSnackbar(binding.getRoot(), getString(R.string.iss_updated));
                                                 Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
 
                                                 issPositionViewModel.setAsyncHandled(false);
@@ -173,6 +175,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                                             }
                                         } else {
                                             if (issPositionViewModel.isAsyncHandled()) {
+                                                showSnackbar(binding.getRoot(), getString(R.string.error_iss_update));
                                                 Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
 
                                                 issPositionViewModel.setAsyncHandled(false);
@@ -199,31 +202,6 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                 .setMessage(getString(R.string.iss_info))
                 .setPositiveButton(R.string.close, null)
                 .show());
-    }
-
-    // Aggiorna l'interfaccia utente
-    public void updateUI() {
-        String newLatitude = ISSUtil.decimalToDMS(lat);
-        String newLongitude = ISSUtil.decimalToDMS(lng);
-
-        newLatitude = ISSUtil.formatDMS(newLatitude, "N");
-        newLongitude = ISSUtil.formatDMS(newLongitude, "E");
-
-        String coordinates = newLatitude + "   " + newLongitude;
-
-        binding.textViewCoordinates.setText(coordinates);
-
-        updateMap();
-
-        binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(timestamp, is12Format));
-        binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(altitude, units));
-        binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(velocity, units));
-        binding.textViewVisibility.setText(visibility);
-
-        if (visibility.equals("eclipsed"))
-            binding.textViewVisibility.setText(getString(R.string.iss_eclipsed));
-        else
-            binding.textViewVisibility.setText(getString(R.string.iss_daylight));
     }
 
     @Override
@@ -260,6 +238,38 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         binding.mapViewIss.onLowMemory();
     }
 
+    // Visualizza una snackbar
+    private void showSnackbar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    // Aggiorna l'interfaccia utente
+    public void updateUI() {
+        String newLatitude = ISSUtil.decimalToDMS(lat);
+        String newLongitude = ISSUtil.decimalToDMS(lng);
+
+        newLatitude = ISSUtil.formatDMS(newLatitude, "N");
+        newLongitude = ISSUtil.formatDMS(newLongitude, "E");
+
+        String coordinates = newLatitude + "   " + newLongitude;
+
+        binding.textViewCoordinates.setText(coordinates);
+
+        updateMap();
+        binding.progressBarIss.setVisibility(View.GONE);
+
+        binding.textViewIssTimestamp.setText(ISSUtil.formatTimestamp(timestamp, is12Format));
+        binding.textViewAltitude.setText(ISSUtil.formatRoundAltitude(altitude, units));
+        binding.textViewVelocity.setText(ISSUtil.formatRoundVelocity(velocity, units));
+        binding.textViewVisibility.setText(visibility);
+
+        if (visibility.equals("eclipsed"))
+            binding.textViewVisibility.setText(getString(R.string.iss_eclipsed));
+        else
+            binding.textViewVisibility.setText(getString(R.string.iss_daylight));
+    }
+
+    // Aggiorna la mappa
     private void updateMap() {
         if (marker != null)
             marker.remove();
@@ -279,7 +289,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
     // Imposta le opzioni della mappa
     private void setGoogleMapOptions(GoogleMap googleMap) {
-        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         googleMap.setOnMarkerClickListener(marker ->
                 marker.getTitle().equals(getString(R.string.iss)));

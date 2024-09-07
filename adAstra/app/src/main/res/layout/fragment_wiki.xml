@@ -65,8 +65,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="@string/planets"
+                            android:text="@string/WikiObjs"
                             android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:textColorPrimary"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -75,12 +77,13 @@
                             android:id="@+id/imageView_planet_icon"
                             android:layout_width="110sp"
                             android:layout_height="110sp"
+                            android:layout_marginTop="37dp"
                             android:src="@drawable/planet"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.498"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="@+id/texview_planets" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -110,6 +113,8 @@
                             android:layout_marginTop="8dp"
                             android:text="@string/stars"
                             android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:textColorPrimary"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -118,12 +123,13 @@
                             android:id="@+id/imageView_stars_icon"
                             android:layout_width="110sp"
                             android:layout_height="110sp"
+                            android:layout_marginTop="37dp"
                             android:src="@drawable/stars"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.498"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="@+id/texview_stars" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -152,7 +158,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/constellations"
+                            android:textColor="?android:textColorPrimary"
                             android:textSize="28sp"
+                            android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -166,7 +174,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.498"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@+id/constellation" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </com.google.android.material.card.MaterialCardView>

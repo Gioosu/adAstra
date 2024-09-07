@@ -89,7 +89,7 @@
 
     <!-- Wiki -->
     <string name="solar_system">Sistema Solare</string>
-    <string name="planets">Pianeti</string>
+    <string name="WikiObjs">Pianeti</string>
     <string name="stars">Stelle</string>
     <string name="constellations">Costellazioni</string>
 
@@ -116,6 +116,7 @@
     </string>
     <string name="close">Chiudi</string>
     <string name="iss_last_update">Ultimo aggiornamento:</string>
+    <string name="iss_updated">Posizione della ISS aggiornata correttamente</string>
 
     <!-- Home -->
     <string name="nasa_pod">Immagine del Giorno:</string>
@@ -151,4 +152,5 @@
     <string name="error_password_change_failed">Cambio password fallito</string>
     <string name="error_invalid_new_email">Scegli un nuovo indirizzo email diversa dalla precedente</string>
     <string name="error_unexpected">Errore inatteso</string>
+    <string name="error_iss_update">Errore nell\'aggiornamento della posizione dell\'ISS</string>">
 </resources>

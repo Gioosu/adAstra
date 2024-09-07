@@ -2,13 +2,13 @@ package it.unimib.adastra.data.repository.wiki;
 
 import java.util.List;
 
-import it.unimib.adastra.model.wiki.Planet;
+import it.unimib.adastra.model.wiki.WikiObj;
 
 public interface WikiResponseCallback {
 
-    void onSuccessFromRemote(List<Planet> planets, boolean isDBEmpty);
+    void onSuccessFromRemote(List<WikiObj> wikiObjs, boolean isDBEmpty);
 
-    void onSuccessFromLocal(List<Planet> planets);
+    void onSuccessFromLocal(List<WikiObj> wikiObjs);
 
     void onFailureFromLocal(String query, String language, boolean isDBEmpty);
 

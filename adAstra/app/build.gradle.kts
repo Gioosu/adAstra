@@ -72,6 +72,7 @@ dependencies {
     // Crypto and Security
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // Test
     testImplementation("junit:junit:4.13.2")

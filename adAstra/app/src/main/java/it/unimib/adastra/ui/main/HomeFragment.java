@@ -138,6 +138,8 @@ public class HomeFragment extends Fragment {
             binding.imageViewImageOfTheDay.setImageResource(R.drawable.thats_illegal);
             binding.textViewApodTitle.setText(text);
         }
+
+        binding.progressBarHome.setVisibility(View.GONE);
     }
 
     public void openWebPage(Context context, String url) {

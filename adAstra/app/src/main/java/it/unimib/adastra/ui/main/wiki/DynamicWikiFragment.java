@@ -1,8 +1,10 @@
 package it.unimib.adastra.ui.main.wiki;
 
+import static it.unimib.adastra.util.Constants.CONSTELLATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.PLANETS;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.STARS;
 
 import android.os.Bundle;
 
@@ -10,15 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import it.unimib.adastra.adapter.WikiRecyclerViewAdapter;
 import it.unimib.adastra.data.repository.wiki.IWikiRepository;
-import it.unimib.adastra.databinding.FragmentDinamicWikiBinding;
+import it.unimib.adastra.databinding.FragmentDynamicWikiBinding;
 import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.wiki.WikiObj;
 import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModel;
 import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
@@ -31,11 +39,14 @@ import it.unimib.adastra.util.SharedPreferencesUtil;
  */
 public class DynamicWikiFragment extends Fragment {
     private static final String TAG = WikiFragment.class.getSimpleName();
-    private FragmentDinamicWikiBinding binding;
+    private FragmentDynamicWikiBinding binding;
     private IWikiRepository wikiRepository;
     private WikiViewModel wikiViewModel;
     private String language;
     private SharedPreferencesUtil sharedPreferencesUtil;
+    private LinearLayoutManager layoutManager;
+    private WikiRecyclerViewAdapter wikiRecyclerViewAdapter;
+    private RecyclerView wikiRecyclerView;
 
     public DynamicWikiFragment() {
         // Required empty public constructor
@@ -68,7 +79,7 @@ public class DynamicWikiFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        binding = FragmentDinamicWikiBinding.inflate(inflater, container, false);
+        binding = FragmentDynamicWikiBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -76,29 +87,45 @@ public class DynamicWikiFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        wikiRecyclerView = binding.recyclerviewDynamicwiki;
+        layoutManager = new LinearLayoutManager(requireContext(),
+                        LinearLayoutManager.VERTICAL, false);
+
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         language = setLanguage();
 
-        wikiViewModel.getWikiData(PLANETS, language).observe(
-            getViewLifecycleOwner(), result -> {
-                if (result.isSuccess()) {
-                    if (wikiViewModel.isAsyncHandled()) {
-                        Log.d(TAG, "Recupero dati della wiki avvenuto con successo: " + ((Result.WikiResponseSuccess) result).getPlanets());
+        if (getArguments() != null) {
+            String wikiType = getArguments().getString("wikiType");
+            Log.d(TAG, "WikiType: " + wikiType);
 
-                        wikiViewModel.setAsyncHandled(false);
-                    } else {
-                        wikiViewModel.setAsyncHandled(true);
-                    }
-                } else {
-                    if (wikiViewModel.isAsyncHandled()) {
-                        Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
+            wikiViewModel.getWikiData(wikiType, language).observe(
+                    getViewLifecycleOwner(), result -> {
+                        if (result.isSuccess()) {
+                            if (wikiViewModel.isAsyncHandled()) {
+                                List<WikiObj> wikiObjs = ((Result.WikiResponseSuccess) result).getWikiObjs();
+                                Log.d(TAG, "Recupero dati della wiki avvenuto con successo: " + wikiObjs);
 
-                        wikiViewModel.setAsyncHandled(false);
-                    } else {
-                        wikiViewModel.setAsyncHandled(true);
-                    }
-                }
-            });
+                                wikiRecyclerView.setLayoutManager(layoutManager);
+                                wikiRecyclerViewAdapter = new WikiRecyclerViewAdapter(wikiObjs, requireActivity().getApplication());
+                                wikiRecyclerView.setAdapter(wikiRecyclerViewAdapter);
+
+                                wikiViewModel.setAsyncHandled(false);
+                            } else {
+                                wikiViewModel.setAsyncHandled(true);
+                            }
+                        } else {
+                            if (wikiViewModel.isAsyncHandled()) {
+                                Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
+
+                                wikiViewModel.setAsyncHandled(false);
+                            } else {
+                                wikiViewModel.setAsyncHandled(true);
+                            }
+                        }
+                    });
+        }
+
+
     }
 
     private String setLanguage() {
@@ -108,5 +135,9 @@ public class DynamicWikiFragment extends Fragment {
             return "it";
         else
             return "en";
+    }
+
+    public void updateRecyclerView(List<WikiObj> wikiObjs) {
+
     }
 }

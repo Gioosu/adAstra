@@ -100,7 +100,7 @@
 
     <!-- Wiki -->
     <string name="solar_system">Solar System</string>
-    <string name="planets">Planets</string>
+    <string name="WikiObjs">Planets</string>
     <string name="stars">Stars</string>
     <string name="constellations">Constellations</string>
 
@@ -128,6 +128,7 @@
     </string>
     <string name="close">Close</string>
     <string name="iss_last_update">Last update:</string>
+    <string name="iss_updated">ISS position updated successfully</string>
 
     <!-- Home -->
     <string name="per_aspera_ad_astra" translatable="false">Per Aspera Ad Astra</string>
@@ -164,4 +165,5 @@
     <string name="error_password_change_failed">Password change failed</string>
     <string name="error_invalid_new_email">Choose a new email address different from the previous one</string>
     <string name="error_unexpected">Unexpected error</string>
+    <string name="error_iss_update">Error in updating ISS position</string>">
 </resources>

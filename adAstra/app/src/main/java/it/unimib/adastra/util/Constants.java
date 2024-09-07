@@ -29,9 +29,8 @@ public class Constants {
     public static final String NUMBER_OF_MOONS = "moons";
     public static final String DISTANCE_FROM_EARTH = "distanceFromEarth";
     public static final String STARS = "stars";
-    // Attributi di Starts
-    public static final String CONSTELATIONS = "constellations";
-    // Attributi di Constellations
+    public static final String URL = "url";
+    public static final String CONSTELLATIONS = "constellations";
 
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.encrypted_preferences";

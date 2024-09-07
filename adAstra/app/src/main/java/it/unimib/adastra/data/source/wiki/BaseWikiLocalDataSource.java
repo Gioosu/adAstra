@@ -3,7 +3,7 @@ package it.unimib.adastra.data.source.wiki;
 import java.util.List;
 
 import it.unimib.adastra.data.repository.wiki.WikiResponseCallback;
-import it.unimib.adastra.model.wiki.Planet;
+import it.unimib.adastra.model.wiki.WikiObj;
 
 public abstract class BaseWikiLocalDataSource {
     protected WikiResponseCallback wikiResponseCallback;
@@ -16,5 +16,5 @@ public abstract class BaseWikiLocalDataSource {
 
     public abstract void fetchPlanets(String language);
 
-    public abstract void updateWiki(List<Planet> planets, boolean isDBEmpty);
+    public abstract void updateWiki(List<WikiObj> wikiObjs, boolean isDBEmpty);
 }

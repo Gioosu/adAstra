@@ -130,75 +130,35 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
                 app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
-                app:layout_constraintTop_toBottomOf="@id/button_login">
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="24dp"
-                    android:layout_toStartOf="@id/textview_or"
-                    android:background="?android:colorPrimary" />
-
-                <TextView
-                    android:id="@+id/textview_or"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/txt_or"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="24dp"
-                    android:layout_toEndOf="@id/textview_or"
-                    android:background="?android:colorPrimary" />
-
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/button_google"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/google_login"
-                android:textSize="20sp"
-                app:icon="@drawable/google_logo"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_login"
-                app:layout_constraintTop_toBottomOf="@+id/relative_layout" />
+                app:layout_constraintTop_toBottomOf="@id/button_login" />
 
             <TextView
                 android:id="@+id/missing_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@string/missing_account"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/button_signup_login"
                 app:layout_constraintEnd_toStartOf="@+id/button_signup_login"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="@+id/guideline_sx_login" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_login" />
 
             <Button
                 android:id="@+id/button_signup_login"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:text="@string/sign_up"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline_dx_login"
+                app:layout_constraintBottom_toBottomOf="@+id/missing_account"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/missing_account"
-                app:layout_constraintTop_toBottomOf="@+id/button_google" />
+                app:layout_constraintTop_toTopOf="@+id/missing_account" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

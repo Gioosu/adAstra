@@ -9,7 +9,7 @@ import java.util.List;
 
 import it.unimib.adastra.data.database.AdAstraRoomDatabase;
 import it.unimib.adastra.data.database.PlanetsDao;
-import it.unimib.adastra.model.wiki.Planet;
+import it.unimib.adastra.model.wiki.WikiObj;
 
 public class WikiLocalDataSource extends BaseWikiLocalDataSource {
     private static final String TAG = WikiLocalDataSource.class.getSimpleName();
@@ -33,15 +33,15 @@ public class WikiLocalDataSource extends BaseWikiLocalDataSource {
     @Override
     public void fetchPlanets(String language) {
         AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
-           List<Planet> planets;
+           List<WikiObj> wikiObjs;
 
            if (!planetsDao.getAllPlanets().isEmpty()) {
                // I dati sono già presenti nel database
                if (planetsDao.getCurrentLanguage().equals(language)) {
                    Log.d(TAG, "lingua corrente: " + planetsDao.getCurrentLanguage() + ", nessuna modifica");
 
-                   planets = planetsDao.getAllPlanets();
-                   wikiResponseCallback.onSuccessFromLocal(planets);
+                   wikiObjs = planetsDao.getAllPlanets();
+                   wikiResponseCallback.onSuccessFromLocal(wikiObjs);
                } else {
                    // La lingua richiesta è diversa da quella corrente
                    Log.d(TAG, "lingua corrente: " + planetsDao.getCurrentLanguage() + ", lingua richiesta: " + language);
@@ -56,26 +56,26 @@ public class WikiLocalDataSource extends BaseWikiLocalDataSource {
     }
 
     @Override
-    public void updateWiki(List<Planet> planets, boolean isDBEmpty) {
+    public void updateWiki(List<WikiObj> wikiObjs, boolean isDBEmpty) {
         if (isDBEmpty) {
             AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
-                planetsDao.insertAll(planets);
+                planetsDao.insertAll(wikiObjs);
 
-                Log.d(TAG, "updateWiki: planets inserted: " + planets.size());
+                Log.d(TAG, "updateWiki: planets inserted: " + wikiObjs.size());
 
-                wikiResponseCallback.onSuccessFromLocal(planets);
+                wikiResponseCallback.onSuccessFromLocal(wikiObjs);
             });
 
         } else {
             AdAstraRoomDatabase.databaseWriteExecutor.execute(() -> {
-                int rows = planetsDao.updateAll(planets);
+                int rows = planetsDao.updateAll(wikiObjs);
 
-                Log.d(TAG, "righe aggiornate e numero Pianeti: " + rows + ", " + planets.size());
+                Log.d(TAG, "righe aggiornate e numero Pianeti: " + rows + ", " + wikiObjs.size());
 
-                if (rows == planets.size()) {
+                if (rows == wikiObjs.size()) {
                     Log.d(TAG, "updateWiki: rows is " + rows);
 
-                    wikiResponseCallback.onSuccessFromLocal(planets);
+                    wikiResponseCallback.onSuccessFromLocal(wikiObjs);
                 } else {
                     Log.e(TAG, "updateWiki: rows is not " + rows);
 

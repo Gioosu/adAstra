@@ -2,10 +2,10 @@ package it.unimib.adastra.model;
 
 import java.util.List;
 
-import it.unimib.adastra.model.wiki.Planet;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.NASA.NASAResponse;
 import it.unimib.adastra.model.user.User;
+import it.unimib.adastra.model.wiki.WikiObj;
 
 public abstract class Result {
     private Result() {}
@@ -52,14 +52,14 @@ public abstract class Result {
     }
 
     public static final class WikiResponseSuccess extends Result {
-        private final List<Planet> planets;
+        private final List<WikiObj> wikiObjs;
 
-        public WikiResponseSuccess(List<Planet> planets) {
-            this.planets = planets;
+        public WikiResponseSuccess(List<WikiObj> wikiObjs) {
+            this.wikiObjs = wikiObjs;
         }
 
-        public List<Planet> getPlanets() {
-            return planets;
+        public List<WikiObj> getWikiObjs() {
+            return wikiObjs;
         }
     }
 

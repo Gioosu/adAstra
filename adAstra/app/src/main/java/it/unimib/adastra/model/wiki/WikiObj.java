@@ -4,33 +4,22 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Planet {
+public class WikiObj {
 
     @PrimaryKey
     int id;
 
     private String name;
     private String description;
-    private String earthDistance;
-    private int moons;
-
+    private String url;
     private String language;
 
-    public Planet(int id, String name, String description, String earthDistance, int moons, String language) {
+    public WikiObj(int id, String name, String description, String url, String language) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.earthDistance = earthDistance;
-        this.moons = moons;
+        this.url = url;
         this.language = language;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getLanguage() {
@@ -41,12 +30,12 @@ public class Planet {
         this.language = language;
     }
 
-    public String getName() {
-        return name;
+    public String getUrl() {
+        return url;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {
@@ -57,20 +46,20 @@ public class Planet {
         this.description = description;
     }
 
-    public String getEarthDistance() {
-        return earthDistance;
+    public String getName() {
+        return name;
     }
 
-    public void setEarthDistance(String earthDistance) {
-        this.earthDistance = earthDistance;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getMoons() {
-        return moons;
+    public int getId() {
+        return id;
     }
 
-    public void setMoons(int moons) {
-        this.moons = moons;
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -79,8 +68,7 @@ public class Planet {
                 "id = " + id +
                 ", name = '" + name + '\'' +
                 ", description = '" + description + '\'' +
-                ", earthDistance = '" + earthDistance + '\'' +
-                ", moons =" + moons +
+                ", url = '" + url + '\'' +
                 ", language = '" + language + '\'' +
                 '}';
     }

@@ -1,13 +1,12 @@
 package it.unimib.adastra.data.source.wiki;
 
-import static it.unimib.adastra.util.Constants.DISTANCE_FROM_EARTH;
 import static it.unimib.adastra.util.Constants.EN_DESCRIPTION;
 import static it.unimib.adastra.util.Constants.EN_NAME;
 import static it.unimib.adastra.util.Constants.ID;
 import static it.unimib.adastra.util.Constants.IT_DESCRIPTION;
 import static it.unimib.adastra.util.Constants.IT_NAME;
-import static it.unimib.adastra.util.Constants.NUMBER_OF_MOONS;
 import static it.unimib.adastra.util.Constants.PLANETS;
+import static it.unimib.adastra.util.Constants.URL;
 
 import android.util.Log;
 
@@ -19,7 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unimib.adastra.model.wiki.Planet;
+import it.unimib.adastra.model.wiki.WikiObj;
 
 public class WikiRemoteDataSource extends BaseWikiRemoteDataSource {
     private static final String TAG = WikiRemoteDataSource.class.getSimpleName();
@@ -48,40 +47,38 @@ public class WikiRemoteDataSource extends BaseWikiRemoteDataSource {
         // Recupera tutti i documenti della raccolta
         planetsRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                List<Planet> planets = new ArrayList<>();
+                List<WikiObj> wikiObjs = new ArrayList<>();
                 QuerySnapshot querySnapshot = task.getResult();
 
                 switch (language) {
                     case "it":
                         if (querySnapshot != null) {
                             for (QueryDocumentSnapshot document : querySnapshot) {
-                                Planet planet = new Planet(
+                                WikiObj wikiObj = new WikiObj(
                                         document.getLong(ID).intValue(),
                                         document.getString(IT_NAME),
                                         document.getString(IT_DESCRIPTION),
-                                        document.getString(DISTANCE_FROM_EARTH),
-                                        document.getLong(NUMBER_OF_MOONS).intValue(),
+                                        document.getString(URL),
                                         "it"
                                 );
-                                planets.add(planet);
+                                wikiObjs.add(wikiObj);
                             }
-                            wikiResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
+                            wikiResponseCallback.onSuccessFromRemote(wikiObjs, isDBEmpty);
                         }
                         break;
                     default:
                         if (querySnapshot != null) {
                             for (QueryDocumentSnapshot document : querySnapshot) {
-                                Planet planet = new Planet(
+                                WikiObj wikiObj = new WikiObj(
                                         document.getLong(ID).intValue(),
                                         document.getString(EN_NAME),
                                         document.getString(EN_DESCRIPTION),
-                                        document.getString(DISTANCE_FROM_EARTH),
-                                        document.getLong(NUMBER_OF_MOONS).intValue(),
+                                        document.getString(URL),
                                         "en"
                                 );
-                                planets.add(planet);
+                                wikiObjs.add(wikiObj);
                             }
-                            wikiResponseCallback.onSuccessFromRemote(planets, isDBEmpty);
+                            wikiResponseCallback.onSuccessFromRemote(wikiObjs, isDBEmpty);
                         }
                 }
             } else {

@@ -6,8 +6,8 @@ import java.util.List;
 
 import it.unimib.adastra.data.source.wiki.BaseWikiLocalDataSource;
 import it.unimib.adastra.data.source.wiki.BaseWikiRemoteDataSource;
-import it.unimib.adastra.model.wiki.Planet;
 import it.unimib.adastra.model.Result;
+import it.unimib.adastra.model.wiki.WikiObj;
 
 public class WikiResponseRepository implements IWikiRepository, WikiResponseCallback {
     private static final String TAG = WikiResponseRepository.class.getSimpleName();
@@ -31,8 +31,8 @@ public class WikiResponseRepository implements IWikiRepository, WikiResponseCall
     }
 
     @Override
-    public void onSuccessFromLocal(List<Planet> planets) {
-        Result.WikiResponseSuccess result = new Result.WikiResponseSuccess(planets);
+    public void onSuccessFromLocal(List<WikiObj> wikiObjs) {
+        Result.WikiResponseSuccess result = new Result.WikiResponseSuccess(wikiObjs);
         wikiMutableLiveData.postValue(result);
     }
 
@@ -48,8 +48,8 @@ public class WikiResponseRepository implements IWikiRepository, WikiResponseCall
     }
 
     @Override
-    public void onSuccessFromRemote(List<Planet> planets, boolean isDBEmpty) {
-        wikiLocalDataSource.updateWiki(planets, isDBEmpty);
+    public void onSuccessFromRemote(List<WikiObj> wikiObjs, boolean isDBEmpty) {
+        wikiLocalDataSource.updateWiki(wikiObjs, isDBEmpty);
     }
 
     @Override

@@ -11,11 +11,11 @@ import androidx.room.Room;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import it.unimib.adastra.model.wiki.Planet;
 import it.unimib.adastra.model.ISS.ISSPositionResponse;
 import it.unimib.adastra.model.NASA.NASAResponse;
+import it.unimib.adastra.model.wiki.WikiObj;
 
-@Database(entities = {ISSPositionResponse.class, NASAResponse.class, Planet.class}, version = DATABASE_VERSION, exportSchema = false)
+@Database(entities = {ISSPositionResponse.class, NASAResponse.class, WikiObj.class}, version = DATABASE_VERSION, exportSchema = false)
 public abstract class AdAstraRoomDatabase extends androidx.room.RoomDatabase {
     public abstract ISSDao issDao();
     public abstract NASADao nasaDao();
