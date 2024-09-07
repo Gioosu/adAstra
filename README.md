@@ -38,7 +38,8 @@ This application is designed for astronomy and space enthusiasts. It allows user
 </div>
 
 **FUTURE UPDATES:**
-- **List of Future Astronomical Events: (It will come with future updates)** Display a list of upcoming astronomical events such as comets, meteor showers, eclipses, and more.
+- **List of Future Astronomical Events:** Display a list of upcoming astronomical events such as comets, meteor showers, eclipses, and more.
+- **ISS Path Prediction:** Display an accurate path.
 
 
 **CONTACT & SUPPORT**
