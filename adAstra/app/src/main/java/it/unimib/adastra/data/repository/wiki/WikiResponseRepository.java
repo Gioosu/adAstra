@@ -15,9 +15,9 @@ public class WikiResponseRepository implements IWikiRepository, WikiResponseCall
     private final BaseWikiRemoteDataSource wikiRemoteDataSource;
     private MutableLiveData<Result> wikiMutableLiveData;
 
-    public WikiResponseRepository(BaseWikiLocalDataSource BaseWikiLocalDataSource, BaseWikiRemoteDataSource BaseWikiRemoteDataSource) {
-        this.wikiLocalDataSource = BaseWikiLocalDataSource;
-        this.wikiRemoteDataSource = BaseWikiRemoteDataSource;
+    public WikiResponseRepository(BaseWikiLocalDataSource baseWikiLocalDataSource, BaseWikiRemoteDataSource baseWikiRemoteDataSource) {
+        this.wikiLocalDataSource = baseWikiLocalDataSource;
+        this.wikiRemoteDataSource = baseWikiRemoteDataSource;
         this.wikiMutableLiveData = new MutableLiveData<>();
         this.wikiRemoteDataSource.setWikiCallback(this);
         this.wikiLocalDataSource.setWikiCallback(this);
@@ -38,7 +38,7 @@ public class WikiResponseRepository implements IWikiRepository, WikiResponseCall
 
     @Override
     public void onFailureFromLocal(String query, String language, boolean isDBEmpty) {
-        wikiRemoteDataSource.getWikiData(query, language, isDBEmpty);
+        wikiRemoteDataSource.getInfo(query, language, isDBEmpty);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class WikiResponseRepository implements IWikiRepository, WikiResponseCall
     }
 
     @Override
-    public void onSuccessFromRemote(List<WikiObj> wikiObjs, boolean isDBEmpty) {
-        wikiLocalDataSource.updateWiki(wikiObjs, isDBEmpty);
+    public void onSuccessFromRemote(String query, List<WikiObj> wikiObjs, boolean isDBEmpty) {
+        wikiLocalDataSource.updateWiki(query, wikiObjs, isDBEmpty);
     }
 
     @Override

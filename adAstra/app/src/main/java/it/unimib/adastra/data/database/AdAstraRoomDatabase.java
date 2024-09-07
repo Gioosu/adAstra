@@ -19,7 +19,7 @@ import it.unimib.adastra.model.wiki.WikiObj;
 public abstract class AdAstraRoomDatabase extends androidx.room.RoomDatabase {
     public abstract ISSDao issDao();
     public abstract NASADao nasaDao();
-    public abstract PlanetsDao planetsDao();
+    public abstract WikiDao wikiDao();
     private static volatile AdAstraRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
     public static final ExecutorService databaseWriteExecutor =

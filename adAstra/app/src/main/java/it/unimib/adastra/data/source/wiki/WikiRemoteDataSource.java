@@ -1,12 +1,15 @@
 package it.unimib.adastra.data.source.wiki;
 
+import static it.unimib.adastra.util.Constants.CONSTELLATIONS;
 import static it.unimib.adastra.util.Constants.EN_DESCRIPTION;
 import static it.unimib.adastra.util.Constants.EN_NAME;
 import static it.unimib.adastra.util.Constants.ID;
 import static it.unimib.adastra.util.Constants.IT_DESCRIPTION;
 import static it.unimib.adastra.util.Constants.IT_NAME;
 import static it.unimib.adastra.util.Constants.PLANETS;
+import static it.unimib.adastra.util.Constants.TYPE;
 import static it.unimib.adastra.util.Constants.URL;
+import static it.unimib.adastra.util.Constants.STARS;
 
 import android.util.Log;
 
@@ -29,56 +32,49 @@ public class WikiRemoteDataSource extends BaseWikiRemoteDataSource {
     }
 
     @Override
-    public void getWikiData(String query, String language, boolean isDBEmpty) {
-        switch (query) {
-            case PLANETS:
-                getPlanetsInfo(language, isDBEmpty);
-                break;
-            default:
-                Log.e(TAG, "Query non supportata: " + query);
-        }
-    }
-
-    @Override
-    public void getPlanetsInfo(String language, boolean isDBEmpty) {
-        // Ottieni un riferimento alla raccolta "planets"
-        CollectionReference planetsRef = db.collection(PLANETS);
+    public void getInfo(String query, String language, boolean isDBEmpty) {
+        // Ottieni un riferimento alla raccolta
+        CollectionReference wikiRef = db.collection(query);
 
         // Recupera tutti i documenti della raccolta
-        planetsRef.get().addOnCompleteListener(task -> {
+        wikiRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<WikiObj> wikiObjs = new ArrayList<>();
                 QuerySnapshot querySnapshot = task.getResult();
+
+                Log.d(TAG, "HO PRESO I DATI DA REMOTO");
 
                 switch (language) {
                     case "it":
                         if (querySnapshot != null) {
                             for (QueryDocumentSnapshot document : querySnapshot) {
                                 WikiObj wikiObj = new WikiObj(
-                                        document.getLong(ID).intValue(),
+                                        document.getLong(ID),
                                         document.getString(IT_NAME),
                                         document.getString(IT_DESCRIPTION),
                                         document.getString(URL),
-                                        "it"
+                                        "it",
+                                        document.getString(TYPE)
                                 );
                                 wikiObjs.add(wikiObj);
                             }
-                            wikiResponseCallback.onSuccessFromRemote(wikiObjs, isDBEmpty);
+                            wikiResponseCallback.onSuccessFromRemote(query, wikiObjs, isDBEmpty);
                         }
                         break;
                     default:
                         if (querySnapshot != null) {
                             for (QueryDocumentSnapshot document : querySnapshot) {
                                 WikiObj wikiObj = new WikiObj(
-                                        document.getLong(ID).intValue(),
+                                        document.getLong(ID),
                                         document.getString(EN_NAME),
                                         document.getString(EN_DESCRIPTION),
                                         document.getString(URL),
-                                        "en"
+                                        "en",
+                                        document.getString(TYPE)
                                 );
                                 wikiObjs.add(wikiObj);
                             }
-                            wikiResponseCallback.onSuccessFromRemote(wikiObjs, isDBEmpty);
+                            wikiResponseCallback.onSuccessFromRemote(query, wikiObjs, isDBEmpty);
                         }
                 }
             } else {

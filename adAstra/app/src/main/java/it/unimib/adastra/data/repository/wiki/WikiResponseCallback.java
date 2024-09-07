@@ -6,7 +6,7 @@ import it.unimib.adastra.model.wiki.WikiObj;
 
 public interface WikiResponseCallback {
 
-    void onSuccessFromRemote(List<WikiObj> wikiObjs, boolean isDBEmpty);
+    void onSuccessFromRemote(String query, List<WikiObj> wikiObjs, boolean isDBEmpty);
 
     void onSuccessFromLocal(List<WikiObj> wikiObjs);
 

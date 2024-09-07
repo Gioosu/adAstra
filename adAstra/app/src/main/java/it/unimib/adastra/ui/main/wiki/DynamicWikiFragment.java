@@ -1,10 +1,7 @@
 package it.unimib.adastra.ui.main.wiki;
 
-import static it.unimib.adastra.util.Constants.CONSTELLATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
-import static it.unimib.adastra.util.Constants.PLANETS;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.adastra.util.Constants.STARS;
 
 import android.os.Bundle;
 
@@ -20,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.adastra.adapter.WikiRecyclerViewAdapter;
@@ -27,6 +25,8 @@ import it.unimib.adastra.data.repository.wiki.IWikiRepository;
 import it.unimib.adastra.databinding.FragmentDynamicWikiBinding;
 import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.wiki.WikiObj;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
+import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModel;
 import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
@@ -47,6 +47,7 @@ public class DynamicWikiFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private WikiRecyclerViewAdapter wikiRecyclerViewAdapter;
     private RecyclerView wikiRecyclerView;
+    private List<WikiObj> wikiObjs;
 
     public DynamicWikiFragment() {
         // Required empty public constructor
@@ -94,6 +95,9 @@ public class DynamicWikiFragment extends Fragment {
         sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         language = setLanguage();
 
+        wikiObjs = new ArrayList<>();
+        wikiRecyclerViewAdapter = new WikiRecyclerViewAdapter(wikiObjs, requireActivity().getApplication());
+
         if (getArguments() != null) {
             String wikiType = getArguments().getString("wikiType");
             Log.d(TAG, "WikiType: " + wikiType);
@@ -102,23 +106,25 @@ public class DynamicWikiFragment extends Fragment {
                     getViewLifecycleOwner(), result -> {
                         if (result.isSuccess()) {
                             if (wikiViewModel.isAsyncHandled()) {
-                                List<WikiObj> wikiObjs = ((Result.WikiResponseSuccess) result).getWikiObjs();
+                                wikiViewModel.setAsyncHandled(false);
+                                wikiObjs.clear();
+                                wikiObjs.addAll(((Result.WikiResponseSuccess) result).getWikiObjs());
+                                wikiRecyclerViewAdapter.notifyDataSetChanged();
                                 Log.d(TAG, "Recupero dati della wiki avvenuto con successo: " + wikiObjs);
 
                                 wikiRecyclerView.setLayoutManager(layoutManager);
-                                wikiRecyclerViewAdapter = new WikiRecyclerViewAdapter(wikiObjs, requireActivity().getApplication());
                                 wikiRecyclerView.setAdapter(wikiRecyclerViewAdapter);
-
-                                wikiViewModel.setAsyncHandled(false);
-                            } else {
+                            }
+                            else
+                            {
                                 wikiViewModel.setAsyncHandled(true);
                             }
                         } else {
                             if (wikiViewModel.isAsyncHandled()) {
-                                Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
-
                                 wikiViewModel.setAsyncHandled(false);
-                            } else {
+                                Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
+                            }
+                            else {
                                 wikiViewModel.setAsyncHandled(true);
                             }
                         }

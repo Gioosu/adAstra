@@ -7,19 +7,21 @@ import androidx.room.PrimaryKey;
 public class WikiObj {
 
     @PrimaryKey
-    int id;
+    private long id;
 
     private String name;
     private String description;
     private String url;
     private String language;
+    private String type;
 
-    public WikiObj(int id, String name, String description, String url, String language) {
+    public WikiObj(long id, String name, String description, String url, String language, String type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.url = url;
         this.language = language;
+        this.type = type;
     }
 
     public String getLanguage() {
@@ -54,7 +56,7 @@ public class WikiObj {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -62,14 +64,23 @@ public class WikiObj {
         this.id = id;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "Planet{" +
-                "id = " + id +
-                ", name = '" + name + '\'' +
-                ", description = '" + description + '\'' +
-                ", url = '" + url + '\'' +
-                ", language = '" + language + '\'' +
+        return "WikiObj{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", language='" + language + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

@@ -41,7 +41,6 @@ public class ServiceLocator {
     private static volatile ServiceLocator INSTANCE = null;
     private static Retrofit issRetrofit = null;
     private static Retrofit nasaRetrofit = null;
-    private static Retrofit wikiRetrofit = null;
 
     private ServiceLocator() {}
 
@@ -87,7 +86,7 @@ public class ServiceLocator {
         return AdAstraRoomDatabase.getDatabase(application);
     }
 
-    public AdAstraRoomDatabase getPlanetsDao(Application application) {
+    public AdAstraRoomDatabase getWikiDao(Application application) {
         return AdAstraRoomDatabase.getDatabase(application);
     }
 
@@ -128,7 +127,7 @@ public class ServiceLocator {
                 new WikiRemoteDataSource();
 
         BaseWikiLocalDataSource wikiLocalDataSource =
-                new WikiLocalDataSource(getPlanetsDao(application));
+                new WikiLocalDataSource(getWikiDao(application));
 
         return new WikiResponseRepository(wikiLocalDataSource, wikiRemoteDataSource);
     }

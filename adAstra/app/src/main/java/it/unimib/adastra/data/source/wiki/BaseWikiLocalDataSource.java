@@ -16,5 +16,9 @@ public abstract class BaseWikiLocalDataSource {
 
     public abstract void fetchPlanets(String language);
 
-    public abstract void updateWiki(List<WikiObj> wikiObjs, boolean isDBEmpty);
+    public abstract void fetchStars(String language);
+
+    public abstract void fetchConstellations(String language);
+
+    public abstract void updateWiki(String query, List<WikiObj> wikiObjs, boolean isDBEmpty);
 }

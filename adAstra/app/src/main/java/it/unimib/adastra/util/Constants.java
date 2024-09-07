@@ -26,11 +26,11 @@ public class Constants {
     public static final String EN_NAME = "enName";
     public static final String IT_DESCRIPTION = "itDescription";
     public static final String EN_DESCRIPTION = "enDescription";
-    public static final String NUMBER_OF_MOONS = "moons";
-    public static final String DISTANCE_FROM_EARTH = "distanceFromEarth";
     public static final String STARS = "stars";
     public static final String URL = "url";
+    public static final String TYPE = "type";
     public static final String CONSTELLATIONS = "constellations";
+
 
     // Constants for EncryptedSharedPreferences
     public static final String ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "it.unimib.adastra.encrypted_preferences";

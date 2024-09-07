@@ -70,15 +70,18 @@ public class WikiFragment extends Fragment {
 
         // cardView Stelle
         binding.stars.setOnClickListener(v -> {
-            bundle.putString("wikiType", CONSTELLATIONS);
+            bundle.putString("wikiType", STARS);
             Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment, bundle);
         });
 
         // cardView Costellazioni
-        binding.stars.setOnClickListener(v -> {
-            bundle.putString("wikiType", STARS);
+        binding.constellations.setOnClickListener(v -> {
+            bundle.putString("wikiType", CONSTELLATIONS);
             Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment, bundle);
         });
+
+
+
 
     }
 }
