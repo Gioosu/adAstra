@@ -92,7 +92,11 @@
             android:id="@+id/dinamicWikiFragment"
             android:name="it.unimib.adastra.ui.main.wiki.DynamicWikiFragment"
             android:label="fragment_dinamic_wiki"
-            tools:layout="@layout/fragment_dynamic_wiki" />
+            tools:layout="@layout/fragment_dynamic_wiki" >
+            <action
+                android:id="@+id/action_dinamicWikiFragment_to_wikiFragment"
+                app:destination="@id/wikiFragment" />
+        </fragment>
         <fragment
             android:id="@+id/wikiFragment"
             android:name="it.unimib.adastra.ui.main.wiki.WikiFragment"

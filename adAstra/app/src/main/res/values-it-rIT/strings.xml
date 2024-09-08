@@ -89,7 +89,7 @@
 
     <!-- Wiki -->
     <string name="solar_system">Sistema Solare</string>
-    <string name="WikiObjs">Pianeti</string>
+    <string name="planets">Pianeti</string>
     <string name="stars">Stelle</string>
     <string name="constellations">Costellazioni</string>
 

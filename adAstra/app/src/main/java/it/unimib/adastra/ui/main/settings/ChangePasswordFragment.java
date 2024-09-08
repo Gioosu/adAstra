@@ -127,7 +127,7 @@ public class ChangePasswordFragment extends Fragment {
 
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAnchorView(R.id.bottom_navigation).show();
     }
 
     // Cambia la password

@@ -140,7 +140,7 @@ public class AccountSettingsFragment extends Fragment {
 
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAnchorView(R.id.bottom_navigation).show();
     }
 
     // Aggiorna l'interfaccia utente

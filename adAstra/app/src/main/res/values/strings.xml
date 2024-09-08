@@ -102,7 +102,7 @@
 
     <!-- Wiki -->
     <string name="solar_system">Solar System</string>
-    <string name="WikiObjs">Planets</string>
+    <string name="planets">Planets</string>
     <string name="stars">Stars</string>
     <string name="constellations">Constellations</string>
 

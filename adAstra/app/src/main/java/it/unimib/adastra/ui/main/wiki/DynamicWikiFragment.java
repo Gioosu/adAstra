@@ -1,7 +1,10 @@
 package it.unimib.adastra.ui.main.wiki;
 
+import static it.unimib.adastra.util.Constants.CONSTELLATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
+import static it.unimib.adastra.util.Constants.PLANETS;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.STARS;
 
 import android.os.Bundle;
 
@@ -9,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +24,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unimib.adastra.R;
 import it.unimib.adastra.adapter.WikiRecyclerViewAdapter;
 import it.unimib.adastra.data.repository.wiki.IWikiRepository;
 import it.unimib.adastra.databinding.FragmentDynamicWikiBinding;
@@ -46,6 +51,7 @@ public class DynamicWikiFragment extends Fragment {
     private WikiRecyclerViewAdapter wikiRecyclerViewAdapter;
     private RecyclerView wikiRecyclerView;
     private List<WikiObj> wikiObjs;
+    private String wikiType;
 
     public DynamicWikiFragment() {
         // Required empty public constructor
@@ -86,7 +92,12 @@ public class DynamicWikiFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        wikiRecyclerView = binding.recyclerviewDynamicwiki;
+        // Bottone di Back to wiki
+        binding.floatingActionButtonBack.setOnClickListener(v -> {
+                    Navigation.findNavController(v).navigate(R.id.action_dinamicWikiFragment_to_wikiFragment);
+                });
+
+                wikiRecyclerView = binding.recyclerviewDynamicwiki;
         layoutManager = new LinearLayoutManager(requireContext(),
                         LinearLayoutManager.VERTICAL, false);
 
@@ -97,7 +108,7 @@ public class DynamicWikiFragment extends Fragment {
         wikiRecyclerViewAdapter = new WikiRecyclerViewAdapter(wikiObjs, requireActivity().getApplication());
 
         if (getArguments() != null) {
-            String wikiType = getArguments().getString("wikiType");
+            wikiType = getArguments().getString("wikiType");
             Log.d(TAG, "WikiType: " + wikiType);
 
             wikiViewModel.getWikiData(wikiType, language).observe(
@@ -109,6 +120,8 @@ public class DynamicWikiFragment extends Fragment {
                             wikiObjs.addAll(((Result.WikiResponseSuccess) result).getWikiObjs());
                             wikiRecyclerViewAdapter.notifyDataSetChanged();
                             Log.d(TAG, "Recupero dati della wiki avvenuto con successo: " + wikiObjs);
+
+                            updateUI();
 
                             wikiRecyclerView.setLayoutManager(layoutManager);
                             wikiRecyclerView.setAdapter(wikiRecyclerViewAdapter);
@@ -135,5 +148,22 @@ public class DynamicWikiFragment extends Fragment {
             return "it";
         else
             return "en";
+    }
+
+    public void updateUI() {
+        switch (wikiType) {
+            case PLANETS:
+                binding.textViewDynamicWikiTitle.setText(getString(R.string.planets));
+                binding.imageView.setImageResource(R.drawable.planet);
+                break;
+            case STARS:
+                binding.textViewDynamicWikiTitle.setText(getString(R.string.stars));
+                binding.imageView.setImageResource(R.drawable.stars);
+                break;
+            case CONSTELLATIONS:
+                binding.textViewDynamicWikiTitle.setText(getString(R.string.constellations));
+                binding.imageView.setImageResource(R.drawable.constellation);
+                break;
+        }
     }
 }

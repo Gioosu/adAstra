@@ -73,10 +73,10 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     private Marker issMarker;
     private Marker userMarker;
     private Circle circle;
-    FusedLocationProviderClient fusedLocationClient;
-    LatLng currentUserLocation;
-    private double userLatitude = 0.0;
-    private double userLongitude = 0.0;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LatLng currentUserLocation;
+    private double userLatitude;
+    private double userLongitude;
 
     public ISSFragment() {
         // Required empty public constructor
@@ -150,6 +150,11 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         googleMap = null;
         issMarker = null;
         circle = null;
+
+        currentUserLocation = null;
+
+        userLatitude = 0.0;
+        userLongitude = 0.0;
 
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
@@ -258,7 +263,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
     // Visualizza una snackbar
     private void showSnackbar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAnchorView(R.id.bottom_navigation).show();
     }
 
     // Aggiorna l'interfaccia utente
@@ -298,7 +303,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         if (googleMap != null) {
             issMarker = drawMarker(iss, R.string.iss, BitmapDescriptorFactory.fromResource(R.drawable.iss_map_icon));
 
-            if(userLatitude != 0.0 && userLongitude != 0.0){
+            if(currentUserLocation != null){
                 userMarker = drawMarker(currentUserLocation, R.string.your_position, BitmapDescriptorFactory.fromResource(R.drawable.telescope_map_icon));
             }
 

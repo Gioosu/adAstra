@@ -11,11 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import it.unimib.adastra.R;
 import it.unimib.adastra.databinding.FragmentWikiBinding;
 
@@ -49,10 +47,8 @@ public class WikiFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         binding = FragmentWikiBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
     }
 
@@ -79,9 +75,5 @@ public class WikiFragment extends Fragment {
             bundle.putString("wikiType", CONSTELLATIONS);
             Navigation.findNavController(v).navigate(R.id.action_wikiFragment_to_dinamicWikiFragment, bundle);
         });
-
-
-
-
     }
 }
