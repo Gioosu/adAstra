@@ -16,6 +16,7 @@ public class Constants {
     public static final String DARK_THEME = "dark_theme";
     public static final String VERIFIED = "verified";
     public static final String AD_ASTRA_EMAIL = "Adiutoriumadastra@gmail.com";
+    public static final int REQUEST_LOCATION_PERMISSION = 1;
 
     // Constants for Wiki
     public static final String PLANETS = "planets";

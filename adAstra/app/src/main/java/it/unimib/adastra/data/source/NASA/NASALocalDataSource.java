@@ -78,10 +78,4 @@ public class NASALocalDataSource extends BaseNASALocalDataSource {
            }
         });
     }
-
-    @Override
-    public void delete() {
-        AdAstraRoomDatabase.databaseWriteExecutor.execute(() ->
-                nasaResponseCallback.onSuccessDeletion());
-    }
 }

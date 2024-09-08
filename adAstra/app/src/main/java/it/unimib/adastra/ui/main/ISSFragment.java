@@ -1,8 +1,15 @@
 package it.unimib.adastra.ui.main;
 
+import static it.unimib.adastra.util.Constants.REQUEST_LOCATION_PERMISSION;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,16 +18,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -59,8 +70,12 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     private String visibility, units;
     private LatLng iss;
     private GoogleMap googleMap;
-    private Marker marker;
+    private Marker issMarker;
+    private Marker userMarker;
     private Circle circle;
+    FusedLocationProviderClient fusedLocationClient;
+    LatLng currentUserLocation;
+    private double userLatitude, userLongitude;
 
     public ISSFragment() {
         // Required empty public constructor
@@ -79,6 +94,9 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Inizializzazione del fusedLocationClient per la geolocalizzazione
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         // Inizializzazione dei ViewModel per User
         userRepository = ServiceLocator.getInstance().
@@ -129,7 +147,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
         iss = null;
         googleMap = null;
-        marker = null;
+        issMarker = null;
         circle = null;
 
         // Aggiornamento dinamico
@@ -270,14 +288,15 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
     // Aggiorna la mappa
     private void updateMap() {
-        if (marker != null)
-            marker.remove();
+        if (issMarker != null)
+            issMarker.remove();
 
         if (circle != null)
             circle.remove();
 
         if (googleMap != null) {
-            marker = drawMarker();
+            issMarker = drawMarker(iss, R.string.iss, BitmapDescriptorFactory.fromResource(R.drawable.iss_map_icon));
+            userMarker = drawMarker(currentUserLocation, R.string.your_position, BitmapDescriptorFactory.fromResource(R.drawable.telescope_map_icon));
             circle = drawFootprint();
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
@@ -293,14 +312,35 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setOnMarkerClickListener(marker ->
                 marker.getTitle().equals(getString(R.string.iss)));
 
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // I permessi sono stati concessi, ottieni l'ultima posizione nota
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(requireActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                userLatitude = location.getLatitude();
+                                userLongitude = location.getLongitude();
+                                currentUserLocation = new LatLng(userLatitude, userLongitude);
+                            } else {
+                                Log.e(TAG, "Errore: Posizione attuale utente non disponibile.");
+
+                                showSnackbar(binding.getRoot(), getString(R.string.error_retrieve_user_position));
+                            }
+                        }
+                    });
+        } else {
+            // I permessi non sono stati concessi, richiedili
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        }
     }
 
     // Disegna il marker
-    private Marker drawMarker() {
+    private Marker drawMarker(LatLng coordinates, int title, BitmapDescriptor icon) {
         MarkerOptions markerOptions = new MarkerOptions()
-                .position(iss)
-                .title(getString(R.string.iss))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iss_map_icon));
+                .position(coordinates)
+                .title(getString(title))
+                .icon(icon);
 
        return googleMap.addMarker(markerOptions);
     }

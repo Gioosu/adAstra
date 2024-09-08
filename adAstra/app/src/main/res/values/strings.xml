@@ -131,6 +131,7 @@
     <string name="close">Close</string>
     <string name="iss_last_update">Last update:</string>
     <string name="iss_updated">ISS position updated successfully</string>
+    <string name="your_position">Your position</string>
 
     <!-- Home -->
     <string name="per_aspera_ad_astra" translatable="false">Per Aspera Ad Astra</string>
@@ -168,4 +169,5 @@
     <string name="error_invalid_new_email">Choose a new email address different from the previous one</string>
     <string name="error_unexpected">Unexpected error</string>
     <string name="error_iss_update">Error in updating ISS position</string>">
+    <string name="error_retrieve_user_position">Unable to get your current location. Check your location permission for adAstra</string>">
 </resources>

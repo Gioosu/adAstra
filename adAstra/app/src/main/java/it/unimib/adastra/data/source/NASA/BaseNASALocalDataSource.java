@@ -15,6 +15,4 @@ public abstract class BaseNASALocalDataSource {
     public abstract void fetchNASAApod();
 
     public abstract void updateNASAData(NASAResponse nasaResponse);
-
-    public abstract void delete();
 }
