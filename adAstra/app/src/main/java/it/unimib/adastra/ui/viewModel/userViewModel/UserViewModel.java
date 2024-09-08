@@ -57,11 +57,11 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public void updateSwitch(User user, String imperialSystem, boolean isChecked) {
+    public void updateSwitch(User user, String chosenSwitch, boolean isChecked) {
         if (userMutableLiveData == null) {
-            userMutableLiveData = userRepository.updateSwitch(user, imperialSystem, isChecked);
+            userMutableLiveData = userRepository.updateSwitch(user, chosenSwitch, isChecked);
         } else {
-            userRepository.updateSwitch(user, imperialSystem, isChecked);
+            userRepository.updateSwitch(user, chosenSwitch, isChecked);
         }
     }
 

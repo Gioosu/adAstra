@@ -32,26 +32,16 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - (timestamp * 1000) > FRESH_TIMEOUT) {
-            Log.d(TAG, "Fetch da remoto");
+            Log.d(TAG, "Fetch ISS da remoto");
 
             issPositionRemoteDataSource.getISSPosition(isKilometers);
         } else {
-            Log.d(TAG, "Fetch da locale");
+            Log.d(TAG, "Fetch ISS da locale");
 
             issPositionLocalDataSource.getISSPosition();
         }
 
         return issPositionMutableLiveData;
-    }
-
-    @Override
-    public void updateISSPosition(ISSPositionResponse issPositionResponse) {
-        issPositionLocalDataSource.updateISS(issPositionResponse);
-    }
-
-    @Override
-    public void deleteISSPosition() {
-        issPositionLocalDataSource.delete();
     }
 
     @Override
@@ -81,10 +71,5 @@ public class ISSPositionResponseRepository implements IISSPositionRepository, IS
     public void onISSPositionStatusChanged(ISSPositionResponse issPositionResponse) {
         Result.ISSPositionResponseSuccess result = new Result.ISSPositionResponseSuccess(issPositionResponse);
         issPositionMutableLiveData.postValue(result);
-    }
-
-    @Override
-    public void onSuccessDeletion() {
-        // TODO Clear
     }
 }

@@ -1,10 +1,8 @@
 package it.unimib.adastra.data.source.user;
 
 import static it.unimib.adastra.util.Constants.ACCOUNT_DELETION_FAILED;
-import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
 import static it.unimib.adastra.util.Constants.INVALID_USERNAME;
-import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
 import static it.unimib.adastra.util.Constants.UNEXPECTED_ERROR;
 import static it.unimib.adastra.util.Constants.USERNAME;
@@ -71,10 +69,7 @@ public class UserDataRemoteDataSource extends BaseUserDataRemoteDataSource {
                             document.getString(USERNAME),
                             document.getBoolean(IMPERIAL_SYSTEM),
                             document.getBoolean(TIME_FORMAT),
-                            document.getBoolean(ISS_NOTIFICATIONS),
-                            document.getBoolean(EVENTS_NOTIFICATIONS),
-                            document.getBoolean(VERIFIED)
-                    );
+                            document.getBoolean(VERIFIED));
 
                     userResponseCallback.onSuccessFromRemoteDatabase(user);
                 }

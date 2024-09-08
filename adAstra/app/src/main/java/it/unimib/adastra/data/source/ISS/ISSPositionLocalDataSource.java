@@ -73,10 +73,4 @@ public class ISSPositionLocalDataSource extends BaseISSPositionLocalDataSource {
             }
         });
     }
-
-    @Override
-    public void delete() {
-        AdAstraRoomDatabase.databaseWriteExecutor.execute(issDao::deleteISSPosition);
-        issPositionResponseCallback.onSuccessDeletion();
-    }
 }

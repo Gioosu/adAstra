@@ -10,7 +10,6 @@ import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.wiki.WikiObj;
 
 public class WikiResponseRepository implements IWikiRepository, WikiResponseCallback {
-    private static final String TAG = WikiResponseRepository.class.getSimpleName();
     private final BaseWikiLocalDataSource wikiLocalDataSource;
     private final BaseWikiRemoteDataSource wikiRemoteDataSource;
     private MutableLiveData<Result> wikiMutableLiveData;

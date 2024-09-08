@@ -8,7 +8,6 @@ import it.unimib.adastra.model.NASA.NASAResponse;
 import it.unimib.adastra.model.Result;
 
 public class NASAResponseRepository implements  INASARepository, NASAResponseCallback{
-    private static final String TAG = NASAResponseRepository.class.getSimpleName();
     private final BaseNASARemoteDataSource nasaRemoteDataSource;
     private final BaseNASALocalDataSource nasaLocalDataSource;
     private final MutableLiveData<Result> nasaMutableLiveData;
@@ -27,11 +26,6 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
         nasaLocalDataSource.getNASAData(query);
 
         return nasaMutableLiveData;
-    }
-
-    @Override
-    public void deleteNASAData() {
-        nasaLocalDataSource.delete();
     }
 
     @Override
@@ -60,10 +54,5 @@ public class NASAResponseRepository implements  INASARepository, NASAResponseCal
     @Override
     public void onFailureFromLocal(String query) {
         nasaRemoteDataSource.getNASAData(query);
-    }
-
-    @Override
-    public void onSuccessDeletion() {
-
     }
 }

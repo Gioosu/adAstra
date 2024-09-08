@@ -23,7 +23,6 @@ import it.unimib.adastra.databinding.ActivityMainBinding;
 import it.unimib.adastra.util.SharedPreferencesUtil;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
 
     @Override

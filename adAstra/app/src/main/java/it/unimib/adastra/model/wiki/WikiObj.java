@@ -75,12 +75,12 @@ public class WikiObj {
     @Override
     public String toString() {
         return "WikiObj{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", url='" + url + '\'' +
-                ", language='" + language + '\'' +
-                ", type='" + type + '\'' +
+                "id = " + id +
+                ", name = '" + name + '\'' +
+                ", description = '" + description + '\'' +
+                ", url = '" + url + '\'' +
+                ", language = '" + language + '\'' +
+                ", type = '" + type + '\'' +
                 '}';
     }
 }

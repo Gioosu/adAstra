@@ -53,9 +53,6 @@ public interface ISSDao {
     @Insert
     void insertIss(ISSPositionResponse issPosition);
 
-    @Delete
-    void deleteISSPositionWithoutQuery(ISSPositionResponse issPosition);
-
     @Query("DELETE FROM ISSPositionResponse")
     void deleteISSPosition();
 }

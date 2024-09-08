@@ -3,9 +3,7 @@ package it.unimib.adastra.ui.main.settings;
 import static it.unimib.adastra.util.Constants.AD_ASTRA_EMAIL;
 import static it.unimib.adastra.util.Constants.DARK_THEME;
 import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
-import static it.unimib.adastra.util.Constants.EVENTS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.IMPERIAL_SYSTEM;
-import static it.unimib.adastra.util.Constants.ISS_NOTIFICATIONS;
 import static it.unimib.adastra.util.Constants.LANGUAGE;
 import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
 import static it.unimib.adastra.util.Constants.TIME_FORMAT;
@@ -63,6 +61,7 @@ public class SettingsFragment extends Fragment {
     private boolean isUserInteractedLanguage;
     private User user;
     private String idToken;
+    private int counterMeme = 1;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -147,19 +146,6 @@ public class SettingsFragment extends Fragment {
             if (binding.switchTimeFormat.isPressed())
                 userViewModel.updateSwitch(user, TIME_FORMAT, isChecked);
         });
-
-        // Switch di ISS_NOTIFICATIONS
-        binding.switchIssNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (binding.switchIssNotifications.isPressed())
-                userViewModel.updateSwitch(user, ISS_NOTIFICATIONS, isChecked);
-        });
-
-        // Switch di EVENTS_NOTIFICATIONS
-        binding.switchEventsNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (binding.switchEventsNotifications.isPressed())
-                userViewModel.updateSwitch(user, EVENTS_NOTIFICATIONS, isChecked);
-        });
-
 
         // Controlla se l'utente interagisce con lo spinner di cambio lingua
         binding.spinnerLanguage.setOnTouchListener((v, event) -> {
@@ -248,7 +234,16 @@ public class SettingsFragment extends Fragment {
         // Bottone di Build information, ottiene versione da build.gradle.kts (Module: app), riga 15
         binding.buttonBuildInformation.setText(BuildConfig.VERSION_NAME);
         binding.buttonBuildInformation.setOnClickListener(v -> {
-            //TODO implement build information easter egg
+            if (counterMeme < 5) {
+                showSnackbar(v, getString(R.string.meme) + " -" + (5 - counterMeme++));
+            } else {
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.fortytwo)
+                        .setMessage(R.string.fortytwo)
+                        .setPositiveButton(R.string.fortytwo, null)
+                        .setNegativeButton(R.string.fortytwo, null)
+                        .show();
+            }
         });
     }
 
@@ -263,8 +258,6 @@ public class SettingsFragment extends Fragment {
             updateSetting(USERNAME, user.getUsername());
             updateSetting(IMPERIAL_SYSTEM, user.isImperialSystem());
             updateSetting(TIME_FORMAT, user.isTimeFormat());
-            updateSetting(ISS_NOTIFICATIONS, user.isIssNotifications());
-            updateSetting(EVENTS_NOTIFICATIONS, user.isEventsNotifications());
         } else {
             Log.d(TAG, "Errore: Nessuno User trovato.");
         }
@@ -311,12 +304,6 @@ public class SettingsFragment extends Fragment {
                 break;
             case TIME_FORMAT:
                 binding.switchTimeFormat.setChecked(value);
-                break;
-            case ISS_NOTIFICATIONS:
-                binding.switchIssNotifications.setChecked(value);
-                break;
-            case EVENTS_NOTIFICATIONS:
-                binding.switchEventsNotifications.setChecked(value);
                 break;
         }
     }

@@ -145,48 +145,47 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                             is12Format = user.isTimeFormat();
 
                             issPositionViewModel.getISSPosition(timestamp, isImperial).observe(
-                                    getViewLifecycleOwner(), task -> {
-                                        if (task.isSuccess()) {
-                                            if (issPositionViewModel.isAsyncHandled()) {
-                                                showSnackbar(binding.getRoot(), getString(R.string.iss_updated));
-                                                Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
+                                getViewLifecycleOwner(), task -> {
+                                    if (task.isSuccess()) {
+                                        if (issPositionViewModel.isAsyncHandled()) {
+                                            Log.d(TAG, "Recupero dati dell'ISS avvenuto con successo.");
 
-                                                issPositionViewModel.setAsyncHandled(false);
-                                                issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
+                                            issPositionViewModel.setAsyncHandled(false);
+                                            issPosition = ((Result.ISSPositionResponseSuccess) task).getData();
 
-                                                if (issPosition != null) {
-                                                    lat = issPosition.getLatitude();
-                                                    lng = issPosition.getLongitude();
-                                                    altitude = issPosition.getAltitude();
-                                                    velocity = issPosition.getVelocity();
-                                                    visibility = issPosition.getVisibility();
-                                                    footprint = issPosition.getFootprint();
-                                                    timestamp = issPosition.getTimestamp();
-                                                    units = issPosition.getUnits();
+                                            if (issPosition != null) {
+                                                lat = issPosition.getLatitude();
+                                                lng = issPosition.getLongitude();
+                                                altitude = issPosition.getAltitude();
+                                                velocity = issPosition.getVelocity();
+                                                visibility = issPosition.getVisibility();
+                                                footprint = issPosition.getFootprint();
+                                                timestamp = issPosition.getTimestamp();
+                                                units = issPosition.getUnits();
 
-                                                    iss = new LatLng(lat, lng);
+                                                iss = new LatLng(lat, lng);
 
-                                                    updateUI();
-                                                } else {
-                                                    Log.e(TAG, "Errore: Recupero dati dell'ISS fallito.");
-                                                }
+                                                updateUI();
                                             } else {
-                                                issPositionViewModel.setAsyncHandled(true);
+                                                Log.e(TAG, "Errore: Recupero dati dell'ISS fallito.");
                                             }
                                         } else {
-                                            if (issPositionViewModel.isAsyncHandled()) {
-                                                showSnackbar(binding.getRoot(), getString(R.string.error_iss_update));
-                                                Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
-
-                                                issPositionViewModel.setAsyncHandled(false);
-                                            } else {
-                                                issPositionViewModel.setAsyncHandled(true);
-                                            }
+                                            issPositionViewModel.setAsyncHandled(true);
                                         }
-                                    });
-                            } else {
-                                Log.e(TAG, "Errore: Recupero dati dell'utente fallito.");
-                            }
+                                    } else {
+                                        if (issPositionViewModel.isAsyncHandled()) {
+                                            Log.e(TAG, "Errore: " + ((Result.Error) task).getMessage());
+
+                                            issPositionViewModel.setAsyncHandled(false);
+                                            showSnackbar(binding.getRoot(), getString(R.string.error_iss_update));
+                                        } else {
+                                            issPositionViewModel.setAsyncHandled(true);
+                                        }
+                                    }
+                                });
+                        } else {
+                            Log.e(TAG, "Errore: Recupero dati dell'utente fallito.");
+                        }
                     } else {
                         Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
                     }

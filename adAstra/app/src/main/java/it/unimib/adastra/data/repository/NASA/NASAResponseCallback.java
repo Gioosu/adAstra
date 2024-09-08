@@ -7,10 +7,6 @@ public interface NASAResponseCallback {
     void onFailureFromRemote(Exception exception);
 
     void onSuccessFromLocal(NASAResponse nasaResponse);
-
     void onFailureFromLocal(Exception exception);
-
     void onFailureFromLocal(String query);
-
-    void onSuccessDeletion();
 }

@@ -152,5 +152,6 @@
     <string name="error_password_change_failed">Cambio password fallito</string>
     <string name="error_invalid_new_email">Scegli un nuovo indirizzo email diversa dalla precedente</string>
     <string name="error_unexpected">Errore inatteso</string>
-    <string name="error_iss_update">Errore nell\'aggiornamento della posizione dell\'ISS</string>">
+    <string name="error_iss_update">Errore nell\'aggiornamento della posizione dell\'ISS</string>
+    <string name="meme">Manca poco, continua...</string>">
 </resources>

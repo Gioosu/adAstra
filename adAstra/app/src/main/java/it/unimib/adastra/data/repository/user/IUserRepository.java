@@ -8,8 +8,6 @@ import it.unimib.adastra.model.user.User;
 public interface IUserRepository {
     MutableLiveData<Result> getUser(String username, String email, String password, boolean isUserRegistered);
 
-    MutableLiveData<Result> getGoogleUser(String idToken);
-
     MutableLiveData<Result> getUserInfo(String idToken);
 
     MutableLiveData<Result> updateSwitch(User user, String imperialSystem, boolean isChecked);

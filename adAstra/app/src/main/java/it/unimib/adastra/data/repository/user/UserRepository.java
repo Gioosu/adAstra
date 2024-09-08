@@ -8,7 +8,6 @@ import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.user.User;
 
 public class UserRepository implements IUserRepository, UserResponseCallback {
-    private static final String TAG = UserRepository.class.getSimpleName();
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
     private final MutableLiveData<Result> userMutableLiveData;
@@ -31,11 +30,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
         }
 
         return userMutableLiveData;
-    }
-
-    @Override
-    public MutableLiveData<Result> getGoogleUser(String idToken) {
-        return null;
     }
 
     @Override
@@ -146,7 +140,6 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
 
     @Override
     public void onSuccessFromLogout() {
-        //TODO Ripulire DAO
         Result.UserResponseSuccess result = new Result.UserResponseSuccess(null);
         userMutableLiveData.postValue(result);
     }

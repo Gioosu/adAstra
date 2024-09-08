@@ -25,8 +25,6 @@ import it.unimib.adastra.data.repository.wiki.IWikiRepository;
 import it.unimib.adastra.databinding.FragmentDynamicWikiBinding;
 import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.wiki.WikiObj;
-import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModel;
-import it.unimib.adastra.ui.viewModel.userViewModel.UserViewModelFactory;
 import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModel;
 import it.unimib.adastra.ui.viewModel.wikiViewModel.WikiViewModelFactory;
 import it.unimib.adastra.util.ServiceLocator;
@@ -103,35 +101,31 @@ public class DynamicWikiFragment extends Fragment {
             Log.d(TAG, "WikiType: " + wikiType);
 
             wikiViewModel.getWikiData(wikiType, language).observe(
-                    getViewLifecycleOwner(), result -> {
-                        if (result.isSuccess()) {
-                            if (wikiViewModel.isAsyncHandled()) {
-                                wikiViewModel.setAsyncHandled(false);
-                                wikiObjs.clear();
-                                wikiObjs.addAll(((Result.WikiResponseSuccess) result).getWikiObjs());
-                                wikiRecyclerViewAdapter.notifyDataSetChanged();
-                                Log.d(TAG, "Recupero dati della wiki avvenuto con successo: " + wikiObjs);
+                getViewLifecycleOwner(), result -> {
+                    if (result.isSuccess()) {
+                        if (wikiViewModel.isAsyncHandled()) {
+                            wikiViewModel.setAsyncHandled(false);
+                            wikiObjs.clear();
+                            wikiObjs.addAll(((Result.WikiResponseSuccess) result).getWikiObjs());
+                            wikiRecyclerViewAdapter.notifyDataSetChanged();
+                            Log.d(TAG, "Recupero dati della wiki avvenuto con successo: " + wikiObjs);
 
-                                wikiRecyclerView.setLayoutManager(layoutManager);
-                                wikiRecyclerView.setAdapter(wikiRecyclerViewAdapter);
-                            }
-                            else
-                            {
-                                wikiViewModel.setAsyncHandled(true);
-                            }
+                            wikiRecyclerView.setLayoutManager(layoutManager);
+                            wikiRecyclerView.setAdapter(wikiRecyclerViewAdapter);
                         } else {
-                            if (wikiViewModel.isAsyncHandled()) {
-                                wikiViewModel.setAsyncHandled(false);
-                                Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
-                            }
-                            else {
-                                wikiViewModel.setAsyncHandled(true);
-                            }
+                            wikiViewModel.setAsyncHandled(true);
                         }
-                    });
+                    } else {
+                        if (wikiViewModel.isAsyncHandled()) {
+                            Log.e(TAG, "Errore: " + ((Result.Error) result).getMessage());
+
+                            wikiViewModel.setAsyncHandled(false);
+                        } else {
+                            wikiViewModel.setAsyncHandled(true);
+                        }
+                    }
+                });
         }
-
-
     }
 
     private String setLanguage() {
@@ -141,9 +135,5 @@ public class DynamicWikiFragment extends Fragment {
             return "it";
         else
             return "en";
-    }
-
-    public void updateRecyclerView(List<WikiObj> wikiObjs) {
-
     }
 }

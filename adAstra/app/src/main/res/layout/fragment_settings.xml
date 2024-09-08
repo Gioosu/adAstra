@@ -123,6 +123,7 @@
             android:layout_marginTop="4dp"
             android:text="@string/user_preferences"
             android:textColor="?android:textColorPrimary"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guideline_sx_settings"
             app:layout_constraintTop_toBottomOf="@+id/divider_settings" />
@@ -181,47 +182,6 @@
                     android:layout_marginEnd="16dp"
                     android:background="?android:attr/listDivider" />
 
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switch_iss_notifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:drawableStart="@drawable/iss_outlined"
-                    android:drawablePadding="21dp"
-                    android:fitsSystemWindows="false"
-                    android:paddingStart="3dp"
-                    android:text="@string/iss_notifications"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    tools:ignore="RtlSymmetry" />
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switch_events_notifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:drawableStart="@drawable/meteorite_comet_outlined"
-                    android:drawablePadding="21dp"
-                    android:fitsSystemWindows="false"
-                    android:paddingStart="3dp"
-                    android:text="@string/events_notifications"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    tools:ignore="RtlSymmetry" />
-
-                <View
-                    android:id="@+id/divider_general_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="?android:attr/listDivider" />
-
                 <TextView
                     android:id="@+id/textView_language"
                     android:layout_width="wrap_content"
@@ -232,7 +192,7 @@
                     android:text="@string/language"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal|bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -271,7 +231,7 @@
                     android:text="@string/theme"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal|bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

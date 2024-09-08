@@ -11,14 +11,10 @@ public abstract class Result {
     private Result() {}
 
     public boolean isSuccess() {
-        if (this instanceof ISSPositionResponseSuccess ||
+        return this instanceof ISSPositionResponseSuccess ||
                 this instanceof UserResponseSuccess ||
                 this instanceof NASAResponseSuccess ||
-                this instanceof WikiResponseSuccess) {
-            return true;
-        } else {
-            return false;
-        }
+                this instanceof WikiResponseSuccess;
     }
 
     /**
@@ -51,6 +47,10 @@ public abstract class Result {
         }
     }
 
+    /**
+     * Class that represents a successful action during the interaction
+     * with a Web Service or a local database.
+     */
     public static final class WikiResponseSuccess extends Result {
         private final List<WikiObj> wikiObjs;
 

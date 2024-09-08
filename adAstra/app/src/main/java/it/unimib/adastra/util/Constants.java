@@ -12,8 +12,6 @@ public class Constants {
     public static final String PASSWORD = "password";
     public static final String IMPERIAL_SYSTEM = "imperialSystem";
     public static final String TIME_FORMAT = "timeFormat";
-    public static final String ISS_NOTIFICATIONS = "issNotifications";
-    public static final String EVENTS_NOTIFICATIONS = "eventsNotifications";
     public static final String LANGUAGE = "language";
     public static final String DARK_THEME = "dark_theme";
     public static final String VERIFIED = "verified";

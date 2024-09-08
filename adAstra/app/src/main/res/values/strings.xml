@@ -64,6 +64,8 @@
     <string name="notification_settings">Notification settings</string>
     <string name="report_issue">Report an issue</string>
     <string name="build_information">Build information</string>
+    <string name="meme">You are close, keep going... </string>
+    <string name="fortytwo" translatable="false">42</string>
 
     <!-- AccountSettings -->
     <string name="update_username">Update username</string>

@@ -13,6 +13,4 @@ public abstract class BaseISSPositionLocalDataSource {
     public abstract void getISSPosition();
 
     public abstract void updateISS(ISSPositionResponse issPositionResponse);
-
-    public abstract void delete();
 }
