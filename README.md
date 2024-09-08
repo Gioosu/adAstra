@@ -1,3 +1,12 @@
+**adAstra**
+
+**Componenti:**
+R. Pretali - 870452
+G. L. Formisano - 885862
+G. Moisè - 885986
+A. Polizzi Andreeff - 886170
+A. Vita - 887466
+
 **What's adAstra?**
 
 This application is designed for astronomy and space enthusiasts. It allows users to track the International Space Station (ISS), explore the NASA Picture of the Day, dive into an astronomical encyclopedia.
