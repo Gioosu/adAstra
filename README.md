@@ -14,7 +14,7 @@ This application is designed for astronomy and space enthusiasts. It allows user
 
 **Palette:**
   - **Dark Theme:**
-    - #000000 (Black)
+    - #121212 (Black)
     - #8B0000 (Crimson Red)
   - **Light Theme:**
     - #FFFFFF (White)
