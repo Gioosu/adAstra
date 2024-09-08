@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
@@ -303,6 +304,29 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         if (googleMap != null) {
             issMarker = drawMarker(iss, R.string.iss, BitmapDescriptorFactory.fromResource(R.drawable.iss_map_icon));
 
+            if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // I permessi sono stati concessi, ottieni l'ultima posizione nota
+                fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                        .addOnSuccessListener(requireActivity(), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    userLatitude = location.getLatitude();
+                                    userLongitude = location.getLongitude();
+                                    currentUserLocation = new LatLng(userLatitude, userLongitude);
+                                } else {
+                                    Log.e(TAG, "Errore: Posizione attuale utente non disponibile.");
+
+                                    showSnackbar(binding.getRoot(), getString(R.string.error_gps_not_enabled));
+                                }
+                            }
+                        });
+            } else {
+                // I permessi non sono stati concessi, richiedili
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+                showSnackbar(binding.getRoot(), getString(R.string.error_retrieve_user_position));
+            }
+
             if(currentUserLocation != null){
                 userMarker = drawMarker(currentUserLocation, R.string.your_position, BitmapDescriptorFactory.fromResource(R.drawable.telescope_map_icon));
             }
@@ -334,13 +358,14 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
                             } else {
                                 Log.e(TAG, "Errore: Posizione attuale utente non disponibile.");
 
-                                showSnackbar(binding.getRoot(), getString(R.string.error_retrieve_user_position));
+                                showSnackbar(binding.getRoot(), getString(R.string.error_gps_not_enabled));
                             }
                         }
                     });
         } else {
             // I permessi non sono stati concessi, richiedili
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+            showSnackbar(binding.getRoot(), getString(R.string.error_retrieve_user_position));
         }
     }
 

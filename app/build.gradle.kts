@@ -13,7 +13,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "0.18.8"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -77,6 +77,7 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("com.google.android.datatransport:transport-api:3.2.0")
 
     // Test
     testImplementation("junit:junit:4.13.2")
