@@ -75,7 +75,8 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
     private Circle circle;
     FusedLocationProviderClient fusedLocationClient;
     LatLng currentUserLocation;
-    private double userLatitude, userLongitude;
+    private double userLatitude = 0.0;
+    private double userLongitude = 0.0;
 
     public ISSFragment() {
         // Required empty public constructor
@@ -296,9 +297,12 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
 
         if (googleMap != null) {
             issMarker = drawMarker(iss, R.string.iss, BitmapDescriptorFactory.fromResource(R.drawable.iss_map_icon));
-            userMarker = drawMarker(currentUserLocation, R.string.your_position, BitmapDescriptorFactory.fromResource(R.drawable.telescope_map_icon));
-            circle = drawFootprint();
 
+            if(userLatitude != 0.0 && userLongitude != 0.0){
+                userMarker = drawMarker(currentUserLocation, R.string.your_position, BitmapDescriptorFactory.fromResource(R.drawable.telescope_map_icon));
+            }
+
+            circle = drawFootprint();
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(iss, 1));
         } else {
             Log.e(TAG, "Errore: Impossibile visualizzare la mappa.");
