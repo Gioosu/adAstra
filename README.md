@@ -1,11 +1,19 @@
 **adAstra**
 
-**Componenti:**
+**Componenti del gruppo:**
+
 R. Pretali - 870452
+
 G. L. Formisano - 885862
+
 G. Moisè - 885986
+
 A. Polizzi Andreeff - 886170
+
 A. Vita - 887466
+
+<br>
+<br>
 
 **What's adAstra?**
 
