@@ -44,16 +44,6 @@ This application is designed for astronomy and space enthusiasts. It allows user
 - Profile: Preferences and account settings.
 
 
-**SOME SCREENSHOTS:**
-<div style="display: flex; justify-content: space-between;">
-    <img src="https://github.com/user-attachments/assets/70ccef30-0aa7-4f32-b67e-a4d0972569c8" alt="Login" width="400">
-    <img src="https://github.com/user-attachments/assets/dac33196-a871-4ba9-9333-03ad01dd184a" alt="Home" width="400">
-</div>
-<div style="display: flex; justify-content: space-between;">
-    <img src="https://github.com/user-attachments/assets/12ba5898-d948-4c8a-9dfc-36c7a2904550" alt="ISS" width="400">
-    <img src="https://github.com/user-attachments/assets/960c3c65-eda2-4de9-8662-e8501f14994b" alt="Settings" width="400">
-</div>
-
 **FUTURE UPDATES:**
 - **List of Future Astronomical Events:** Display a list of upcoming astronomical events such as comets, meteor showers, eclipses, and more.
 - **ISS Path Prediction:** Display an accurate path.
