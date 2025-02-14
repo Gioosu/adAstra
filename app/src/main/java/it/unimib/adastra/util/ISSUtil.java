@@ -15,7 +15,7 @@ public class ISSUtil {
         return degrees + "° " + minutes + "' ";
     }
 
-    public static String formatDMS(String dms, String direction) {
+    private static String formatDMS(String dms, String direction) {
         if (direction.equals("N"))
             return dms + "N";
         if (direction.equals("E"))
@@ -54,6 +54,13 @@ public class ISSUtil {
         Date netDate= new Date(timestamp * 1000);
 
         return sdf.format(netDate);
+    }
+
+    public static String formatCoordinates(String latitude, String longitude){
+        latitude = formatDMS(latitude, "N");
+        longitude = formatDMS(longitude, "E");
+
+        return latitude + "   " + longitude;
     }
 
     public static double milesToKilometers(double miles) {

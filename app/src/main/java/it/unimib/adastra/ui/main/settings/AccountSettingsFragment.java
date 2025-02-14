@@ -45,8 +45,6 @@ public class AccountSettingsFragment extends Fragment {
     private FragmentAccountSettingsBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
-    private DataEncryptionUtil dataEncryptionUtil;
-    private SharedPreferencesUtil sharedPreferencesUtil;
     private Activity activity;
     private User user;
     private String idToken;
@@ -90,13 +88,11 @@ public class AccountSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
         activity = getActivity();
         user = null;
         idToken = userViewModel.getLoggedUser();
-        email = getEmail();
-        password = getPassword();
+        email = userViewModel.getEmail(getContext());
+        password = userViewModel.getPassword(getContext());
 
         // Aggiornamento dinamico
         userViewModel.getUserInfoMutableLiveData(idToken).observe(
@@ -159,42 +155,6 @@ public class AccountSettingsFragment extends Fragment {
         }
     }
 
-    // Ottiene l'email
-    private String getEmail() {
-        String email;
-
-        try {
-            email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return email;
-    }
-
-    // Ottiene la password
-    private String getPassword() {
-        String password;
-
-        try {
-            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return password;
-    }
-
-    // Elimina i dati crittografati
-    private void clearEncryptedData() {
-        try {
-            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-            sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     // Elimina l'account
     private void deleteUserAccount(View view) {
         userViewModel.deleteAccount(user, email, password).observe(
@@ -204,7 +164,7 @@ public class AccountSettingsFragment extends Fragment {
                             Log.d(TAG, "Eliminazione dell'account avvenuta con successo.");
 
                             userViewModel.setAsyncHandled(false);
-                            clearEncryptedData();
+                            userViewModel.clearEncryptedData(getContext());
 
                             Navigation.findNavController(view).navigate(R.id.action_accountSettingsFragment_to_welcomeActivity);
                             activity.finish();

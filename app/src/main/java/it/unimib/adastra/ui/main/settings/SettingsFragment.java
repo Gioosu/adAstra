@@ -54,8 +54,6 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private IUserRepository userRepository;
     private UserViewModel userViewModel;
-    private SharedPreferencesUtil sharedPreferencesUtil;
-    private DataEncryptionUtil dataEncryptionUtil;
     private Activity activity;
     private boolean isUserInteractedDarkTheme;
     private boolean isUserInteractedLanguage;
@@ -100,8 +98,6 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sharedPreferencesUtil = new SharedPreferencesUtil(requireContext());
-        dataEncryptionUtil = new DataEncryptionUtil(requireContext());
         activity = getActivity();
         isUserInteractedLanguage = false;
         isUserInteractedDarkTheme = false;
@@ -164,14 +160,7 @@ public class SettingsFragment extends Fragment {
                 if (isUserInteractedLanguage) {
                     String selectedLanguage = parent.getItemAtPosition(position).toString();
 
-                    switch (selectedLanguage) {
-                        case "English":
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
-                            break;
-                        case "Italiano":
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
-                            break;
-                    }
+                    userViewModel.switchUserLanguage(selectedLanguage, getContext());
 
                     isUserInteractedLanguage = false;
                     activity.recreate();
@@ -200,23 +189,7 @@ public class SettingsFragment extends Fragment {
                 if (isUserInteractedDarkTheme) {
                     String selectedTheme = parent.getItemAtPosition(position).toString();
 
-                    switch (selectedTheme) {
-                        case "OS setting":
-                        case "Impostazioni di sistema":
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                            break;
-                        case "Dark theme":
-                        case "Tema scuro":
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 1);
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                            break;
-                        case "Light theme":
-                        case "Tema chiaro":
-                            sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 2);
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                            break;
-                    }
+                    userViewModel.switchUserTheme(selectedTheme, getContext());
 
                     isUserInteractedDarkTheme = false;
                 }
@@ -262,8 +235,8 @@ public class SettingsFragment extends Fragment {
             Log.d(TAG, "Errore: Nessuno User trovato.");
         }
 
-        updateSetting(LANGUAGE, sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
-        updateSetting(DARK_THEME, sharedPreferencesUtil.readIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
+        updateSetting(LANGUAGE, userViewModel.getIntSharedPreferences(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
+        updateSetting(DARK_THEME, userViewModel.getIntSharedPreferences(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
     }
 
     // Aggiorna le impostazioni dopo una modifica
@@ -315,7 +288,7 @@ public class SettingsFragment extends Fragment {
                 User resultUser = ((Result.UserResponseSuccess) result).getUser();
 
                 if (resultUser == null) {
-                    clearEncryptedData();
+                    userViewModel.clearEncryptedData(getContext());
                     Navigation.findNavController(view).navigate(R.id.action_settingsFragment_to_welcomeActivity);
                     activity.finish();
                 }
@@ -323,15 +296,6 @@ public class SettingsFragment extends Fragment {
                 showSnackbar(view, getString(R.string.error_unexpected));
             }
         });
-    }
-
-    // Cancella i dati crittografati
-    private void clearEncryptedData() {
-        try {
-            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     // Invia un email

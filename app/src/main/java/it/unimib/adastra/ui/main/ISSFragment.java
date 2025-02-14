@@ -272,10 +272,7 @@ public class ISSFragment extends Fragment implements OnMapReadyCallback {
         String newLatitude = ISSUtil.decimalToDMS(lat);
         String newLongitude = ISSUtil.decimalToDMS(lng);
 
-        newLatitude = ISSUtil.formatDMS(newLatitude, "N");
-        newLongitude = ISSUtil.formatDMS(newLongitude, "E");
-
-        String coordinates = newLatitude + "   " + newLongitude;
+        String coordinates = ISSUtil.formatCoordinates(newLatitude, newLongitude);
 
         binding.textViewCoordinates.setText(coordinates);
 

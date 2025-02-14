@@ -1,13 +1,27 @@
 package it.unimib.adastra.ui.viewModel.userViewModel;
 
+import static it.unimib.adastra.util.Constants.DARK_THEME;
+import static it.unimib.adastra.util.Constants.EMAIL_ADDRESS;
+import static it.unimib.adastra.util.Constants.ENCRYPTED_SHARED_PREFERENCES_FILE_NAME;
+import static it.unimib.adastra.util.Constants.LANGUAGE;
+import static it.unimib.adastra.util.Constants.PASSWORD;
+import static it.unimib.adastra.util.Constants.SHARED_PREFERENCES_FILE_NAME;
+
+import android.content.Context;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import it.unimib.adastra.data.repository.user.IUserRepository;
 import it.unimib.adastra.model.Result;
 import it.unimib.adastra.model.user.User;
+import it.unimib.adastra.util.DataEncryptionUtil;
+import it.unimib.adastra.util.SharedPreferencesUtil;
 
 public class UserViewModel extends ViewModel {
     private static final String TAG = UserViewModel.class.getSimpleName();
@@ -15,6 +29,8 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Result> userMutableLiveData;
     private boolean authenticationError;
     private boolean isAsyncHandled;
+    private DataEncryptionUtil dataEncryptionUtil;
+    private SharedPreferencesUtil sharedPreferencesUtil;
 
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;
@@ -135,5 +151,83 @@ public class UserViewModel extends ViewModel {
 
     public void getUser(String username, String email, String password, boolean isUserRegistered) {
         userRepository.getUser(username, email, password, isUserRegistered);
+    }
+
+    // Ottiene l'email
+    public String getEmail(Context context) {
+        dataEncryptionUtil = new DataEncryptionUtil(context);
+        String email;
+
+        try {
+            email = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, EMAIL_ADDRESS);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return email;
+    }
+
+    // Ottiene la password
+    public String getPassword(Context context) {
+        dataEncryptionUtil = new DataEncryptionUtil(context);
+        String password;
+
+        try {
+            password = dataEncryptionUtil.readSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME, PASSWORD);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return password;
+    }
+
+    // Elimina i dati crittografati
+    public void clearEncryptedData(Context context) {
+        dataEncryptionUtil = new DataEncryptionUtil(context);
+        sharedPreferencesUtil = new SharedPreferencesUtil(context);
+        try {
+            dataEncryptionUtil.clearSecretDataWithEncryptedSharedPreferences(ENCRYPTED_SHARED_PREFERENCES_FILE_NAME);
+            sharedPreferencesUtil.clearSharedPreferences(SHARED_PREFERENCES_FILE_NAME);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void switchUserTheme(String selectedTheme, Context context) {
+        sharedPreferencesUtil = new SharedPreferencesUtil(context);
+        switch (selectedTheme) {
+            case "OS setting":
+            case "Impostazioni di sistema":
+                sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 0);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case "Dark theme":
+            case "Tema scuro":
+                sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 1);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case "Light theme":
+            case "Tema chiaro":
+                sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, 2);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+        }
+    }
+
+    public void switchUserLanguage(String selectedLanguage, Context context) {
+        sharedPreferencesUtil = new SharedPreferencesUtil(context);
+
+        switch (selectedLanguage) {
+            case "English":
+                sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 0);
+                break;
+            case "Italiano":
+                sharedPreferencesUtil.writeIntData(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, 1);
+                break;
+        }
+    }
+
+    public int getIntSharedPreferences(String sharedPreferencesFileName, String key) {
+        return sharedPreferencesUtil.readIntData(sharedPreferencesFileName, key);
     }
 }
