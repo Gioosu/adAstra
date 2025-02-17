@@ -37,11 +37,25 @@ This application is designed for astronomy and space enthusiasts. It allows user
     - #FFFFFF (White)
     - #001372 (Navy Blue)
 
+
 **MAIN NAVBAR:**
 - Encyclopedia: short descryption and an image.
 - ISS: where it's, visibility, speed and more info.
 - Homepage: NASA Picture of the Day with a desription.
 - Profile: Preferences and account settings.
+
+
+**MVVM PATTERN:**
+Approaching the code may seems hard the first time you face it, so here is a simple Sequence Diagram that shows View, ViewModel and Model interactions. We used callbacks and LiveData to handle every asynchronous updates. 
+
+on Model folder, you can find the essential Java classes that represent the business logic objects that will be shared through liveData, these objects are treated as Room database tables, so that they can also be saved and retrieved from the database.
+
+On Data folder, you will find the most of the business logic, including API calls, callbacks definition, Room database and DAOs. Last but not least, here is defined all the business logic to handle these processes, such as local and remote calls for retrieving datas.
+
+On UI folder there are two main parts: View and ViewModel. ViewModels have the duty to expose the business logic contained in Data and Model in a way that it is easily accessible to Views. This way you can maintain a good separation of duty.
+
+Views don't contain any sort of business logic, they handle the UI components bindings and observes changes on liveData exposed by ViewModels.
+
 
 
 **FUTURE UPDATES:**

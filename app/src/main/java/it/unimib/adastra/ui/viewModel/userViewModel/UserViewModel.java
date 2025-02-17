@@ -227,7 +227,8 @@ public class UserViewModel extends ViewModel {
         }
     }
 
-    public int getIntSharedPreferences(String sharedPreferencesFileName, String key) {
+    public int getIntSharedPreferences(String sharedPreferencesFileName, String key, Context context) {
+        sharedPreferencesUtil = new SharedPreferencesUtil(context);
         return sharedPreferencesUtil.readIntData(sharedPreferencesFileName, key);
     }
 }

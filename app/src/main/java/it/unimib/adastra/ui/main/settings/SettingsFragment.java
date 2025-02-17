@@ -235,8 +235,8 @@ public class SettingsFragment extends Fragment {
             Log.d(TAG, "Errore: Nessuno User trovato.");
         }
 
-        updateSetting(LANGUAGE, userViewModel.getIntSharedPreferences(SHARED_PREFERENCES_FILE_NAME, LANGUAGE));
-        updateSetting(DARK_THEME, userViewModel.getIntSharedPreferences(SHARED_PREFERENCES_FILE_NAME, DARK_THEME));
+        updateSetting(LANGUAGE, userViewModel.getIntSharedPreferences(SHARED_PREFERENCES_FILE_NAME, LANGUAGE, getContext()));
+        updateSetting(DARK_THEME, userViewModel.getIntSharedPreferences(SHARED_PREFERENCES_FILE_NAME, DARK_THEME, getContext()));
     }
 
     // Aggiorna le impostazioni dopo una modifica
