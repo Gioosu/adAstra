@@ -35,6 +35,10 @@ android {
         buildConfig = true
     }
 
+    lint {
+        disable += "MissingDefaultResource"
+    }
+
 }
 
 secrets {
@@ -42,7 +46,7 @@ secrets {
 
     // A properties file containing default secret values. This file can be
     // checked in version control.
-    defaultPropertiesFileName = "local.defaults.properties"
+    defaultPropertiesFileName = "local.properties"
 
     // Configure which keys should be ignored by the plugin by providing regular expressions.
     // "sdk.dir" is ignored by default.
@@ -53,8 +57,8 @@ secrets {
 dependencies {
 
     // GPS Position
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-maps:20.0.0")
+    implementation("com.google.android.gms:play-services-location:21.4.0")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
@@ -96,7 +100,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     // Google Maps
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    //implementation("com.google.android.gms:play-services-maps:19.0.0")
 
     // Glide (Immagini da URL)
     implementation("com.github.bumptech.glide:glide:4.15.1")
